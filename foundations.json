@@ -1,0 +1,105 @@
+{
+	"required" : 5,
+	"courses" : [
+		{
+				"id" : "CS103",
+				"name" : "Mathematical Foundations of Computing",
+				"units" : {"min": 3, "max": 5},
+				"terms" : {
+					"Autumn" : {
+						"days" : ["Mon", "Wed", "Fri"],
+						"start" : 1415,
+						"end" : 1530
+					},
+					"Winter" : {
+						"days" : ["Mon", "Wed", "Fri"],
+						"start" : 1250,
+						"end" : 1405
+					},
+					"Spring" : {
+						"days" : ["Mon", "Wed", "Fri"],
+						"start" : 1250,
+						"end" : 1405
+					}
+				}
+			},
+			{
+				"id" : "CS107",
+				"name" : "Computer Organization and Systems",
+				"units" : {"min": 3, "max": 5},
+				"terms" : {
+					"Autumn" : {
+						"days" : ["Mon", "Fri"],
+						"start" : 1100,
+						"end" : 1215
+					},
+					"Winter" : {
+						"days" : ["Mon", "Wed", "Fri"],
+						"start" : 1000,
+						"end" : 1050
+					},
+					"Spring" : {
+						"days" : ["Mon", "Fri"],
+						"start" : 1100,
+						"end" : 1215
+					}
+				}
+			},
+			{
+				"id" : "CS109",
+				"name" : "Introduction to Probability for Computer Scientists",
+				"units" : {"min": 3, "max": 5},
+				"terms" : {
+					"Winter" : {
+						"days" : ["Mon", "Wed", "Fri"],
+						"start" : 1250,
+						"end" : 1405
+					},
+					"Spring" : {
+						"days" : ["Mon", "Wed", "Fri"],
+						"start" : 1250,
+						"end" : 1405
+					}
+				}
+			},
+			{
+				"id" : "CS110",
+				"name" : "Principles of Computer Systems",
+				"units" : {"min": 3, "max": 5},
+				"terms" : {
+					"Autumn" : {
+						"days" : ["Mon", "Wed", "Fri"],
+						"start" : 1100,
+						"end" : 1150
+					},
+					"Winter" : {
+						"days" : ["Mon", "Wed", "Fri"],
+						"start" : 1100,
+						"end" : 1150
+					},
+					"Spring" : {
+						"days" : ["Mon", "Wed", "Fri"],
+						"start" : 1000,
+						"end" : 1050
+					}
+				}
+			},
+			{
+				"id" : "CS161",
+				"name" : "Design and Analysis of Algorithms",
+				"units" : {"min": 3, "max": 5},
+				"terms" : {
+					"Autumn" : {
+						"days" : ["Tue", "Thu"],
+						"start" : 1100,
+						"end" : 1215
+					},
+					"Spring" : {
+						"days" : ["Mon", "Wed"],
+						"start" : 1615,
+						"end" : 1730
+					}
+				}
+			}
+	]
+}
