@@ -344,6 +344,15 @@ Constraint.prototype.isSatisfiedBy = function(courseOfferings) {
 	return result;
 };
 
+function Program(){
+	this.name = "";
+	this.breadthCourses = [];
+	this.depthCourses = [];
+	this.singleDepthReqs = [];
+	this.primaryDepthReqs = [];
+	this.secondaryDepthReqs = [];
+}
+
 
 var foundations = {
 	"required" : 5,
