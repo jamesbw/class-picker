@@ -1568,6 +1568,284 @@
         "courseOfferings": []
     },
     {
+        "id": "CS 103",
+        "name": "Mathematical Foundations of Computing",
+        "desc": "Mathematical foundations required for computer science, including propositional predicate logic, induction, sets, functions, and relations. Formal language theory, including regular expressions, grammars, finite automata, Turing machines, and NP-completeness. Mathematical rigor, proof techniques, and applications. May not be taken by students who have completed 103A,B or 103X. Prerequisite: 106A or equivalent.",
+        "units": {
+            "min": "3",
+            "max": "5"
+        },
+        "terms": [
+            {
+                "period": "Autumn",
+                "year": "2012-2013",
+                "id": "Autumn2012-2013"
+            },
+            {
+                "period": "Winter",
+                "year": "2012-2013",
+                "id": "Winter2012-2013"
+            },
+            {
+                "period": "Spring",
+                "year": "2012-2013",
+                "id": "Spring2012-2013"
+            }
+        ],
+        "courseOfferings": [
+            {
+                "term": {
+                    "period": "Autumn",
+                    "year": "2012-2013",
+                    "id": "Autumn2012-2013"
+                },
+                "days": [
+                    "Mon",
+                    "Wed",
+                    "Fri"
+                ],
+                "start": 1415,
+                "end": 1530
+            },
+            {
+                "term": {
+                    "period": "Winter",
+                    "year": "2012-2013",
+                    "id": "Winter2012-2013"
+                },
+                "days": [
+                    "Mon",
+                    "Wed",
+                    "Fri"
+                ],
+                "start": 1250,
+                "end": 1405
+            },
+            {
+                "term": {
+                    "period": "Spring",
+                    "year": "2012-2013",
+                    "id": "Spring2012-2013"
+                },
+                "days": [
+                    "Mon",
+                    "Wed",
+                    "Fri"
+                ],
+                "start": 1250,
+                "end": 1405
+            }
+        ]
+    },
+    {
+        "id": "CS 107",
+        "name": "Computer Organization and Systems",
+        "desc": "Introduction to the fundamental concepts of computer systems. Explores how computer systems execute programs and manipulate data, working from the C programming language down to the microprocessor. Topics covered include: the C programming language, data representation, machine-level code, computer arithmetic, elements of code compilation, memory organization and management, and performance evaluation and optimization. Prerequisites: 106B or X, or consent of instructor.",
+        "units": {
+            "min": "3",
+            "max": "5"
+        },
+        "terms": [
+            {
+                "period": "Autumn",
+                "year": "2012-2013",
+                "id": "Autumn2012-2013"
+            },
+            {
+                "period": "Winter",
+                "year": "2012-2013",
+                "id": "Winter2012-2013"
+            },
+            {
+                "period": "Spring",
+                "year": "2012-2013",
+                "id": "Spring2012-2013"
+            },
+            {
+                "period": "Summer",
+                "year": "2012-2013",
+                "id": "Summer2012-2013"
+            }
+        ],
+        "courseOfferings": [
+            {
+                "term": {
+                    "period": "Autumn",
+                    "year": "2012-2013",
+                    "id": "Autumn2012-2013"
+                },
+                "days": [
+                    "Mon",
+                    "Fri"
+                ],
+                "start": 1100,
+                "end": 1215
+            },
+            {
+                "term": {
+                    "period": "Winter",
+                    "year": "2012-2013",
+                    "id": "Winter2012-2013"
+                },
+                "days": [
+                    "Mon",
+                    "Wed",
+                    "Fri"
+                ],
+                "start": 1000,
+                "end": 1050
+            },
+            {
+                "term": {
+                    "period": "Spring",
+                    "year": "2012-2013",
+                    "id": "Spring2012-2013"
+                },
+                "days": [
+                    "Mon",
+                    "Fri"
+                ],
+                "start": 1100,
+                "end": 1215
+            },
+            {
+                "term": {
+                    "period": "Summer",
+                    "year": "2012-2013",
+                    "id": "Summer2012-2013"
+                },
+                "days": [
+                    "Mon",
+                    "Wed",
+                    "Fri"
+                ],
+                "start": 1100,
+                "end": 1215
+            }
+        ]
+    },
+    {
+        "id": "CS 109",
+        "name": "Introduction to Probability for Computer Scientists",
+        "desc": "Topics include: counting and combinatorics, random variables, conditional probability, independence, distributions, expectation, point estimation, and limit theorems. Applications of probability in computer science including machine learning and the use of probability in the analysis of algorithms. Prerequisites: 103, 106B or X, MATH 51 or equivalent.",
+        "units": {
+            "min": "3",
+            "max": "5"
+        },
+        "terms": [
+            {
+                "period": "Winter",
+                "year": "2012-2013",
+                "id": "Winter2012-2013"
+            },
+            {
+                "period": "Spring",
+                "year": "2012-2013",
+                "id": "Spring2012-2013"
+            }
+        ],
+        "courseOfferings": [
+            {
+                "term": {
+                    "period": "Winter",
+                    "year": "2012-2013",
+                    "id": "Winter2012-2013"
+                },
+                "days": [
+                    "Mon",
+                    "Wed",
+                    "Fri"
+                ],
+                "start": 1250,
+                "end": 1405
+            },
+            {
+                "term": {
+                    "period": "Spring",
+                    "year": "2012-2013",
+                    "id": "Spring2012-2013"
+                },
+                "days": [
+                    "Mon",
+                    "Wed",
+                    "Fri"
+                ],
+                "start": 1250,
+                "end": 1405
+            }
+        ]
+    },
+    {
+        "id": "CS 110",
+        "name": "Principles of Computer Systems",
+        "desc": "Principles and practice of engineering of computer software and hardware systems. Topics include: techniques for controlling complexity; strong modularity using client-server design, virtual memory, and threads; networks; atomicity and coordination of parallel activities; security, and encryption; and performance optimizations. Prerequisite: 107.",
+        "units": {
+            "min": "3",
+            "max": "5"
+        },
+        "terms": [
+            {
+                "period": "Autumn",
+                "year": "2012-2013",
+                "id": "Autumn2012-2013"
+            },
+            {
+                "period": "Winter",
+                "year": "2012-2013",
+                "id": "Winter2012-2013"
+            },
+            {
+                "period": "Spring",
+                "year": "2012-2013",
+                "id": "Spring2012-2013"
+            }
+        ],
+        "courseOfferings": [
+            {
+                "term": {
+                    "period": "Autumn",
+                    "year": "2012-2013",
+                    "id": "Autumn2012-2013"
+                },
+                "days": [
+                    "Mon",
+                    "Wed",
+                    "Fri"
+                ],
+                "start": 1100,
+                "end": 1150
+            },
+            {
+                "term": {
+                    "period": "Winter",
+                    "year": "2012-2013",
+                    "id": "Winter2012-2013"
+                },
+                "days": [
+                    "Mon",
+                    "Wed",
+                    "Fri"
+                ],
+                "start": 1100,
+                "end": 1150
+            },
+            {
+                "term": {
+                    "period": "Spring",
+                    "year": "2012-2013",
+                    "id": "Spring2012-2013"
+                },
+                "days": [
+                    "Mon",
+                    "Wed",
+                    "Fri"
+                ],
+                "start": 1000,
+                "end": 1050
+            }
+        ]
+    },
+    {
         "id": "CS 124",
         "name": "From Languages to Information (LINGUIST 180, LINGUIST 280)",
         "desc": "Automated processing of less structured information: human language text and speech, web pages, social networks, genome sequences, with goal of automatically extracting meaning and structure. Methods include: string algorithms, automata and transducers, hidden Markov models, graph algorithms, XML processing. Applications such as information retrieval, text classification, social network models, machine translation, genomic sequence alignment, word meaning extraction, and speech recognition. Prerequisite: CS103, CS107, CS109.",
