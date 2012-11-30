@@ -102,7 +102,6 @@ Course.prototype.canBePicked = function(scheduleList) {
 //Search filter
 Course.prototype.matches = function(filter) {
 	filter = filter || "";
-	console.log(filter);
 	var strippedFilter = filter.replace(/\s/g, '');
 	var strippedCourse = (this.id + this.name).replace(/\s/g, '');
 	return strippedCourse.match(strippedFilter);
@@ -847,6 +846,7 @@ Application.prototype.run = function() {
 	ui.renderTerms();
 	ui.renderConstraint();
 	ui.renderSearch();
+	ui.renderHeader();
 	
 };
 
@@ -926,6 +926,11 @@ var ui = {
 	renderSearch: function(){
 		var searchView = new ui.SearchView();
 		$('#search').html(searchView.render().el);
+	},
+
+	renderHeader: function(){
+		var headerView = new ui.HeaderView();
+		$('header').html(headerView.render().el);
 	},
 
 	Requirement: Backbone.Model.extend({
@@ -1237,6 +1242,37 @@ var ui = {
 			ui.renderCourses();
 		},
 
+	}),
+
+	HeaderView: Backbone.View.extend({
+		tagName: 'div',
+		className: 'header',
+		template: _.template("<div id='select-program-tab' class='header-tab'>Select your program</div>"
+							+"<div id='select-courses-tab' class='header-tab'>Select your courses</div>"
+							+"<div id='view-schedules-tab' class='header-tab'>View Schedules</div>"),
+
+		render: function(){
+			this.$el.html(this.template());
+			return this;
+		},
+
+		events: {
+			'click #select-program-tab': 'selectProgram',
+			'click #select-courses-tab': 'selectCourses',
+			'click #view-schedules-tab': 'viewSchedules',
+		},
+
+		selectProgram: function(){
+			console.log('clicked on select program tab')
+		},
+
+		selectCourses: function(){
+			console.log('clicked on select courses tab')
+		},
+
+		viewSchedules: function(){
+			console.log('clicked on view schedules tab')
+		},
 	})
 }
 
@@ -1248,6 +1284,5 @@ var app = new Application();
 app.start();
 
 /* TODO
-waivable not regexp on Depth: changed to SI
-search
+header
 */

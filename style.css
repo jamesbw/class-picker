@@ -1,5 +1,7 @@
-header {
-
+.header-tab {
+	display: inline-block;
+	width: 33%;
+	border: 1px solid black;
 }
 
 html {
