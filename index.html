@@ -1,10 +1,56 @@
+<!DOCTYPE html>
 <html>
 	<head>
-		<script src="./underscore-min.js"></script>
 		<script src="./jquery-1.8.2.min.js"></script>
+		<script src="./underscore-min.js"></script>
+		<script type="text/javascript" src='./backbone.js'></script>
 		<script src="./script.js"></script>
+		<link rel="stylesheet" type="text/css" href="./style.css">
 	</head>
 	<body>
-		Hello World!
+		<header> Header </header>
+		<section id="left_bar">Left bar
+			<ul id='req-list'></ul>
+		</section>
+		<section id="mid_section">
+			<div>Place course search here</div>
+			<table id='course-table'> </table>
+		</section>
+		<section id="right_bar">
+			<div id='terms'>
+				<div>Terms</div>
+				<ul id='term-list'></ul>
+			</div>
+			<div id='constraint'></div>
+		</section>
 	</body>
+	<script>
+		// $(function(){
+
+		// 	var Requirement = Backbone.Model.extend({
+		// 		name: 'default name'
+		// 	});
+
+		// 	var RequirementList = Backbone.Collection.extend({
+		// 		model: Requirement
+		// 	});
+
+		// 	var RequirementView = Backbone.View.extend({
+		// 		tagName: 'li',
+		// 		className: 'requirement',
+		// 		template: _.template("<span>HelloWorld<span><span class='req-name'><span>"),
+
+		// 		events: {
+		// 			"click": toggle,
+		// 			"click": console.log('clicked')
+		// 		},
+
+		// 		render: function(){
+		// 			this.$('.req-name').html(this.model.get('name'));
+		// 			return this;
+		// 		}
+		// 	});
+
+		// });
+	</script>
 </html>

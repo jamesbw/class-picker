@@ -1,0 +1,34 @@
+header {
+
+}
+
+html {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	width: 100%;
+}
+
+#left_bar {
+	width: 200px;
+	float: left;
+}
+
+#right_bar {
+	width: 200px;
+	float: right;
+}
+
+#mid_section {
+	float: left;
+	min-width: 400px;
+	max-width: 450px;
+}
+
+.activeReq {
+	background: gray;
+}
+
+section {
+	border: 1px solid black;
+}

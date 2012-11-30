@@ -76,6 +76,10 @@ function Course(id, name, desc, units, terms, courseOfferings) {
 	this.units = units;
 	this.terms = terms;
 	this.courseOfferings = courseOfferings;
+
+	this.pick = false;
+	this.alreadyTaken = false;
+	this.waived = false;
 }
 
 Course.prototype.getTerms = function() {
@@ -84,8 +88,8 @@ Course.prototype.getTerms = function() {
 
 
 Course.prototype.canBePicked = function(scheduleList) {
-	for (var i = scheduleList.length - 1; i >= 0; i--) {
-		var schedule = scheduleList[i];
+	for (var i = scheduleList.schedules.length - 1; i >= 0; i--) {
+		var schedule = scheduleList.schedules[i];
 		for (var j = this.courseOfferings.length - 1; j >= 0; j--) {
 			var courseOffering = this.courseOfferings[j];
 			if (courseOffering.fitsIn(schedule))
@@ -100,24 +104,24 @@ Schedule.prototype.canAddCourseOffering = function(newCourseOffering) {
 	var termID = newCourseOffering.term.id
 
 	if (!_.contains(this.getTermIDs(), termID)) {
-		console.log("Course offering is for a term that's not chosen")
+		// console.log("Course offering is for a term that's not chosen")
 		return false;
 	};
 	for (var i = this.courses[termID].length - 1; i >= 0; i--) {
 		if(this.courses[termID][i].conflictsWith(newCourseOffering)) {
-			console.log("conflict")
+			// console.log("conflict")
 			return false;
 		};
 	};
-	console.log("no conflict")
+	// console.log("no conflict")
 
 
 	if(this.constraint && !this.constraint.isSatisfiedBy(this.courses[termID].concat([newCourseOffering]))) {
-		console.log("constraint not satisfied");
+		// console.log("constraint not satisfied");
 		return false;
 	}
 
-	console.log("no constraints violated")
+	// console.log("no constraints violated")
 	return true;
 };
 
@@ -148,7 +152,7 @@ Schedule.prototype.getTermIDs = function() {
 };
 
 
-Schedule.prototype.fulfills = function(unitRequirement, alreadyTaken) {
+Schedule.prototype.getFulfilledUnits = function(unitRequirement) {
 
 	var requiredIds = unitRequirement.courseList.map(function(course){return course.id});
 
@@ -159,10 +163,6 @@ Schedule.prototype.fulfills = function(unitRequirement, alreadyTaken) {
 
 	var unitsTowardsReq = 0;
 
-	//add in the units for courses already taken
-	alreadyTaken.filter(function(c){ return _.contains(requiredIds, c.course.id)})
-		.forEach(function(c){unitsTowardsReq += c.units});
-
 	var termIDs = this.getTermIDs();
 
 	for (var i = termIDs.length - 1; i >= 0; i--) {
@@ -170,25 +170,27 @@ Schedule.prototype.fulfills = function(unitRequirement, alreadyTaken) {
 		var courseOfferings = this.courses[termID];
 		var units = {};
 		var unitsLeft = maxUnitsPerTerm || 24;
-		for (var i = courseOfferings.length - 1; i >= 0; i--) {
-			var courseOffering = courseOfferings[i];
-			units[courseOffering] = courseOffering.units.min;
-			unitsLeft -= units[courseOffering];
+		for (var k = courseOfferings.length - 1; k >= 0; k--) {
+			var courseOffering = courseOfferings[k];
+			units[courseOffering.id] = courseOffering.units.min;
+			unitsLeft -= units[courseOffering.id];
 		};
-		for (var i = courseOfferings.length - 1; i >= 0; i--) {
-			var courseOffering = courseOfferings[i];
+		for (var j = courseOfferings.length - 1; j >= 0; j--) {
+			var courseOffering = courseOfferings[j];
 			if (_.contains(requiredIds, courseOffering.id)) {
 				var addedUnits = Math.min(courseOffering.units.max - courseOffering.units.min, unitsLeft);
-				units[courseOffering] += addedUnits;
-				unitsTowardsReq += units[courseOffering];
+				units[courseOffering.id] += addedUnits;
+				unitsTowardsReq += units[courseOffering.id];
 				unitsLeft -= addedUnits;
 			};
 		};
 	};
 
-	return unitsTowardsReq >= unitRequirement.requiredUnitCount;
+	return unitsTowardsReq ;
+};
 
-
+Schedule.prototype.fulfills = function(unitRequirement) {
+	return this.getFulfilledUnits(unitRequirement) >= unitRequirement.requiredUnitCount;
 };
 
 function ScheduleList(courses, terms, constraint){
@@ -248,23 +250,38 @@ ScheduleList.prototype.getCourses = function() {
 	return this.courses;
 };
 
+//this also updates the fulfilled field in requirement
 ScheduleList.prototype.fulfills = function(requirement) {
 	switch (requirement.constructor.name){
 
 		case "CourseRequirement":
-			if(_.intersection(this.courses, requirement.courseList).length < requirement.requiredCourseCount)
+			if (this.getScheduleCount() > 0){
+				requirement.fulfilled = _.intersection(this.courses, requirement.courseList).length;
+			}
+			else{
+				requirement.fulfilled = 0;
+			}
+			if( requirement.fulfilled < requirement.requiredCourseCount)
 				return false;
 			else
 				return this.getScheduleCount() > 0;
 			break;
 
 		case "UnitRequirement":
+			requirement.fulfilled = 0;
 			for (var i = this.schedules.length - 1; i >= 0; i--) {
 				var schedule = this.schedules[i];
-				if (schedule.fulfills(requirement))
-					return true;
+				var fulfilled = schedule.getFulfilledUnits(requirement);
+				if(fulfilled > requirement.fulfilled){
+					requirement.fulfilled = fulfilled;
+				}
 			};
-			return false;
+			if (requirement.fulfilled >= requirement.requiredUnitCount){
+				return true;
+			}
+			else{
+				return false;
+			}
 			break;
 
 		default:
@@ -290,7 +307,7 @@ ScheduleList.prototype.removeTerm = function(term) {
 		console.log("Cannot remove term that's not in list");
 	}
 	else {
-		this.terms.splice(index);
+		this.terms = _.without(this.terms, this.terms[index]);
 		this.recalculate();
 	}
 };
@@ -326,7 +343,9 @@ function Requirement(name, courseCount, unitCount, courseList){
 	this.name = name;
 	this.requiredCourseCount = courseCount || 0;
 	this.requiredUnitCount = unitCount || 0;
+	this.required = this.requiredCourseCount || this.requiredUnitCount;
 	this.courseList = courseList;
+	this.fulfilled = 0;
 }
 
 function CourseRequirement(name, courseCount, courseList){
@@ -339,7 +358,7 @@ function UnitRequirement(name, unitCount, courseList){
 
 CourseRequirement.prototype.adjusted = function(waivedCourses, alreadyTakenCourses) {
 	//may want to amke waive/no-waive a type in the requirement
-	var allowsWaive = ! this.name.match(/Depth/);
+	var allowsWaive = ! this.name.match(/Significant Implementation/);
 
 	var courseIDs = this.courseList.get('id');
 	var alreadyTakenCourseIDs = alreadyTakenCourses.get('course').get('id');
@@ -364,31 +383,50 @@ UnitRequirement.prototype.adjusted = function(waivedCourses, alreadyTakenCourses
 	return new UnitRequirement(this.name, this.requiredUnitCount - alreadyTakenUnits, this.courseList);
 };
 
+CourseRequirement.prototype.progressText = function() {
+	return this.fulfilled + " of " + this.required + " courses";
+};
 
-function Constraint(maxUnitsPerTerm, maxDaysPerTerm){
+UnitRequirement.prototype.progressText = function() {
+	return this.fulfilled + " of " + this.required + " units";
+};
+
+CourseRequirement.prototype.instructions = function() {
+	return "Select " + this.required + " courses from the following list:";
+};
+
+UnitRequirement.prototype.instructions = function() {
+	return "Select " + this.required + " units from the following list:";
+};
+
+
+function Constraint(maxUnitsPerTerm, maxDaysPerTerm, allowedDays){
 	this.maxUnitsPerTerm = maxUnitsPerTerm || 18;
 	this.maxDaysPerTerm = maxDaysPerTerm || 5;
+	this.allowedDays = allowedDays || ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
 }
 
 Constraint.prototype.isSatisfiedBy = function(courseOfferings) {
 	var result = true;
 
 	if (this.maxUnitsPerTerm > 0) {
-		var minSum = 0
+		var minSum = 0;
 		for (var i = courseOfferings.length - 1; i >= 0; i--) {
 			minSum += courseOfferings[i].units.min;
 		};
-		console.log(minSum)
 		result = result && (minSum <= this.maxUnitsPerTerm);
 	};
 
-	if (this.maxDaysPerTerm < 5) {
+	if (this.maxDaysPerTerm < 5 || this.allowedDays.length < 5) {
 		var unionDays = [];
 		for (var i = courseOfferings.length - 1; i >= 0; i--) {
 			unionDays = _.union(unionDays, courseOfferings[i].days);
 		};
-		result = result && (unionDays.length <= maxDaysPerTerm);
+		result = result && (unionDays.length <= this.maxDaysPerTerm);
+
+		result = result && (_.difference(unionDays, this.allowedDays).length === 0);
 	};
+
 	return result;
 };
 
@@ -422,7 +460,7 @@ function Application(){
 	
 };
 
-Application.prototype.init = function(callback) {
+Application.prototype.start = function() {
 	console.log("Loading");
 
 	this.initCourses(function(){
@@ -430,7 +468,7 @@ Application.prototype.init = function(callback) {
 			this.initScheduleList(function(){
 				console.log("Done Loading");
 				this.loaded = true;
-				this.start();
+				this.run();
 			});
 		});
 	});
@@ -553,15 +591,6 @@ Application.prototype.initPrograms = function(callback) {
 	});
 };
 
-Application.prototype.start = function() {
-	//TODO start application
-	if (!this.loaded) {
-		console.log("Error: data not loaded");
-	};
-	console.log("Application starting!");
-};
-
-
 Application.prototype.initScheduleList = function (callback){
 	this.scheduleList = new ScheduleList([], [], undefined);
 	if (callback) {
@@ -632,7 +661,7 @@ Application.prototype.removeCourse = function(course) {
 };
 
 Application.prototype.getCourses = function() {
-	this.scheduleList.getCourses();
+	return this.scheduleList.getCourses();
 };
 
 Application.prototype.setCourses = function(courses) {
@@ -660,6 +689,15 @@ Application.prototype.addWaivedCourse = function(course) {
 	}
 };
 
+Application.prototype.removeWaivedCourse = function(course) {
+	if(!_.contains(this.waivedCourses, course)){
+		console.log("Error: Course not found in waived courses: " + course.id);
+	}
+	else{
+		this.waivedCourses = _.without(this.waivedCourses, course);
+	}
+};
+
 Application.prototype.addWaivedCourseByID = function(id) {
 	var course = _.find(this.allCourses, function(c){return c.id === id});
 	if (course) {
@@ -677,6 +715,16 @@ Application.prototype.setAlreadyTakenCourses = function(courses) {
 
 Application.prototype.getAlreadyTakenCourses = function() {
 	return this.alreadyTakenCourses;
+};
+
+Application.prototype.getAlreadyTakenUnits = function(course) {
+	var alreadyTakenCourse = _.find(this.alreadyTakenCourses, function(c){return c.course === course});
+	return alreadyTakenCourse.units;
+};
+
+Application.prototype.setAlreadyTakenUnits = function(course, units) {
+	var alreadyTakenCourse = _.find(this.alreadyTakenCourses, function(c){return c.course === course});
+	alreadyTakenCourse.units = units;
 };
 
 Application.prototype.addAlreadyTakenCourse = function(course, units) {
@@ -698,9 +746,21 @@ Application.prototype.addAlreadyTakenCourseByID = function(id, units) {
 	}
 };
 
+Application.prototype.removeAlreadyTakenCourse = function(course) {
+	var alreadyTakenCourse = _.find(this.alreadyTakenCourses, function(c){return c.course === course});
+	if(! alreadyTakenCourse){
+		console.log("Error: course not marked as already taken");
+	}
+	else{
+		this.alreadyTakenCourses = _.without(this.alreadyTakenCourses, alreadyTakenCourse);
+	}
+};
+
 Application.prototype.fulfills = function(requirement) {
 	var adjustedRequirement = requirement.adjusted(this.waivedCourses, this.alreadyTakenCourses);
-	return this.scheduleList.fulfills(adjustedRequirement);
+	var res = this.scheduleList.fulfills(adjustedRequirement);
+	requirement.fulfilled = adjustedRequirement.fulfilled + requirement.required - adjustedRequirement.required;
+	return res;
 };
 
 
@@ -712,6 +772,19 @@ function SingleDepthSpecialization(program) {
 SingleDepthSpecialization.prototype.getRequirements = function() {
 	return this.singleDepth.singleDepthReqs;
 };
+
+SingleDepthSpecialization.prototype.getBreadthRequirement = function() {
+	return this.singleDepth.singleDepthReqs.filter(function(req){
+		return req.name === 'Breadth';
+	})[0];
+};
+
+SingleDepthSpecialization.prototype.getDepthRequirements = function() {
+	return this.singleDepth.singleDepthReqs.filter(function(req){
+		return req.name !== 'Breadth';
+	});
+};
+
 
 SingleDepthSpecialization.prototype.getFulfilledRequirements = function(scheduleList) {
 	return this.getRequirements().filter(function(req){
@@ -744,484 +817,396 @@ Application.prototype.getSchedulesMeetingReqs = function() {
 	});
 };
 
+Application.prototype.run = function() {
 
-//TODO:
-//overlapping requirements
-//at most ten units from foundations
-//tests
+	if (!this.loaded) {
+		console.log("Error: data not loaded");
+		return;
+	};
+	console.log("Application starting!");
 
-var foundations = {
-	"required" : 5,
-	"courses" : [
-		{
-				"id" : "CS103",
-				"name" : "Mathematical Foundations of Computing",
-				"units" : {"min": 3, "max": 5},
-				"terms" : {
-					"Autumn" : {
-						"days" : ["Mon", "Wed", "Fri"],
-						"start" : 1415,
-						"end" : 1530
-					},
-					"Winter" : {
-						"days" : ["Mon", "Wed", "Fri"],
-						"start" : 1250,
-						"end" : 1405
-					},
-					"Spring" : {
-						"days" : ["Mon", "Wed", "Fri"],
-						"start" : 1250,
-						"end" : 1405
-					}
-				}
-			},
-			{
-				"id" : "CS107",
-				"name" : "Computer Organization and Systems",
-				"units" : {"min": 3, "max": 5},
-				"terms" : {
-					"Autumn" : {
-						"days" : ["Mon", "Fri"],
-						"start" : 1100,
-						"end" : 1215
-					},
-					"Winter" : {
-						"days" : ["Mon", "Wed", "Fri"],
-						"start" : 1000,
-						"end" : 1050
-					},
-					"Spring" : {
-						"days" : ["Mon", "Fri"],
-						"start" : 1100,
-						"end" : 1215
-					}
-				}
-			},
-			{
-				"id" : "CS109",
-				"name" : "Introduction to Probability for Computer Scientists",
-				"units" : {"min": 3, "max": 5},
-				"terms" : {
-					"Winter" : {
-						"days" : ["Mon", "Wed", "Fri"],
-						"start" : 1250,
-						"end" : 1415
-					},
-					"Spring" : {
-						"days" : ["Mon", "Wed", "Fri"],
-						"start" : 1250,
-						"end" : 1415
-					}
-				}
-			},
-			{
-				"id" : "CS110",
-				"name" : "Principles of Computer Systems",
-				"units" : {"min": 3, "max": 5},
-				"terms" : {
-					"Autumn" : {
-						"days" : ["Mon", "Wed", "Fri"],
-						"start" : 1100,
-						"end" : 1150
-					},
-					"Winter" : {
-						"days" : ["Mon", "Wed", "Fri"],
-						"start" : 1100,
-						"end" : 1150
-					},
-					"Spring" : {
-						"days" : ["Mon", "Wed", "Fri"],
-						"start" : 1000,
-						"end" : 1050
-					}
-				}
-			},
-			{
-				"id" : "CS161",
-				"name" : "Design and Analysis of Algorithms",
-				"units" : {"min": 3, "max": 5},
-				"terms" : {
-					"Autumn" : {
-						"days" : ["Tue", "Thu"],
-						"start" : 1100,
-						"end" : 1215
-					},
-					"Spring" : {
-						"days" : ["Mon", "Wed"],
-						"start" : 1615,
-						"end" : 1730
-					}
-				}
-			}
-	]
-}
 
-var computer_sec_reqs = {
-	"A": {
-		"required" : 5,
-		"courses" : [
-			{
-				"id" : "CS140",
-				"name" : "Operating Systems and Systems Programming",
-				"units" : {"min": 3, "max": 4},
-				"terms" : {
-					"Autumn" : {
-						"days" : ["Mon", "Wed"],
-						"start" : 1415,
-						"end" : 1530
-					},
-					"Winter" : {
-						"days" : ["Mon", "Wed", "Fri"],
-						"start" : 1000,
-						"end" : 1050
-					}
-				}
-			},
-			{
-				"id" : "CS144",
-				"name" : "Introduction to Computer Networking",
-				"units" : {"min": 3, "max": 4},
-				"terms" : {
-					"Autumn" : {
-						"days" : ["Tue", "Thu"],
-						"start" : 1615,
-						"end" : 1730
-					}
-				}
-			},
-			{
-				"id" : "CS155",
-				"name" : "Computer and Network Security",
-				"units" : {"min": 3, "max": 3},
-				"terms" : {
-					"Spring" : {
-						"days" : ["Tue", "Thu"],
-						"start" : 1415,
-						"end" : 1530
-					}
-				}
-			},
-			{
-				"id" : "CS244",
-				"name" : "Advanced Topics in Networking",
-				"units" : {"min": 3, "max": 4},
-				"terms" : {
-					"Winter" : {
-						"days" : ["Mon", "Wed"],
-						"start" : 1415,
-						"end" : 1530
-					}
-				}
-			},
-			{
-				"id" : "CS255",
-				"name" : "Introduction to Cryptography",
-				"units" : {"min": 3, "max": 3},
-				"terms" : {
-					"Winter" : {
-						"days" : ["Mon", "Wed"],
-						"start" : 1415,
-						"end" : 1530
-					}
-				}
-			}
-		]		
+	var constraint = new Constraint(10, 3);
+	this.setConstraint(constraint);
+	this.setSpecialization(new SingleDepthSpecialization(this.getPrograms()[0]));
+
+	ui.app = this;
+	ui.activeRequirement = this.totalUnitRequirement;
+
+	ui.renderRequirements();
+	ui.renderCourses();
+	ui.renderTerms();
+	ui.renderConstraint();
+	
+};
+
+var ui = {
+
+	terms: [ new Term('Autumn', '2012-2013'), new Term('Winter', '2012-2013'), new Term('Spring', '2012-2013'),
+				  new Term('Autumn', '2013-2014'), new Term('Winter', '2013-2014'), new Term('Spring', '2013-2014')],
+
+	app: null,
+	activeRequirement: null, //selected requirement in UI
+
+	updateRequirements: function(){
+		ui.app.getRequirements().forEach(function(req){
+			ui.app.fulfills(req);
+		});
 	},
 
-	"B" : {
-		"required" : 3,
-		"courses" : [
-			{
-				"id" : "CS142",
-				"name" : "Web Applications",
-				"units" : {"min": 3, "max": 3},
-				"terms" : {
-					"Spring" : {
-						"days" : ["Mon", "Wed", "Fri"],
-						"start" : 1100,
-						"end" : 1150
-					}
-				}
-			},
-			{
-				"id" : "CS240",
-				"name" : "Advanced Topics in Operating Systems",
-				"units" : {"min": 3, "max": 3},
-				"terms" : {
-					"Winter" : {
-						"days" : ["Mon", "Wed"],
-						"start" : 1615,
-						"end" : 1730
-					},
-					"Spring" : {
-						"days" : ["Tue", "Thu"],
-						"start" : 1615,
-						"end" : 1730
-					}
-				}
-			},
-			{
-				"id" : "CS241",
-				"name" : "Secure Web Programming",
-				"units" : {"min": 3, "max": 3},
-				"terms" : {}
-			},
-			{
-				"id" : "CS244B",
-				"name" : "Distributed Systems",
-				"units" : {"min": 3, "max": 3},
-				"terms" : {
-					"Spring" : {
-						"days" : ["Tue", "Thu"],
-						"start" : 1100,
-						"end" : 1215
-					}
-				}
-			},
-			{
-				"id" : "CS244C",
-				"name" : "Readings and Projects in Distributed Systems",
-				"units" : {"min": 3, "max": 6},
-				"terms" : {}
-			},
-			{
-				"id" : "CS259",
-				"name" : "Security Analysis of Network Protocols",
-				"units" : {"min": 3, "max": 3},
-				"terms" : {
-					"Winter" : {
-						"days" : ["Mon", "Wed"],
-						"start" : 1250,
-						"end" : 1405
-					}
-				}
-			},
-			{
-				"id" : "CS261",
-				"name" : "Optimization and Algorithmic Paradigms",
-				"units" : {"min": 3, "max": 3},
-				"terms" : {
-					"Winter" : {
-						"days" : ["Tue", "Thu"],
-						"start" : 1415,
-						"end" : 1530
-					}
-				}
-			},
-			{
-				"id" : "CS344",
-				"name" : "Topics in Computer Networks",
-				"units" : {"min": 3, "max": 3},
-				"terms" : {}
-			},
-			{
-				"id" : "CS355",
-				"name" : "Advanced Topics in Cryptography",
-				"units" : {"min": 3, "max": 3},
-				"terms" : {}
-			},
-			{
-				"id" : "CS365",
-				"name" : "Randomized Algorithms",
-				"units" : {"min": 3, "max": 3},
-				"terms" : {
-					"Winter" : {
-						"days" : ["Tue", "Thu"],
-						"start" : 1100,
-						"end" : 1215
-					}
-				}
-			}
-		]
+	renderRequirements: function(){
+		$('#req-list li').remove();
+
+		//overview
+		var overviewReqView = new ui.RequirementView({requirement: app.totalUnitRequirement, label: 'Overview', indent: 0});
+		$('#req-list').append(overviewReqView.render().el);
+
+		//Foundations
+		var foundationsReqView = new ui.RequirementView({requirement: app.foundationsRequirement, label: 'Foundations', indent: 1});
+		$('#req-list').append(foundationsReqView.render().el);
+
+		//SI
+		var significantImplementationReqView = new ui.RequirementView({requirement: app.significantImplementationRequirement, label: 'Significant Implementation', indent: 1});
+		$('#req-list').append(significantImplementationReqView.render().el);
+
+		//Depth
+		var depthReqs = ui.app.getSpecialization().getDepthRequirements();
+		var summaryReq = depthReqs[depthReqs.length -1];
+		var depthReqView = new ui.RequirementView({requirement: summaryReq, label: 'Depth', indent: 1});
+		$('#req-list').append(depthReqView.render().el);
+
+		depthReqs.forEach(function(req){
+			var reqView = new ui.RequirementView({requirement: req, label: req.name, indent: 2});
+			$('#req-list').append(reqView.render().el);
+		});
+
+		//Breadth
+		var breadthReqView = new ui.RequirementView({requirement: ui.app.getSpecialization().getBreadthRequirement(), label: 'Breadth', indent: 1});
+		$('#req-list').append(breadthReqView.render().el);
+
+		//Electives
+		var electivesReqView = new ui.RequirementView({requirement: app.totalUnitRequirement, label: 'Electives'});
+		$('#req-list').append(electivesReqView.render().el);
 	},
 
-	"C": {
-		"required": 0,
-		"courses" : [
-			{
-				"id" : "CS244E",
-				"name" : "Networked Wireless Systems",
-				"units" : {"min": 3, "max": 3},
-				"terms" : {}
-			},
-			{
-				"id" : "CS245",
-				"name" : "Database Systems Principles",
-				"units" : {"min": 3, "max": 3},
-				"terms" : {
-					"Winter" : {
-						"days" : ["Tue", "Thu"],
-						"start" : 1250,
-						"end" : 1405
-					}
-				}
-			},
-			{
-				"id" : "CS294S",
-				"name" : "Research Project in Software Systems and Security",
-				"units" : {"min": 3, "max": 3},
-				"terms" : {
-					"Spring" : {
-						"days" : ["Mon", "Wed"],
-						"start" : 1100,
-						"end" : 1215
-					}
-				}
-			},
-			{
-				"id" : "CS295",
-				"name" : "Software Engineering",
-				"units" : {"min": 2, "max": 3},
-				"terms" : {}
-			},
-			{
-				"id" : "CS341",
-				"name" : "Project in Mining Massive Data Sets",
-				"units" : {"min": 3, "max": 3},
-				"terms" : {
-					"Spring" : {
-						"days" : ["Tue", "Thu"],
-						"start" : 1615,
-						"end" : 1730
-					}
-				}
-			},
-			{
-				"id" : "CS344B",
-				"name" : "Advanced Topics in Distributed Systems",
-				"units" : [2],
-				"terms" : {}
-			},
-			{
-				"id" : "CS345",
-				"name" : "Advanced Topics in Database Systems",
-				"units" : {"min": 3, "max": 3},
-				"terms" : {}
-			},
-			{
-				"id" : "CS347",
-				"name" : "Parallel and Distributed Data Management",
-				"units" : {"min": 3, "max": 3},
-				"terms" : {
-					"Spring" : {
-						"days" : ["Mon", "Wed"],
-						"start" : 1250,
-						"end" : 1405
-					}
-				}
-			},
-			{
-				"id" : "CS361A",
-				"name" : "Advanced Algorithms",
-				"units" : {"min": 3, "max": 3},
-				"terms" : {}
-			},
-			{
-				"id" : "EE384A",
-				"name" : "Internet Routing Protocols and Standards",
-				"units" : {"min": 3, "max": 3},
-				"terms" : {
-					"Winter" : {
-						"days" : ["Tue", "Thu"],
-						"start" : 930,
-						"end" : 1045
-					}
-				}
-			},
-			{
-				"id" : "EE384C",
-				"name" : "Wireless Local and Wide Area Networks",
-				"units" : {"min": 3, "max": 3},
-				"terms" : {
-					"Spring" : {
-						"days" : ["Tue", "Thu"],
-						"start" : 930,
-						"end" : 1045
-					}
-				}
-			},
-			{
-				"id" : "EE384M",
-				"name" : "Network Science",
-				"units" : {"min": 3, "max": 3},
-				"terms" : {}
-			},
-			{
-				"id" : "EE384S",
-				"name" : "Performance Engineering of Computer Systems & Networks",
-				"units" : {"min": 3, "max": 3},
-				"terms" : {
-					"Spring" : {
-						"days" : ["Mon", "Wed"],
-						"start" : 1100,
-						"end" : 1215
-					}
-				}
-			},
-			{
-				"id" : "EE384X",
-				"name" : "Packet Switch Architectures",
-				"units" : {"min": 3, "max": 3},
-				"terms" : {}
+	renderCourses: function(){
+		$('#course-table tr').remove();
+		$('#course-table').append('<tr><td colspan="4">' + ui.activeRequirement.instructions()+ '</td></tr>')
+		ui.activeRequirement.courseList.forEach(function(course){
+			var courseView = new ui.CourseView({course: course});
+			$('#course-table').append(courseView.render().el);
+		})
+	},
+
+	renderTerms: function(){
+		ui.terms.forEach(function(term){
+			var termView = new ui.TermView({term: term});
+			$('#term-list').append(termView.render().el);
+		});
+	},
+
+	renderConstraint: function(){
+		var constraintView = new ui.ConstraintView();
+		$('#constraint').append(constraintView.render().el);
+	},
+
+	Requirement: Backbone.Model.extend({
+		name: 'default name'
+	}),
+
+	RequirementList: Backbone.Collection.extend({
+		model: Requirement
+	}),
+
+	RequirementView: Backbone.View.extend({
+
+		defaults: {
+			label: "Default Label"
+		},
+
+		initialize: function(){
+			this.label = this.options.label;
+			this.requirement = this.options.requirement;
+			this.indent = this.options.indent;
+		},
+
+		label: null,
+		requirement: null,
+
+
+		tagName: 'li',
+		className: 'requirement',
+		template: _.template("<ul><li class='req-label'></li><li class='progress-text'></li><li class='progress-bar'><meter min='0'></meter></li></ul>"),
+
+		activate: function(){
+			console.log('activate');
+			ui.activeRequirement = this.requirement;
+			ui.renderRequirements();
+			ui.renderCourses();
+		},
+
+		events: {
+			"click": "activate",
+		},
+
+
+		render: function(){
+			this.$el.html(this.template());
+			this.$el.toggleClass('activeReq', this.requirement === ui.activeRequirement);
+			this.$('.req-label').html(this.label);
+			this.$('.progress-text').html(this.requirement.progressText());
+			this.$('meter').attr('max', this.requirement.required)
+						   .attr('value', this.requirement.fulfilled);
+			this.$('ul').css('padding-left', (this.indent * 20 + 20) + 'px');
+			return this;
+		}
+	}),
+
+	CourseView: Backbone.View.extend({
+		initialize: function(){
+			this.course = this.options.course;
+		},
+
+		tagName: 'tr',
+		className: 'course',
+		template: _.template("<td class='course-id'></td>"
+							+"<td class='course-name'></td>"
+							+"<td class='course-units'></td>"
+							+"<td><ul>"
+							+"<li><input type='checkbox' class='course-pick'>Pick</input></li>"
+							+"<li><input type='checkbox' class='course-waive'>Waive</input></li>"
+							+"<li><input type='checkbox' class='course-alreadyTaken'>Already taken <span class='unit-option' style='display:none'>for <input type='number' class='alreadyTaken-units' value='3'/> units </span></input></li>"
+							+"</ul></td>"
+							),
+
+		events: {
+			'click .course-waive' : 'toggleWaive',
+			'click .course-alreadyTaken': 'toggleAlreadyTaken',
+			'click .course-pick': 'togglePick',
+			'input .alreadyTaken-units': 'updateTakenUnits'
+		},
+
+		toggleWaive: function(){
+			console.log('waive')
+			if (this.course.waived) {
+				this.course.waived = false;
+				ui.app.removeWaivedCourse(this.course);
 			}
-		]
-	}
+			else{
+				this.course.waived = true;
+				ui.app.addWaivedCourse(this.course);
+
+				if(this.course.pick){
+					this.course.pick = false;
+					this.$('.course-pick').attr('checked', false);
+					ui.app.removeCourse(this.course);
+				};
+				if (this.course.alreadyTaken) {
+					this.course.alreadyTaken = false;
+					this.$('.course-alreadyTaken').attr('checked', false);
+					this.$('.unit-option').hide();
+					ui.app.removeAlreadyTakenCourse(this.course);
+				};
+			}
+			ui.updateRequirements();
+			ui.renderRequirements();
+			ui.renderCourses();
+		},
+
+		toggleAlreadyTaken: function(){
+			console.log('already taken')
+			if (this.course.alreadyTaken) {
+				this.course.alreadyTaken = false;
+				this.$('.unit-option').hide();
+				ui.app.removeAlreadyTakenCourse(this.course);
+			}
+			else{
+				this.course.alreadyTaken = true;
+				this.$('.unit-option').show();
+
+				ui.app.addAlreadyTakenCourse(this.course, parseInt(this.$('.alreadyTaken-units').val(),10));
+
+				if(this.course.pick){
+					this.course.pick = false;
+					this.$('.course-pick').attr('checked', false);
+					ui.app.removeCourse(this.course);
+				};
+				if(this.course.waived){
+					this.course.waived = false;
+					this.$('.course-waive').attr('checked', false);
+					ui.app.removeWaivedCourse(this.course);
+				};
+			}
+			ui.updateRequirements();
+			ui.renderRequirements();
+			ui.renderCourses();
+		},
+
+		togglePick: function(){
+			if (this.course.pick) {
+				this.course.pick = false;
+				ui.app.removeCourse(this.course);
+			}
+			else{
+				this.course.pick = true;
+				ui.app.addCourse(this.course);
+
+				if (this.course.alreadyTaken) {
+					this.course.alreadyTaken = false;
+					this.$('.course-alreadyTaken').attr('checked', false);
+					this.$('.unit-option').hide();
+					ui.app.removeAlreadyTakenCourse(this.course);
+				};
+				if(this.course.waived){
+					this.course.waived = false;
+					this.$('.course-waive').attr('checked', false);
+					ui.app.removeWaivedCourse(this.course);
+				};
+			}
+
+			ui.updateRequirements();
+			ui.renderRequirements();
+			ui.renderCourses();
+		},
+
+		updateTakenUnits: function(){
+			console.log('update units')
+			ui.app.setAlreadyTakenUnits(this.course, parseInt(this.$('.alreadyTaken-units').val(),10));
+
+			ui.updateRequirements();
+			ui.renderRequirements();
+			ui.renderCourses();
+		},
+
+		render: function(){
+			this.$el.html(this.template());
+			this.$('.course-id').html(this.course.id);
+			this.$('.course-name').html(this.course.name);
+			this.$('.course-units').html(this.course.units.min + '-' + this.course.units.max);
+			this.$('.course-pick').prop('checked',this.course.pick);
+			this.$('.course-waive').prop('checked',this.course.waived);
+			this.$('.course-alreadyTaken').prop('checked',this.course.alreadyTaken);
+			this.$('.unit-option').toggle(this.course.alreadyTaken);
+			if(this.course.alreadyTaken){
+				this.$('.alreadyTaken-units').val(ui.app.getAlreadyTakenUnits(this.course));
+			}
+
+			if (!(this.course.pick || this.course.alreadyTaken || this.course.waived)
+				&& !ui.app.canPick(this.course))
+			{
+				this.$('.course-pick').prop('disabled',true);
+				this.$('.course-waive').prop('disabled',true);
+				this.$('.course-alreadyTaken').prop('disabled',true);
+			}
+
+			return this;
+		}
+
+	}),
+
+	TermView: Backbone.View.extend({
+		initialize: function(){
+			this.term = this.options.term;
+		},
+
+		tagName: 'li',
+		className: 'term',
+		template: _.template("<li><input class='term-pick' type='checkbox'/><span class='term-name'><span></li>"),
+
+		render: function(){
+			this.$el.html(this.template());
+			this.$('.term-name').html(this.term.period + " " + this.term.year);
+			return this;
+		},
+
+		events: {
+			'click .term-pick' : 'toggleTerm',
+		},
+
+		toggleTerm: function(){
+			if (this.$('.term-pick').prop('checked')) {
+				ui.app.addTerm(this.term);
+			}
+			else{
+				ui.app.removeTerm(this.term);
+			}
+			ui.updateRequirements();
+			ui.renderRequirements();
+			ui.renderCourses();
+		}
+
+	}),
+
+	ConstraintView: Backbone.View.extend({
+
+		tagName: 'span',
+		className: 'constraint',
+		template: _.template("<div class='constraint-units'>Max units per term: <input type='number' value='10' id='constraint-units-selector'/></div><div class='constraint-days'>Max days per term: <input type='number' value='3' id='constraint-numdays-selector'/></div>" 
+							 +"<div>Days Allowed</div>"
+							 +"<ul>"
+							 +"<li><input type='checkbox' class='day-checkbox' value='Mon' checked>Monday</input></li>"
+							 +"<li><input type='checkbox' class='day-checkbox' value='Tue' checked>Tuesday</input></li>"
+							 +"<li><input type='checkbox' class='day-checkbox' value='Wed' checked>Wednesday</input></li>"
+							 +"<li><input type='checkbox' class='day-checkbox' value='Thu' checked>Thursday</input></li>"
+							 +"<li><input type='checkbox' class='day-checkbox' value='Fri' checked>Friday</input></li>"
+							 +"</ul>"),
+
+		render: function(){
+			this.$el.html(this.template());
+			this.$('#constraint-units-selector').attr('value', ui.app.getConstraint().maxUnitsPerTerm)
+			this.$('#constraint-numdays-selector').attr('value', ui.app.getConstraint().maxDaysPerTerm);
+			return this;
+		},
+
+		events: {
+			'input #constraint-units-selector' : 'changeUnits',
+			'input #constraint-numdays-selector' : 'changeNumDays',
+			'click .day-checkbox': 'changeDays'
+		},
+
+		changeUnits: function(){
+			var constraint = ui.app.getConstraint();
+			constraint.maxUnitsPerTerm = parseInt(this.$('#constraint-units-selector').val(), 10);
+			ui.app.setConstraint(constraint);
+
+			ui.updateRequirements();
+			ui.renderRequirements();
+			ui.renderCourses();
+		},
+
+		changeNumDays: function(){
+			var constraint = ui.app.getConstraint();
+			constraint.maxDaysPerTerm = parseInt(this.$('#constraint-numdays-selector').val(), 10);
+			ui.app.setConstraint(constraint);
+
+			ui.updateRequirements();
+			ui.renderRequirements();
+			ui.renderCourses();
+		},
+
+		changeDays: function(){
+			var constraint = ui.app.getConstraint();
+			constraint.allowedDays = this.$('.day-checkbox:checked').map(function(i, el){
+				return $(el).val();
+			}).toArray();
+			ui.app.setConstraint(constraint);
+
+			ui.updateRequirements();
+			ui.renderRequirements();
+			ui.renderCourses();
+		}
+
+	})
 }
 
-var terms = [ new Term('Autumn', '2012-2013'), new Term('Winter', '2012-2013'), new Term('Spring', '2012-2013'),
-			  new Term('Autumn', '2013-2014'), new Term('Winter', '2013-2014'), new Term('Spring', '2013-2014')]
 
-// var ACourses = computer_sec_reqs['A'].courses.map(function(course){
-// 	return new Course(course, terms);
-// })
 
-// var BCourses = computer_sec_reqs['B'].courses.map(function(course){
-// 	return new Course(course, terms);
-// })
 
-// var CCourses = computer_sec_reqs['C'].courses.map(function(course){
-// 	return new Course(course, terms);
-// })
-
-// var computer_sec_courses = ACourses.concat(BCourses).concat(CCourses);
-// var winterCourses = computer_sec_courses.filter(function(course){
-// 	var terms = _.uniq(course.getTerms().get('period'));
-// 	return terms.length === 1 && terms[0] === 'Winter';
-// })
 
 var app = new Application();
-app.init();
+app.start();
 
-app.setTerms(terms);
-
-var constraint = new Constraint(10);
-app.setConstraint(constraint);
-// var scheduleList = new ScheduleList(undefined, terms.slice(0,5), undefined);
-// scheduleList.constraint = constraint;
-
-// var context = {}
-// context.constraint = constraint;
-// context.terms = terms.slice(0,5);
-
-// init(context);
-// var foundationCourses = foundations.courses.map(function(course){
-// 	return new Course(course, terms);
-// })
-
-// var foundationsReq = new CourseRequirement("Foundations", 5, foundationCourses);
-// var AReq = new CourseRequirement("A", computer_sec_reqs['A'].required, ACourses);
-// var BReq = new CourseRequirement("B", computer_sec_reqs['B'].required, BCourses);
-// var depthReq = new UnitRequirement("Depth", 27, computer_sec_courses);
-
-// console.log(myCourse.canBePicked(scheduleList))
-// scheduleList.add(myCourse)
-// console.log(scheduleList)
-
-// scheduleList.add(computer_sec_courses[0])
-// scheduleList.add(computer_sec_courses[1])
-// scheduleList.add(computer_sec_courses[2])
-// scheduleList.add(computer_sec_courses[3])
-// scheduleList.add(computer_sec_courses[4])
-
-
-
+/* TODO
+waivable not regexp on Depth: changed to SI
+search
+*/

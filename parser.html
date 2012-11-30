@@ -34,6 +34,22 @@
 			  				return _.contains(keptIDs, c.id)
 			  			})
 
+
+			  			//duplicate years for courses
+			  			keptCourses.forEach(function(c){
+			  				var newOfferings = []
+			  				c.courseOfferings.forEach(function(off){
+			  					var clone = {};
+			  					$.extend(true, clone, off);
+			  					clone.term.year = '2013-2014';
+			  					clone.term.id = clone.term.period + clone.term.year;
+			  					newOfferings.push(off);
+			  					newOfferings.push(clone);
+			  				});
+			  				c.courseOfferings = newOfferings;
+			  			});
+
+
 			  			var allIDs = allcourses.map(function(c){return c.id})
 			  			var notFound = keptIDs.filter(function(id){
 			  				return !_.contains(allIDs, id)

@@ -102,7 +102,7 @@
                 {
                     "type": "CourseRequirement",
                     "name": "Breadth",
-                    "required": 5,
+                    "required": 3,
                     "courses": [
                         "CS 140",
                         "CS 143",
@@ -160,7 +160,7 @@
                     ]
                 },
                 {
-                    "name": "C (Depth)",
+                    "name": "C",
                     "type": "UnitRequirement",
                     "required": 27,
                     "courses": [
@@ -511,7 +511,7 @@
                 {
                     "type": "CourseRequirement",
                     "name": "Breadth",
-                    "required": 5,
+                    "required": 3,
                     "courses": [
                         "CS 124",
                         "CS 140",
@@ -570,7 +570,7 @@
                     ]
                 },
                 {
-                    "name": "B (Depth)",
+                    "name": "B",
                     "type": "UnitRequirement",
                     "required": 27,
                     "courses": [
@@ -785,7 +785,7 @@
                 {
                     "type": "CourseRequirement",
                     "name": "Breadth",
-                    "required": 5,
+                    "required": 3,
                     "courses": [
                         "CS 124",
                         "CS 143",
@@ -858,7 +858,7 @@
                     ]
                 },
                 {
-                    "name": "C (Depth)",
+                    "name": "C",
                     "type": "UnitRequirement",
                     "required": 27,
                     "courses": [
@@ -1094,7 +1094,7 @@
                 {
                     "type": "CourseRequirement",
                     "name": "Breadth",
-                    "required": 5,
+                    "required": 3,
                     "courses": [
                         "CS 140",
                         "CS 143",
@@ -1204,7 +1204,7 @@
                     ]
                 },
                 {
-                    "name": "G (Depth)",
+                    "name": "G",
                     "type": "UnitRequirement",
                     "required": 27,
                     "courses": [
@@ -1519,7 +1519,7 @@
                 {
                     "type": "CourseRequirement",
                     "name": "Breadth",
-                    "required": 5,
+                    "required": 3,
                     "courses": [
                         "CS 124",
                         "CS 140",
@@ -1570,7 +1570,7 @@
                     ]
                 },
                 {
-                    "name": "C (Depth)",
+                    "name": "C",
                     "type": "UnitRequirement",
                     "required": 27,
                     "courses": [
@@ -1854,7 +1854,7 @@
                 {
                     "type": "CourseRequirement",
                     "name": "Breadth",
-                    "required": 5,
+                    "required": 3,
                     "courses": [
                         "CS 124",
                         "CS 143",
@@ -1937,7 +1937,7 @@
                     ]
                 },
                 {
-                    "name": "E (Depth)",
+                    "name": "E",
                     "type": "UnitRequirement",
                     "required": 27,
                     "courses": [
@@ -2205,7 +2205,7 @@
                 {
                     "type": "CourseRequirement",
                     "name": "Breadth",
-                    "required": 5,
+                    "required": 3,
                     "courses": [
                         "CS 124",
                         "CS 140",
@@ -2277,7 +2277,7 @@
                     ]
                 },
                 {
-                    "name": "C (Depth)",
+                    "name": "C",
                     "type": "UnitRequirement",
                     "required": 27,
                     "courses": [
@@ -2558,7 +2558,7 @@
                 {
                     "type": "CourseRequirement",
                     "name": "Breadth",
-                    "required": 5,
+                    "required": 3,
                     "courses": [
                         "CS 124",
                         "CS 140",
@@ -2646,7 +2646,7 @@
                     ]
                 },
                 {
-                    "name": "E (Depth)",
+                    "name": "E",
                     "type": "UnitRequirement",
                     "required": 27,
                     "courses": [
@@ -2910,7 +2910,7 @@
                 {
                     "type": "CourseRequirement",
                     "name": "Breadth",
-                    "required": 5,
+                    "required": 3,
                     "courses": [
                         "CS 124",
                         "CS 147",
@@ -2969,7 +2969,7 @@
                     ]
                 },
                 {
-                    "name": "C (Depth)",
+                    "name": "C",
                     "type": "UnitRequirement",
                     "required": 27,
                     "courses": [
@@ -3227,7 +3227,7 @@
                 {
                     "type": "CourseRequirement",
                     "name": "Breadth",
-                    "required": 5,
+                    "required": 3,
                     "courses": [
                         "CS 124",
                         "CS 140",
@@ -3286,7 +3286,7 @@
                     ]
                 },
                 {
-                    "name": "B (Depth)",
+                    "name": "B",
                     "type": "UnitRequirement",
                     "required": 27,
                     "courses": [
