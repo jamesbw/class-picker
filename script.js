@@ -99,6 +99,15 @@ Course.prototype.canBePicked = function(scheduleList) {
 	return false;
 };
 
+//Search filter
+Course.prototype.matches = function(filter) {
+	filter = filter || "";
+	console.log(filter);
+	var strippedFilter = filter.replace(/\s/g, '');
+	var strippedCourse = (this.id + this.name).replace(/\s/g, '');
+	return strippedCourse.match(strippedFilter);
+};
+
 
 Schedule.prototype.canAddCourseOffering = function(newCourseOffering) {
 	var termID = newCourseOffering.term.id
@@ -837,6 +846,7 @@ Application.prototype.run = function() {
 	ui.renderCourses();
 	ui.renderTerms();
 	ui.renderConstraint();
+	ui.renderSearch();
 	
 };
 
@@ -890,11 +900,14 @@ var ui = {
 	},
 
 	renderCourses: function(){
+		var filter = $('#search-box').val();
 		$('#course-table tr').remove();
 		$('#course-table').append('<tr><td colspan="4">' + ui.activeRequirement.instructions()+ '</td></tr>')
 		ui.activeRequirement.courseList.forEach(function(course){
-			var courseView = new ui.CourseView({course: course});
-			$('#course-table').append(courseView.render().el);
+			if(course.matches(filter)){
+				var courseView = new ui.CourseView({course: course});
+				$('#course-table').append(courseView.render().el);
+			}
 		})
 	},
 
@@ -908,6 +921,11 @@ var ui = {
 	renderConstraint: function(){
 		var constraintView = new ui.ConstraintView();
 		$('#constraint').append(constraintView.render().el);
+	},
+
+	renderSearch: function(){
+		var searchView = new ui.SearchView();
+		$('#search').html(searchView.render().el);
 	},
 
 	Requirement: Backbone.Model.extend({
@@ -1198,6 +1216,26 @@ var ui = {
 			ui.renderRequirements();
 			ui.renderCourses();
 		}
+
+	}),
+
+	SearchView: Backbone.View.extend({
+		tagName: 'span',
+		className: 'search',
+		template: _.template("Search: <input type=text id='search-box' placeholder='enter class'/>"),
+
+		render: function(){
+			this.$el.html(this.template());
+			return this;
+		},
+
+		events: {
+			'input #search-box': 'handleInput',
+		},
+
+		handleInput: function(){
+			ui.renderCourses();
+		},
 
 	})
 }
