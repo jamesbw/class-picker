@@ -1087,6 +1087,9 @@ var ui = {
 			this.$('.course-waive').prop('checked',this.course.waived);
 			this.$('.course-alreadyTaken').prop('checked',this.course.alreadyTaken);
 			this.$('.unit-option').toggle(this.course.alreadyTaken);
+
+			this.$('.alreadyTaken-units').attr('min', this.course.units.min);
+			this.$('.alreadyTaken-units').attr('max', this.course.units.max);
 			if(this.course.alreadyTaken){
 				this.$('.alreadyTaken-units').val(ui.app.getAlreadyTakenUnits(this.course));
 			}
