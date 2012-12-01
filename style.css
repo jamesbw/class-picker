@@ -31,6 +31,10 @@ html {
 	background: gray;
 }
 
+.activeTab {
+	background: gray;
+}
+
 section {
 	border: 1px solid black;
 }

@@ -841,12 +841,15 @@ Application.prototype.run = function() {
 	ui.app = this;
 	ui.activeRequirement = this.totalUnitRequirement;
 
+	ui.renderHeader();
+	ui.toggleContainers();
+
 	ui.renderRequirements();
 	ui.renderCourses();
 	ui.renderTerms();
 	ui.renderConstraint();
 	ui.renderSearch();
-	ui.renderHeader();
+	
 	
 };
 
@@ -857,11 +860,36 @@ var ui = {
 
 	app: null,
 	activeRequirement: null, //selected requirement in UI
+	activeTabId: 'select-program-tab',
+
 
 	updateRequirements: function(){
 		ui.app.getRequirements().forEach(function(req){
 			ui.app.fulfills(req);
 		});
+	},
+
+	toggleContainers: function(){
+		$('.container').hide();
+		$('.header-tab').removeClass('activeTab');
+		switch(ui.activeTabId){
+			case 'select-program-tab':
+				$('#select-program-container').show();
+				$('#select-program-tab').addClass('activeTab');
+				break;
+				
+			case 'select-courses-tab':
+				$('#select-courses-container').show();
+				$('#select-courses-tab').addClass('activeTab');
+				break;
+			
+			case 'view-schedules-tab':
+				$('#view-schedules-container').show();
+				$('#view-schedules-tab').addClass('activeTab');
+				break;
+			default:
+				console.log('Why not:' + ui.activeTabId)
+		}
 	},
 
 	renderRequirements: function(){
@@ -1263,15 +1291,21 @@ var ui = {
 		},
 
 		selectProgram: function(){
-			console.log('clicked on select program tab')
+			console.log('clicked on select program tab');
+			ui.activeTabId = 'select-program-tab';
+			ui.toggleContainers();
 		},
 
 		selectCourses: function(){
 			console.log('clicked on select courses tab')
+			ui.activeTabId = 'select-courses-tab';
+			ui.toggleContainers();
 		},
 
 		viewSchedules: function(){
 			console.log('clicked on view schedules tab')
+			ui.activeTabId = 'view-schedules-tab';
+			ui.toggleContainers();
 		},
 	})
 }
