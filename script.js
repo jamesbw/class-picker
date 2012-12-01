@@ -12,6 +12,10 @@ function extend(target, source) {
     return target;
 }
 
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 Array.prototype.get = function(property) {
 	var res = [];
 	for (var i = 0; i < this.length; i ++) {
@@ -28,14 +32,25 @@ function Term(period, year){
 
 function Schedule(terms, constraint) {
 	this.constraint = constraint;
-	this.units = {};
+	// this.units = {};
 	this.courses = {};
 
 	for (var i = terms.length - 1; i >= 0; i--) {
-		this.units[terms[i].id] = { "min" : 0, "max" : 0};
+		// this.units[terms[i].id] = { "min" : 0, "max" : 0};
 		this.courses[terms[i].id] = [];
 	};
 }
+
+Schedule.prototype.clone = function() {
+	var newSchedule = new Schedule([], this.constraint);
+	var termIDs = this.getTermIDs();
+	for (var i = termIDs.length - 1; i >= 0; i--) {
+		var termID = termIDs[i];
+		// newSchedule.units[termID] = { min: this.units[termID].min, max: this.units[termID].max};
+		newSchedule.courses[termID] = this.courses[termID].slice();
+	};
+	return newSchedule;
+};
 
 function CourseOffering(id, name, units, term, days, startTime, endTime) {
 	this.id = id
@@ -51,6 +66,18 @@ CourseOffering.prototype.fitsIn = function(schedule) {
 	return schedule.canAddCourseOffering(this);
 };
 
+//checks intersection. attempt at optimizing because _.intersection seems slow
+function daysInCommon(days1, days2){
+	var days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+	for (var i = days.length - 1; i >= 0; i--) {
+		var day = days[i];
+		if ( (days1.indexOf(day) >=0) && (days2.indexOf(day) >=0)) {
+			return true;
+		};
+	};
+	return false;
+}
+
 CourseOffering.prototype.conflictsWith = function(courseOffering) {
 
 	//same term?
@@ -58,8 +85,10 @@ CourseOffering.prototype.conflictsWith = function(courseOffering) {
 		return false;
 
 	//same days?
-	if (_.isEmpty(_.intersection(courseOffering.days, this.days)))
+	// if (_.isEmpty(_.intersection(courseOffering.days, this.days)))
+	if (! daysInCommon(courseOffering.days, this.days)) {
 		return false;
+	};
 
 	//same time?
 	if ((this.startTime < courseOffering.startTime || this.startTime >= courseOffering.endTime)
@@ -88,14 +117,36 @@ Course.prototype.getTerms = function() {
 
 
 Course.prototype.canBePicked = function(scheduleList) {
-	for (var i = scheduleList.schedules.length - 1; i >= 0; i--) {
-		var schedule = scheduleList.schedules[i];
-		for (var j = this.courseOfferings.length - 1; j >= 0; j--) {
-			var courseOffering = this.courseOfferings[j];
-			if (courseOffering.fitsIn(schedule))
-				return true;
-		};
-	};
+
+
+	//if too many schedule, we'll just randomly sample
+	var numSchedules = scheduleList.schedules.length;
+
+	if (numSchedules < 500) {
+		for (var i = scheduleList.schedules.length - 1; i >= 0; i--) {
+			var schedule = scheduleList.schedules[i];
+			for (var j = this.courseOfferings.length - 1; j >= 0; j--) {
+				var courseOffering = this.courseOfferings[j];
+				if (courseOffering.fitsIn(schedule))
+					return true;
+			};
+		};		
+	}
+	else {
+		//we sample
+		var numSamples = 1000;
+		while (numSamples > 0) {
+			var index = getRandomInt(0, numSchedules -1);
+			var schedule = scheduleList.schedules[index];
+			for (var j = this.courseOfferings.length - 1; j >= 0; j--) {
+				var courseOffering = this.courseOfferings[j];
+				if (courseOffering.fitsIn(schedule))
+					return true;
+			};
+			numSamples -=1;
+		}
+	}
+
 	return false;
 };
 
@@ -111,7 +162,7 @@ Course.prototype.matches = function(filter) {
 Schedule.prototype.canAddCourseOffering = function(newCourseOffering) {
 	var termID = newCourseOffering.term.id
 
-	if (!_.contains(this.getTermIDs(), termID)) {
+	if (this.getTermIDs().indexOf(termID) < 0) {
 		// console.log("Course offering is for a term that's not chosen")
 		return false;
 	};
@@ -140,8 +191,8 @@ Schedule.prototype.add = function(courseOffering) {
 		return ;
 	};
 	this.courses[termID].push(courseOffering)
-	this.units[termID].min += courseOffering.units.min
-	this.units[termID].max += courseOffering.units.max
+	// this.units[termID].min += courseOffering.units.min
+	// this.units[termID].max += courseOffering.units.max
 };
 
 Schedule.prototype.remove = function(courseOffering) {
@@ -162,7 +213,32 @@ Schedule.prototype.getTermIDs = function() {
 
 Schedule.prototype.getFulfilledUnits = function(unitRequirement) {
 
-	var requiredIds = unitRequirement.courseList.map(function(course){return course.id});
+	var foundationIds = ['CS 103', 'CS 107', 'CS 109', 'CS 110', 'CS 161'];
+
+	//do some memoization:
+	if (! unitRequirement.requiredIds) {
+		unitRequirement.requiredIds =  unitRequirement.courseList.get('id');
+	};
+	var requiredIds = unitRequirement.requiredIds;
+
+	if (! unitRequirement.requiredWithoutFoundations) {
+		unitRequirement.requiredWithoutFoundations =  _.difference(requiredIds, foundationIds);
+	};
+	var requiredWithoutFoundations = unitRequirement.requiredWithoutFoundations;
+
+	if (! unitRequirement.foundationsInterRequired) {
+		unitRequirement.foundationsInterRequired =  _.intersection(requiredIds, foundationIds);
+	};
+	var foundationsInterRequired = unitRequirement.foundationsInterRequired;
+
+	if (! unitRequirement.requiredWithoutFoundationsHash) {
+		unitRequirement.requiredWithoutFoundationsHash = {};
+		for (var i = requiredWithoutFoundations.length - 1; i >= 0; i--) {
+			unitRequirement.requiredWithoutFoundationsHash[requiredWithoutFoundations[i]] = true;
+		};
+	};
+	var foundationsInterRequired = unitRequirement.foundationsInterRequired;
+
 
 	var maxUnitsPerTerm;
 	if (this.constraint) {
@@ -170,6 +246,9 @@ Schedule.prototype.getFulfilledUnits = function(unitRequirement) {
 	};
 
 	var unitsTowardsReq = 0;
+
+	//keep count of units towards foundation because we will cap these
+	var foundationsTotal = 0;
 
 	var termIDs = this.getTermIDs();
 
@@ -183,18 +262,46 @@ Schedule.prototype.getFulfilledUnits = function(unitRequirement) {
 			units[courseOffering.id] = courseOffering.units.min;
 			unitsLeft -= units[courseOffering.id];
 		};
+
+		//reiterate over required courses - minus the foundations
+		var reqOfferings = [];
 		for (var j = courseOfferings.length - 1; j >= 0; j--) {
-			var courseOffering = courseOfferings[j];
-			if (_.contains(requiredIds, courseOffering.id)) {
-				var addedUnits = Math.min(courseOffering.units.max - courseOffering.units.min, unitsLeft);
-				units[courseOffering.id] += addedUnits;
-				unitsTowardsReq += units[courseOffering.id];
-				unitsLeft -= addedUnits;
+			var off = courseOfferings[j];
+			if (unitRequirement.requiredWithoutFoundationsHash[off.id]) {
+				reqOfferings.push(off);
 			};
+		};
+
+		for (var j = reqOfferings.length - 1; j >= 0; j--) {
+			var courseOffering = reqOfferings[j];
+			var addedUnits = Math.min(courseOffering.units.max - courseOffering.units.min, unitsLeft);
+			units[courseOffering.id] += addedUnits;
+			unitsTowardsReq += units[courseOffering.id];
+			unitsLeft -= addedUnits;
+		};
+
+		//reiterate over the required foundations
+		var foundationsOfferings = [];
+		for (var j = courseOfferings.length - 1; j >= 0; j--) {
+			var off = courseOfferings[j];
+			if (_.contains(foundationsInterRequired, off.id)) {
+				foundationsOfferings.push(off);
+			};
+		};
+
+		for (var j = foundationsOfferings.length - 1; j >= 0; j--) {
+			var courseOffering = foundationsOfferings[j];
+			var addedUnits = Math.min(courseOffering.units.max - courseOffering.units.min, unitsLeft);
+			units[courseOffering.id] += addedUnits;
+			unitsTowardsReq += units[courseOffering.id];
+			unitsLeft -= addedUnits;
+			foundationsTotal += units[courseOffering.id];
 		};
 	};
 
-	return unitsTowardsReq ;
+
+	//cap the number of foundations units
+	return unitsTowardsReq  - Math.max(0, foundationsTotal - 10);
 };
 
 Schedule.prototype.fulfills = function(unitRequirement) {
@@ -215,24 +322,48 @@ function ScheduleList(courses, terms, constraint){
 }
 
 ScheduleList.prototype.getScheduleCount = function() {
-	return this.schedules.length
+	return this.schedules.length;
 };
 
 ScheduleList.prototype.canPick = function(course) {
-	return course.canBePicked(this)
+	return course.canBePicked(this);
 };
 
 ScheduleList.prototype.addCourse = function(course) {
-	var newSchedules = []
-	while (!_.isEmpty(this.schedules)){
-		var schedule = this.schedules.pop();
-		course.courseOfferings.forEach(function(courseOffering){
-			if (schedule.canAddCourseOffering(courseOffering)) {
-				var newSchedule = jQuery.extend(true, new Schedule(this.terms, this.constraint), schedule);
-				newSchedule.add(courseOffering);
-				newSchedules.push(newSchedule);
+	var newSchedules = [];
+
+	//if too many schedules, we just sample (without replacement)
+	var numSchedules = this.schedules.length;
+
+	if (numSchedules > 1000) {
+		var sample = 0;
+		var numSamples = 1000;
+		while (sample < numSamples){
+			var index = Math.floor( sample * (numSchedules - 1) / (numSamples - 1));
+			var schedule = this.schedules[index];
+			for (var i = course.courseOfferings.length - 1; i >= 0; i--) {
+				var courseOffering = course.courseOfferings[i];
+				if (schedule.canAddCourseOffering(courseOffering)) {
+					var newSchedule = schedule.clone();
+					newSchedule.add(courseOffering);
+					newSchedules.push(newSchedule);
+				};
 			};
-		}, this);
+			sample +=1;
+		}
+	}
+	else {
+		for (var i = this.schedules.length - 1; i >= 0; i--) {
+			var schedule = this.schedules[i];
+			for (var j = course.courseOfferings.length - 1; j >= 0; j--) {
+				var courseOffering = course.courseOfferings[j];
+				if (schedule.canAddCourseOffering(courseOffering)) {
+					var newSchedule = schedule.clone();
+					newSchedule.add(courseOffering);
+					newSchedules.push(newSchedule);
+				};
+			};
+		};
 	}
 
 	this.courses.push(course);
@@ -277,13 +408,26 @@ ScheduleList.prototype.fulfills = function(requirement) {
 
 		case "UnitRequirement":
 			requirement.fulfilled = 0;
-			for (var i = this.schedules.length - 1; i >= 0; i--) {
-				var schedule = this.schedules[i];
+
+			//let's sample all schedules and get the max units from the sample
+			var numSamples = 100;
+			while (numSamples > 0){
+				var index = getRandomInt(0, this.schedules.length -1);
+				var schedule = this.schedules[index];
 				var fulfilled = schedule.getFulfilledUnits(requirement);
 				if(fulfilled > requirement.fulfilled){
 					requirement.fulfilled = fulfilled;
 				}
-			};
+				numSamples -= 1;
+			}
+
+			// for (var i = this.schedules.length - 1; i >= 0; i--) {
+			// 	var schedule = this.schedules[i];
+			// 	var fulfilled = schedule.getFulfilledUnits(requirement);
+			// 	if(fulfilled > requirement.fulfilled){
+			// 		requirement.fulfilled = fulfilled;
+			// 	}
+			// };
 			if (requirement.fulfilled >= requirement.requiredUnitCount){
 				return true;
 			}
@@ -820,12 +964,38 @@ Application.prototype.getSchedules = function() {
 };
 
 Application.prototype.getSchedulesMeetingReqs = function(num) {
+
+	var unitReqs = [];
+	var courseReqs = [];
+	for (var i = this.activeRequirements.length - 1; i >= 0; i--) {
+		var req = this.activeRequirements[i];
+		switch (req.constructor.name) {
+			case  "UnitRequirement":
+				unitReqs.push(req);
+				break;
+			case "CourseRequirement":
+				courseReqs.push(req);
+				break;
+			default:
+				console.log("Error: unknown requirement type")
+		}
+	};
+
+	//if the course reqs are not fulfilled, then no schedule works
+	for (var i = courseReqs.length - 1; i >= 0; i--) {
+		var courseReq = courseReqs[i];
+		if(!this.fulfills(courseReq)){
+			return [];
+		}
+	};
+
+	//now go through the unit reqs
 	num = num || Infinity;
 	var count = 0;
 	var res = [];
 	for (var i = this.getSchedules().length - 1; i >= 0; i--) {
 		var schedule = this.getSchedules()[i];
-		schedule.valid = this.activeRequirements.every(function(req){schedule.fulfills(req)});
+		schedule.valid = unitReqs.every(function(req){return schedule.fulfills(req)});
 		if (schedule.valid) {
 			res.push(schedule);
 			count +=1;
@@ -846,9 +1016,10 @@ Application.prototype.run = function() {
 	console.log("Application starting!");
 
 
-	var constraint = new Constraint(10, 3);
+	var constraint = new Constraint(10, 5);
 	this.setConstraint(constraint);
 	this.setSpecialization(new SingleDepthSpecialization(this.getPrograms()[0]));
+	this.setTerms(ui.terms);
 
 	ui.app = this;
 	ui.activeRequirement = this.totalUnitRequirement;
@@ -858,6 +1029,7 @@ Application.prototype.run = function() {
 
 	ui.renderRequirements();
 	ui.renderCourses();
+	ui.toggleCourses();
 	ui.renderTerms();
 	ui.renderConstraint();
 	ui.renderSearch();
@@ -879,9 +1051,30 @@ var ui = {
 
 
 	updateRequirements: function(){
+		// return;
 		ui.app.getRequirements().forEach(function(req){
 			ui.app.fulfills(req);
 		});
+	},
+
+	//enable, disable courses
+	toggleCourses: function(){
+		var courses = ui.activeRequirement.courseList;
+		for (var i = courses.length - 1; i >= 0; i--) {
+			var course = courses[i];
+			var view = course.view;
+
+			if (!(course.pick || course.alreadyTaken || course.waived)
+				&& !ui.app.canPick(course))
+			{
+				view.$el.addClass('disabled');
+				view.$('.course-pick').prop('disabled',true);
+			}
+			else{
+				view.$el.removeClass('disabled');
+				view.$('.course-pick').prop('disabled',false);
+			}
+		};
 	},
 
 	toggleContainers: function(){
@@ -951,7 +1144,8 @@ var ui = {
 				var courseView = new ui.CourseView({course: course});
 				$('#course-table').append(courseView.render().el);
 			}
-		})
+		});
+		// ui.toggleCourses();
 	},
 
 	renderTerms: function(){
@@ -1039,6 +1233,7 @@ var ui = {
 			ui.activeRequirement = this.requirement;
 			ui.renderRequirements();
 			ui.renderCourses();
+			ui.toggleCourses();
 		},
 
 		events: {
@@ -1106,7 +1301,8 @@ var ui = {
 			}
 			ui.updateRequirements();
 			ui.renderRequirements();
-			ui.renderCourses();
+			// ui.renderCourses();
+			ui.toggleCourses();
 		},
 
 		toggleAlreadyTaken: function(){
@@ -1135,7 +1331,8 @@ var ui = {
 			}
 			ui.updateRequirements();
 			ui.renderRequirements();
-			ui.renderCourses();
+			// ui.renderCourses();
+			ui.toggleCourses();
 		},
 
 		togglePick: function(){
@@ -1162,7 +1359,8 @@ var ui = {
 
 			ui.updateRequirements();
 			ui.renderRequirements();
-			ui.renderCourses();
+			// ui.renderCourses();
+			ui.toggleCourses();
 		},
 
 		updateTakenUnits: function(){
@@ -1171,10 +1369,12 @@ var ui = {
 
 			ui.updateRequirements();
 			ui.renderRequirements();
-			ui.renderCourses();
+			// ui.renderCourses();
+			ui.toggleCourses();
 		},
 
 		render: function(){
+			this.course.view = this;
 			this.$el.html(this.template());
 			this.$('.course-id').html(this.course.id);
 			this.$('.course-name').html(this.course.name);
@@ -1190,14 +1390,7 @@ var ui = {
 				this.$('.alreadyTaken-units').val(ui.app.getAlreadyTakenUnits(this.course));
 			}
 
-			if (!(this.course.pick || this.course.alreadyTaken || this.course.waived)
-				&& !ui.app.canPick(this.course))
-			{
-				this.$el.addClass('disabled');
-				this.$('.course-pick').prop('disabled',true);
-			}
-			else
-				this.$el.removeClass('disabled');
+			
 
 			return this;
 		}
@@ -1216,6 +1409,7 @@ var ui = {
 		render: function(){
 			this.$el.html(this.template());
 			this.$('.term-name').html(this.term.period + " " + this.term.year);
+			this.$('.term-pick').prop('checked', _.contains(ui.app.getTerms(),this.term));
 			return this;
 		},
 
@@ -1232,7 +1426,8 @@ var ui = {
 			}
 			ui.updateRequirements();
 			ui.renderRequirements();
-			ui.renderCourses();
+			// ui.renderCourses();
+			ui.toggleCourses();
 		}
 
 	}),
@@ -1271,7 +1466,8 @@ var ui = {
 
 			ui.updateRequirements();
 			ui.renderRequirements();
-			ui.renderCourses();
+			// ui.renderCourses();
+			ui.toggleCourses();
 		},
 
 		changeNumDays: function(){
@@ -1281,7 +1477,8 @@ var ui = {
 
 			ui.updateRequirements();
 			ui.renderRequirements();
-			ui.renderCourses();
+			// ui.renderCourses();
+			ui.toggleCourses();
 		},
 
 		changeDays: function(){
@@ -1293,7 +1490,8 @@ var ui = {
 
 			ui.updateRequirements();
 			ui.renderRequirements();
-			ui.renderCourses();
+			// ui.renderCourses();
+			ui.toggleCourses();
 		}
 
 	}),
