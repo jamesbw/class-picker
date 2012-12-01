@@ -322,15 +322,15 @@ function ScheduleList(courses, terms, constraint){
 }
 
 ScheduleList.prototype.getScheduleCount = function() {
-	return this.schedules.length
+	return this.schedules.length;
 };
 
 ScheduleList.prototype.canPick = function(course) {
-	return course.canBePicked(this)
+	return course.canBePicked(this);
 };
 
 ScheduleList.prototype.addCourse = function(course) {
-	var newSchedules = []
+	var newSchedules = [];
 
 	//if too many schedules, we just sample (without replacement)
 	var numSchedules = this.schedules.length;
@@ -964,12 +964,38 @@ Application.prototype.getSchedules = function() {
 };
 
 Application.prototype.getSchedulesMeetingReqs = function(num) {
+
+	var unitReqs = [];
+	var courseReqs = [];
+	for (var i = this.activeRequirements.length - 1; i >= 0; i--) {
+		var req = this.activeRequirements[i];
+		switch (req.constructor.name) {
+			case  "UnitRequirement":
+				unitReqs.push(req);
+				break;
+			case "CourseRequirement":
+				courseReqs.push(req);
+				break;
+			default:
+				console.log("Error: unknown requirement type")
+		}
+	};
+
+	//if the course reqs are not fulfilled, then no schedule works
+	for (var i = courseReqs.length - 1; i >= 0; i--) {
+		var courseReq = courseReqs[i];
+		if(!this.fulfills(courseReq)){
+			return [];
+		}
+	};
+
+	//now go through the unit reqs
 	num = num || Infinity;
 	var count = 0;
 	var res = [];
 	for (var i = this.getSchedules().length - 1; i >= 0; i--) {
 		var schedule = this.getSchedules()[i];
-		schedule.valid = this.activeRequirements.every(function(req){schedule.fulfills(req)});
+		schedule.valid = unitReqs.every(function(req){return schedule.fulfills(req)});
 		if (schedule.valid) {
 			res.push(schedule);
 			count +=1;
