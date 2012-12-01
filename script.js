@@ -849,6 +849,8 @@ Application.prototype.run = function() {
 	ui.renderTerms();
 	ui.renderConstraint();
 	ui.renderSearch();
+
+	ui.renderPrograms();
 	
 	
 };
@@ -959,6 +961,14 @@ var ui = {
 	renderHeader: function(){
 		var headerView = new ui.HeaderView();
 		$('header').html(headerView.render().el);
+	},
+
+	renderPrograms: function(){
+		$('#programs').children().remove();
+		ui.app.getPrograms().forEach(function(program){
+			var programView = new ui.ProgramView({program: program});
+			$('#programs').append(programView.render().el);
+		});
 	},
 
 	Requirement: Backbone.Model.extend({
@@ -1148,10 +1158,13 @@ var ui = {
 			if (!(this.course.pick || this.course.alreadyTaken || this.course.waived)
 				&& !ui.app.canPick(this.course))
 			{
+				this.$el.addClass('disabled');
 				this.$('.course-pick').prop('disabled',true);
 				this.$('.course-waive').prop('disabled',true);
 				this.$('.course-alreadyTaken').prop('disabled',true);
 			}
+			else
+				this.$el.removeClass('disabled');
 
 			return this;
 		}
@@ -1300,6 +1313,7 @@ var ui = {
 			console.log('clicked on select courses tab')
 			ui.activeTabId = 'select-courses-tab';
 			ui.toggleContainers();
+			ui.renderRequirements();
 		},
 
 		viewSchedules: function(){
@@ -1307,6 +1321,41 @@ var ui = {
 			ui.activeTabId = 'view-schedules-tab';
 			ui.toggleContainers();
 		},
+	}),
+
+	ProgramView: Backbone.View.extend({
+
+		initialize: function(){
+			this.program = this.options.program;
+		},
+
+		tagName: 'div',
+		className: 'program',
+		template: _.template("<div class='program-name'></div>"
+							+"<ul class='course-list'></ul>"),
+
+		render: function(){
+			this.$el.html(this.template());
+			this.$('.program-name').html(this.program.name);
+			this.program.depthCourses.slice(0,5).forEach(function(c){
+				this.$('.course-list').append("<li>"+ c.id + " " + c.name + "</li>");
+			}, this);
+			if(this.program === ui.app.getSpecialization().singleDepth){
+				this.$el.addClass('activeProgram');
+			}
+			return this;
+		},
+
+		events: {
+			'click': 'selectProgram',
+		},
+
+		selectProgram: function(){
+			console.log('select program')
+			ui.app.setSpecialization(new SingleDepthSpecialization(this.program));
+			$('.program').removeClass('activeProgram');
+			this.$el.addClass('activeProgram');
+		}
 	})
 }
 
@@ -1318,5 +1367,7 @@ var app = new Application();
 app.start();
 
 /* TODO
-header
+pick program
+calendar
+perf
 */

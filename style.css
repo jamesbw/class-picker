@@ -35,6 +35,18 @@ html {
 	background: gray;
 }
 
+.activeProgram {
+	background: gray;
+}
+
+.disabled {
+	text-decoration: line-through;
+}
+
+.program {
+	border: 1px solid black;
+}
+
 section {
 	border: 1px solid black;
 }
