@@ -886,21 +886,21 @@ var ui = {
 
 	toggleContainers: function(){
 		$('.container').hide();
-		$('.header-tab').removeClass('activeTab');
+		$('.nav li').removeClass('active');
 		switch(ui.activeTabId){
 			case 'select-program-tab':
 				$('#select-program-container').show();
-				$('#select-program-tab').addClass('activeTab');
+				$('#select-program-tab').addClass('active');
 				break;
 				
 			case 'select-courses-tab':
 				$('#select-courses-container').show();
-				$('#select-courses-tab').addClass('activeTab');
+				$('#select-courses-tab').addClass('active');
 				break;
 			
 			case 'view-schedules-tab':
 				$('#view-schedules-container').show();
-				$('#view-schedules-tab').addClass('activeTab');
+				$('#view-schedules-tab').addClass('active');
 				break;
 			default:
 				console.log('Why not:' + ui.activeTabId)
@@ -1321,9 +1321,15 @@ var ui = {
 	HeaderView: Backbone.View.extend({
 		tagName: 'div',
 		className: 'header',
-		template: _.template("<div id='select-program-tab' class='header-tab'>Select your program</div>"
-							+"<div id='select-courses-tab' class='header-tab'>Select your courses</div>"
-							+"<div id='view-schedules-tab' class='header-tab'>View Schedules</div>"),
+		template: _.template("<div class='navbar navbar-fixed-top'>"
+  							+"	<div class='navbar-inner'>"
+  							+"		<ul class='nav'>"
+							+"			<li id='select-program-tab'><a><h4>Select your program</h4></a></li>"
+							+"			<li id='select-courses-tab'><a><h4>Select your courses</h4></a></li>"
+							+"			<li id='view-schedules-tab'><a><h4>View Schedules</h4></a></li>"
+							+"		</ul>"
+							+"  </div>"
+							+"</div>"),
 
 		render: function(){
 			this.$el.html(this.template());
@@ -1365,7 +1371,7 @@ var ui = {
 
 		tagName: 'div',
 		className: 'program',
-		template: _.template("<div class='program-name'></div>"
+		template: _.template("<h3 class='program-name'></h3>"
 							+"<ul class='course-list'></ul>"),
 
 		render: function(){
