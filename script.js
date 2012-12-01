@@ -42,7 +42,7 @@ function Schedule(terms, constraint) {
 }
 
 Schedule.prototype.clone = function() {
-	var newSchedule = new Schedule([], this.contraint);
+	var newSchedule = new Schedule([], this.constraint);
 	var termIDs = this.getTermIDs();
 	for (var i = termIDs.length - 1; i >= 0; i--) {
 		var termID = termIDs[i];
