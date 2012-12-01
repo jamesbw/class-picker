@@ -819,10 +819,22 @@ Application.prototype.getSchedules = function() {
 	return this.scheduleList.schedules;
 };
 
-Application.prototype.getSchedulesMeetingReqs = function() {
-	return this.scheduleList.schedules.filter(function(schedule){
-		return this.activeRequirements.every(function(req){schedule.fulfills(req)});
-	});
+Application.prototype.getSchedulesMeetingReqs = function(num) {
+	num = num || Infinity;
+	var count = 0;
+	var res = [];
+	for (var i = this.getSchedules().length - 1; i >= 0; i--) {
+		var schedule = this.getSchedules()[i];
+		schedule.valid = this.activeRequirements.every(function(req){schedule.fulfills(req)});
+		if (schedule.valid) {
+			res.push(schedule);
+			count +=1;
+			if (count >= num) {
+				break;
+			};
+		};
+	};
+	return res;
 };
 
 Application.prototype.run = function() {
@@ -851,6 +863,7 @@ Application.prototype.run = function() {
 	ui.renderSearch();
 
 	ui.renderPrograms();
+	ui.renderSchedules(10);
 	
 	
 };
@@ -971,6 +984,29 @@ var ui = {
 		});
 	},
 
+	renderSchedules: function(numToShow){
+
+		//don't show any schedules if no courses are picked
+		//this case is necessary because we start with an empty schedule
+		if (_.isEmpty(ui.app.getCourses())) {
+			return;
+		};
+
+		numToShow = numToShow || 10;
+		$('#schedules').children().remove();
+		var schedules = ui.app.getSchedulesMeetingReqs(numToShow);
+		if (_.isEmpty(schedules)) {
+			schedules = ui.app.getSchedules().slice(0,numToShow);
+			$('#schedules').append("<div class='warning'>Warning: these schedules do not meet all the requirements</div>");
+		};
+
+		console.log(schedules)
+		schedules.forEach(function(schedule){
+			var scheduleView = new ui.ScheduleView({schedule: schedule});
+			$('#schedules').append(scheduleView.render().el);
+		});
+	},
+
 	Requirement: Backbone.Model.extend({
 		name: 'default name'
 	}),
@@ -1000,7 +1036,6 @@ var ui = {
 		template: _.template("<ul><li class='req-label'></li><li class='progress-text'></li><li class='progress-bar'><meter min='0'></meter></li></ul>"),
 
 		activate: function(){
-			console.log('activate');
 			ui.activeRequirement = this.requirement;
 			ui.renderRequirements();
 			ui.renderCourses();
@@ -1160,8 +1195,6 @@ var ui = {
 			{
 				this.$el.addClass('disabled');
 				this.$('.course-pick').prop('disabled',true);
-				this.$('.course-waive').prop('disabled',true);
-				this.$('.course-alreadyTaken').prop('disabled',true);
 			}
 			else
 				this.$el.removeClass('disabled');
@@ -1320,6 +1353,7 @@ var ui = {
 			console.log('clicked on view schedules tab')
 			ui.activeTabId = 'view-schedules-tab';
 			ui.toggleContainers();
+			ui.renderSchedules(10);
 		},
 	}),
 
@@ -1351,11 +1385,32 @@ var ui = {
 		},
 
 		selectProgram: function(){
-			console.log('select program')
 			ui.app.setSpecialization(new SingleDepthSpecialization(this.program));
 			$('.program').removeClass('activeProgram');
 			this.$el.addClass('activeProgram');
 		}
+	}),
+
+	ScheduleView: Backbone.View.extend({
+		initialize: function(){
+			this.schedule = this.options.schedule;
+		},
+
+		tagName: 'div',
+		className: 'schedule',
+		template: _.template("<ul></ul>"),
+
+		render: function(){
+			console.log(this.schedule)
+			this.$el.html(this.template());
+			this.schedule.getTermIDs().forEach(function(termID){
+				var courses = this.schedule.courses[termID].get('id').join(', ');
+				this.$el.append("<li class='schedule-term'><div>" + termID + "</div><div>" + courses + "</div></li>");
+			}, this);
+			return this;
+		},
+
+
 	})
 }
 

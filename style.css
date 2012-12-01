@@ -47,6 +47,11 @@ html {
 	border: 1px solid black;
 }
 
+.schedule-term {
+	display: inline-block;
+	border: 1px solid black;
+}
+
 section {
 	border: 1px solid black;
 }
