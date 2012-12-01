@@ -163,6 +163,8 @@ Schedule.prototype.getTermIDs = function() {
 Schedule.prototype.getFulfilledUnits = function(unitRequirement) {
 
 	var requiredIds = unitRequirement.courseList.map(function(course){return course.id});
+	var foundationIds = ['CS 103', 'CS 107', 'CS 109', 'CS 110', 'CS 161'];
+	var requiredWithoutFoundations = _.difference(requiredIds, foundationIds);
 
 	var maxUnitsPerTerm;
 	if (this.constraint) {
@@ -171,6 +173,9 @@ Schedule.prototype.getFulfilledUnits = function(unitRequirement) {
 
 	var unitsTowardsReq = 0;
 
+	//keep count of units towards foundation because we will cap these
+	var foundationsTotal = 0;
+	
 	var termIDs = this.getTermIDs();
 
 	for (var i = termIDs.length - 1; i >= 0; i--) {
@@ -185,16 +190,30 @@ Schedule.prototype.getFulfilledUnits = function(unitRequirement) {
 		};
 		for (var j = courseOfferings.length - 1; j >= 0; j--) {
 			var courseOffering = courseOfferings[j];
-			if (_.contains(requiredIds, courseOffering.id)) {
+			if (_.contains(requiredWithoutFoundations, courseOffering.id)) {
 				var addedUnits = Math.min(courseOffering.units.max - courseOffering.units.min, unitsLeft);
 				units[courseOffering.id] += addedUnits;
 				unitsTowardsReq += units[courseOffering.id];
 				unitsLeft -= addedUnits;
 			};
+
+		};
+
+		for (var j = courseOfferings.length - 1; j >= 0; j--) {
+			var courseOffering = courseOfferings[j];
+			if (_.contains(foundationIds, courseOffering.id)) {
+				var addedUnits = Math.min(courseOffering.units.max - courseOffering.units.min, unitsLeft);
+				units[courseOffering.id] += addedUnits;
+				unitsTowardsReq += units[courseOffering.id];
+				unitsLeft -= addedUnits;
+				foundationsTotal += units[courseOffering.id];
+			};
 		};
 	};
 
-	return unitsTowardsReq ;
+
+	//cap the number of foundations units
+	return unitsTowardsReq  - Math.max(0, foundationsTotal - 10);
 };
 
 Schedule.prototype.fulfills = function(unitRequirement) {
