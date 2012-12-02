@@ -1162,14 +1162,15 @@ var ui = {
 			if (!(course.pick || course.alreadyTaken || course.waived)
 				&& !canPickWithFeedback.canPick)
 			{
+				console.log(course.id,canPickWithFeedback.feedback )
 				view.$el.addClass('disabled');
 				view.$('.course-pick').prop('disabled',true);
-				view.$('tooltip-content').text(canPickWithFeedback.feedback);
+				view.$('.tooltip-content').text(canPickWithFeedback.feedback);
 			}
 			else{
 				view.$el.removeClass('disabled');
 				view.$('.course-pick').prop('disabled',false);
-				view.$('tooltip-content').text('');
+				view.$('.tooltip-content').text('');
 			}
 		};
 	},
