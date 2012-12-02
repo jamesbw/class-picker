@@ -62,8 +62,16 @@ function CourseOffering(id, name, units, term, days, startTime, endTime) {
 	this.endTime = endTime
 }
 
+CourseOffering.prototype.fitsInWithConflicts = function(schedule) {
+	var canAdd = schedule.canAddCourseOfferingWithConflicts(this);
+	return {
+		fits: canAdd.canAdd,
+		conflicts: canAdd.conflicts
+	};
+};
+
 CourseOffering.prototype.fitsIn = function(schedule) {
-	return schedule.canAddCourseOffering(this);
+	return this.fitsInWithConflicts(schedule).fits;
 };
 
 //checks intersection. attempt at optimizing because _.intersection seems slow
@@ -116,19 +124,60 @@ Course.prototype.getTerms = function() {
 };
 
 
-Course.prototype.canBePicked = function(scheduleList) {
+Course.prototype.canBePickedWithFeedback = function(scheduleList) {
 
 
 	//if too many schedule, we'll just randomly sample
 	var numSchedules = scheduleList.schedules.length;
+
+	//no offerings
+	if (_.isEmpty(this.courseOfferings)) {
+		return {
+			canBePicked: false,
+			feedback: "This course is not offered."
+		};
+	};
+
+	//no offerings in selected terms
+	var selectedTermIDs = scheduleList.terms.get('id');
+	if (this.getTerms().every(function(term){
+		return selectedTermIDs.indexOf(term.id) < 0;
+	})){
+		return {
+			canBePicked: false,
+			feedback: "This course is not offered in the selected terms."
+		};
+	};
+
+	//no offerings with matching days
+	if (this.courseOfferings.every(function(off){
+		return off.days.some(function(day){
+			return scheduleList.constraint.allowedDays.indexOf(day) < 0;
+		}); 
+	})){
+		return {
+			canBePicked: false,
+			feedback: "This course is not offered in the selected days."
+		};
+	};
+
+	var conflicts = [];
 
 	if (numSchedules < 500) {
 		for (var i = scheduleList.schedules.length - 1; i >= 0; i--) {
 			var schedule = scheduleList.schedules[i];
 			for (var j = this.courseOfferings.length - 1; j >= 0; j--) {
 				var courseOffering = this.courseOfferings[j];
-				if (courseOffering.fitsIn(schedule))
-					return true;
+				var fitsWithConflicts = courseOffering.fitsInWithConflicts(schedule);
+				if (fitsWithConflicts.fits){
+					return {
+						canBePicked: true,
+						feedback: ""
+					};
+				}
+				else {
+					conflicts = conflicts.concat(fitsWithConflicts.conflicts);
+				}
 			};
 		};		
 	}
@@ -140,14 +189,29 @@ Course.prototype.canBePicked = function(scheduleList) {
 			var schedule = scheduleList.schedules[index];
 			for (var j = this.courseOfferings.length - 1; j >= 0; j--) {
 				var courseOffering = this.courseOfferings[j];
-				if (courseOffering.fitsIn(schedule))
-					return true;
+				var fitsWithConflicts = courseOffering.fitsInWithConflicts(schedule);
+				if (fitsWithConflicts.fits){
+					return {
+						canBePicked: true,
+						feedback: ""
+					};
+				}
+				else {
+					conflicts = conflicts.concat(fitsWithConflicts.conflicts);
+				}
 			};
 			numSamples -=1;
 		}
 	}
 
-	return false;
+	return {
+		canBePicked: false,
+		feedback: "Consider removing " + _.uniq(conflicts).join(', ')
+	};
+};
+
+Course.prototype.canBePicked = function(scheduleList) {
+	return this.canBePickedWithFeedback.canBePicked;
 };
 
 //Search filter
@@ -159,17 +223,23 @@ Course.prototype.matches = function(filter) {
 };
 
 
-Schedule.prototype.canAddCourseOffering = function(newCourseOffering) {
+Schedule.prototype.canAddCourseOfferingWithConflicts = function(newCourseOffering) {
 	var termID = newCourseOffering.term.id
 
 	if (this.getTermIDs().indexOf(termID) < 0) {
 		// console.log("Course offering is for a term that's not chosen")
-		return false;
+		return {
+			canAdd: false,
+			conflicts: []
+		};
 	};
 	for (var i = this.courses[termID].length - 1; i >= 0; i--) {
 		if(this.courses[termID][i].conflictsWith(newCourseOffering)) {
 			// console.log("conflict")
-			return false;
+			return {
+				canAdd: false,
+				conflicts: [this.courses[termID][i].id]
+			};
 		};
 	};
 	// console.log("no conflict")
@@ -177,11 +247,21 @@ Schedule.prototype.canAddCourseOffering = function(newCourseOffering) {
 
 	if(this.constraint && !this.constraint.isSatisfiedBy(this.courses[termID].concat([newCourseOffering]))) {
 		// console.log("constraint not satisfied");
-		return false;
+		return {
+			canAdd: false,
+			conflicts: this.courses[termID].get('id')
+		};
 	}
 
 	// console.log("no constraints violated")
-	return true;
+	return {
+		canAdd: true,
+		conflicts: []
+	};
+};
+
+Schedule.prototype.canAddCourseOffering = function(newCourseOffering) {
+	return this.canAddCourseOfferingWithConflicts(newCourseOffering).canAdd;
 };
 
 Schedule.prototype.add = function(courseOffering) {
@@ -327,6 +407,14 @@ ScheduleList.prototype.getScheduleCount = function() {
 
 ScheduleList.prototype.canPick = function(course) {
 	return course.canBePicked(this);
+};
+
+ScheduleList.prototype.canPickWithFeedback = function(course) {
+	var canBePicked = course.canBePickedWithFeedback(this);
+	return {
+		canPick: canBePicked.canBePicked,
+		feedback: canBePicked.feedback
+	};
 };
 
 ScheduleList.prototype.addCourse = function(course) {
@@ -824,6 +912,11 @@ Application.prototype.canPick = function(course) {
 	return this.scheduleList.canPick(course);
 };
 
+Application.prototype.canPickWithFeedback = function(course) {
+	return this.scheduleList.canPickWithFeedback(course);
+};
+
+
 Application.prototype.setWaivedCourses = function(courses) {
 	this.waivedCourses = courses;
 };
@@ -1064,15 +1157,19 @@ var ui = {
 			var course = courses[i];
 			var view = course.view;
 
+			var canPickWithFeedback = ui.app.canPickWithFeedback(course);
+
 			if (!(course.pick || course.alreadyTaken || course.waived)
-				&& !ui.app.canPick(course))
+				&& !canPickWithFeedback.canPick)
 			{
 				view.$el.addClass('disabled');
 				view.$('.course-pick').prop('disabled',true);
+				view.$('tooltip-content').text(canPickWithFeedback.feedback);
 			}
 			else{
 				view.$el.removeClass('disabled');
 				view.$('.course-pick').prop('disabled',false);
+				view.$('tooltip-content').text('');
 			}
 		};
 	},
@@ -1263,6 +1360,7 @@ var ui = {
 		template: _.template("<td class='course-id'></td>"
 							+"<td class='course-name'></td>"
 							+"<td class='course-units'></td>"
+							+"<td class='tooltip-content'></td>"
 							+"<td><ul>"
 							+"<li><input type='checkbox' class='course-pick'>Pick</input></li>"
 							+"<li><input type='checkbox' class='course-waive'>Waive</input></li>"
@@ -1274,7 +1372,14 @@ var ui = {
 			'click .course-waive' : 'toggleWaive',
 			'click .course-alreadyTaken': 'toggleAlreadyTaken',
 			'click .course-pick': 'togglePick',
-			'input .alreadyTaken-units': 'updateTakenUnits'
+			'input .alreadyTaken-units': 'updateTakenUnits',
+			'mouseover': 'showTooltip'
+		},
+
+		showTooltip: function(){
+			if (this.$el.is('.disabled')) {
+				console.log('disabled')
+			};
 		},
 
 		toggleWaive: function(){
@@ -1383,6 +1488,7 @@ var ui = {
 			this.$('.course-waive').prop('checked',this.course.waived);
 			this.$('.course-alreadyTaken').prop('checked',this.course.alreadyTaken);
 			this.$('.unit-option').toggle(this.course.alreadyTaken);
+			this.$('.tooltip-content').hide();
 
 			this.$('.alreadyTaken-units').attr('min', this.course.units.min);
 			this.$('.alreadyTaken-units').attr('max', this.course.units.max);
@@ -1512,6 +1618,7 @@ var ui = {
 
 		handleInput: function(){
 			ui.renderCourses();
+			ui.toggleCourses();
 		},
 
 	}),
@@ -1522,9 +1629,9 @@ var ui = {
 		template: _.template("<div class='navbar navbar-fixed-top'>"
   							+"	<div class='navbar-inner'>"
   							+"		<ul class='nav'>"
-							+"			<li id='select-program-tab'><a><h4>Select your program</h4></a></li>"
-							+"			<li id='select-courses-tab'><a><h4>Select your courses</h4></a></li>"
-							+"			<li id='view-schedules-tab'><a><h4>View Schedules</h4></a></li>"
+							+"			<li id='select-program-tab' class='header-tab'><a><h4>Select your program</h4></a></li>"
+							+"			<li id='select-courses-tab' class='header-tab'><a><h4>Select your courses</h4></a></li>"
+							+"			<li id='view-schedules-tab' class='header-tab'><a><h4>View Schedules</h4></a></li>"
 							+"		</ul>"
 							+"  </div>"
 							+"</div>"),
