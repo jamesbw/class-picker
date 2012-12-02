@@ -418,6 +418,7 @@ ScheduleList.prototype.canPickWithFeedback = function(course) {
 };
 
 ScheduleList.prototype.addCourse = function(course) {
+	course.pick = true;
 	var newSchedules = [];
 
 	//if too many schedules, we just sample (without replacement)
@@ -461,6 +462,7 @@ ScheduleList.prototype.addCourse = function(course) {
 };
 
 ScheduleList.prototype.removeCourse = function(course) {
+	course.pick = false;
 	this.courses = this.courses.filter(function(course_){
 		return course_.id !== course.id;
 	})
@@ -498,24 +500,29 @@ ScheduleList.prototype.fulfills = function(requirement) {
 			requirement.fulfilled = 0;
 
 			//let's sample all schedules and get the max units from the sample
-			var numSamples = 100;
-			while (numSamples > 0){
-				var index = getRandomInt(0, this.schedules.length -1);
-				var schedule = this.schedules[index];
-				var fulfilled = schedule.getFulfilledUnits(requirement);
-				if(fulfilled > requirement.fulfilled){
-					requirement.fulfilled = fulfilled;
+			if (this.getScheduleCount() > 100){
+				var numSamples = 100;
+				while (numSamples > 0){
+					var index = getRandomInt(0, this.schedules.length -1);
+					var schedule = this.schedules[index];
+					var fulfilled = schedule.getFulfilledUnits(requirement);
+					if(fulfilled > requirement.fulfilled){
+						requirement.fulfilled = fulfilled;
+					}
+					numSamples -= 1;
 				}
-				numSamples -= 1;
+			}
+			else {
+				for (var i = this.schedules.length - 1; i >= 0; i--) {
+					var schedule = this.schedules[i];
+					var fulfilled = schedule.getFulfilledUnits(requirement);
+					if(fulfilled > requirement.fulfilled){
+						requirement.fulfilled = fulfilled;
+					}
+				};
 			}
 
-			// for (var i = this.schedules.length - 1; i >= 0; i--) {
-			// 	var schedule = this.schedules[i];
-			// 	var fulfilled = schedule.getFulfilledUnits(requirement);
-			// 	if(fulfilled > requirement.fulfilled){
-			// 		requirement.fulfilled = fulfilled;
-			// 	}
-			// };
+
 			if (requirement.fulfilled >= requirement.requiredUnitCount){
 				return true;
 			}
@@ -926,6 +933,7 @@ Application.prototype.getWaivedCourses = function() {
 };
 
 Application.prototype.addWaivedCourse = function(course) {
+	course.waived = true;
 	if(_.contains(this.waivedCourses, course)){
 		console.log("Error: course already waived");
 	}
@@ -935,6 +943,7 @@ Application.prototype.addWaivedCourse = function(course) {
 };
 
 Application.prototype.removeWaivedCourse = function(course) {
+	course.waived = false;
 	if(!_.contains(this.waivedCourses, course)){
 		console.log("Error: Course not found in waived courses: " + course.id);
 	}
@@ -973,6 +982,7 @@ Application.prototype.setAlreadyTakenUnits = function(course, units) {
 };
 
 Application.prototype.addAlreadyTakenCourse = function(course, units) {
+	course.alreadyTaken = true;
 	if(_.contains(this.alreadyTakenCourses.get('course'), course)){
 		console.log("Error: course already marked as taken");
 	}
@@ -992,6 +1002,7 @@ Application.prototype.addAlreadyTakenCourseByID = function(id, units) {
 };
 
 Application.prototype.removeAlreadyTakenCourse = function(course) {
+	course.alreadyTaken = false;
 	var alreadyTakenCourse = _.find(this.alreadyTakenCourses, function(c){return c.course === course});
 	if(! alreadyTakenCourse){
 		console.log("Error: course not marked as already taken");
@@ -1114,12 +1125,32 @@ Application.prototype.run = function() {
 	this.setSpecialization(new SingleDepthSpecialization(this.getPrograms()[0]));
 	this.setTerms(ui.terms);
 
+	// this.addCourseByID('CS 103');
+	// this.addCourseByID('CS 107');
+	// this.addCourseByID('CS 109');
+	// this.addCourseByID('CS 110');
+	// this.addCourseByID('CS 161');
+	// this.addCourseByID('CS 221');
+	// this.addCourseByID('CS 223A');
+	// this.addCourseByID('CS 224M');
+	// this.addCourseByID('CS 224N');
+	// this.addCourseByID('CS 229');
+	// this.addCourseByID('CS 231A');
+	// this.addCourseByID('CS 124');
+	// this.addCourseByID('CS 224U');
+	// this.addCourseByID('CS 224W');
+	// this.addCourseByID('CS 228');
+	// this.addCourseByID('CS 140');
+	// this.addCourseByID('CS 143');
+	// this.addCourseByID('CS 144');
+
 	ui.app = this;
 	ui.activeRequirement = this.totalUnitRequirement;
 
 	ui.renderHeader();
 	ui.toggleContainers();
 
+	ui.updateRequirements();
 	ui.renderRequirements();
 	ui.renderCourses();
 	ui.toggleCourses();
@@ -1292,7 +1323,6 @@ var ui = {
 			$('#schedules').append("<div class='warning'>Warning: these schedules do not meet all the requirements</div>");
 		};
 
-		console.log(schedules)
 		schedules.forEach(function(schedule){
 			var scheduleView = new ui.ScheduleView({schedule: schedule});
 			$('#schedules').append(scheduleView.render().el);
@@ -1713,11 +1743,68 @@ var ui = {
 		template: _.template("<ul></ul>"),
 
 		render: function(){
-			console.log(this.schedule)
 			this.$el.html(this.template());
 			this.schedule.getTermIDs().forEach(function(termID){
 				var courses = this.schedule.courses[termID].get('id').join(', ');
-				this.$el.append("<li class='schedule-term'><div>" + termID + "</div><div>" + courses + "</div></li>");
+				this.$el.append("<li class='schedule-term " + termID + "'><div>" + termID + "</div><div class='mini-term-schedule'></div><div class='term-courses'>" + courses + "</div></li>");
+
+				var svgHeight = 100;
+				var svgWidth = 200;
+				this.$('.'+termID ).width(svgWidth)
+				var svg = d3.select(this.$('.'+termID+ ' .mini-term-schedule')[0])
+							.append('svg')
+							.attr('width', svgWidth)
+							.attr('height', svgHeight);
+
+				var days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+
+				svg.selectAll('rect .svg-day')
+					.data(days)
+					.enter()
+					.append('rect')
+					.classed('svg-day', true)
+					.attr('x', function(d,i){return svgWidth / 5 * i})
+					.attr('width', svgWidth / 5)
+					.attr('y', 0)
+					.attr('height', svgHeight)
+
+
+				var courseOfferings = this.schedule.courses[termID];
+				var slots = [];
+				for (var i = courseOfferings.length - 1; i >= 0; i--) {
+					var courseOffering = courseOfferings[i];
+					for (var j = courseOffering.days.length - 1; j >= 0; j--) {
+						var day = courseOffering.days[j]
+						slots.push({
+							courseNum: i,
+							courseID: courseOffering.id,
+							day: day,
+							start: courseOffering.startTime,
+							end: courseOffering.endTime
+						});
+					};
+				};
+
+				var timeScale = d3.scale.linear()
+								  .domain([700, 2000])
+								  .range([0, svgHeight])
+
+				svg.selectAll('rect .svg-course')
+					.data(slots)
+					.enter()
+					.append('rect')
+					.classed('svg-course', true)
+					.classed('course-1', function(d){return  d.courseNum === 0})
+					.classed('course-2', function(d){return  d.courseNum === 1})
+					.classed('course-3', function(d){return  d.courseNum === 2})
+					.classed('course-4', function(d){return  d.courseNum === 3})
+					.attr('x', function(d){return days.indexOf(d.day) * svgWidth / 5})
+					.attr('y', function(d){return timeScale(d.start)})
+					.attr('width', svgWidth / 5)
+					.attr('height', function(d){return timeScale(d.end) - timeScale(d.start)})
+				   
+
+
 			}, this);
 			return this;
 		},

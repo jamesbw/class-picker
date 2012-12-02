@@ -1,0 +1,94 @@
+.header-tab {
+	display: inline-block;
+	width: 33%;
+	border: 1px solid black;
+}
+
+html {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	width: 100%;
+}
+
+#left_bar {
+	width: 200px;
+	float: left;
+}
+
+#right_bar {
+	width: 200px;
+	float: right;
+}
+
+#mid_section {
+	float: left;
+	min-width: 400px;
+	max-width: 450px;
+}
+
+.activeReq {
+	background: gray;
+}
+
+.activeTab {
+	background: gray;
+}
+
+.activeProgram {
+	background: gray;
+}
+
+.disabled {
+	text-decoration: line-through;
+}
+
+.program {
+	border: 1px solid black;
+}
+
+.schedule-term {
+	display: inline-table;
+	border: 1px solid black;
+}
+
+section {
+	border: 1px solid black;
+}
+
+.tooltip {
+    display:none;
+    background:gray;
+    font-size:12px;
+    height:10px;
+    width:160px;
+    padding:25px;
+    color: black;
+  }
+
+ .mini-term-schedule {
+ 	width: 200px;
+ 	height: 100px;
+ }
+
+ .term-courses {
+ 	height: 20px;
+ }
+
+ rect.svg-day {
+ 	fill: gray;
+ 	stroke: black;
+ }
+
+ .svg-course.course-1 {
+ 	fill: red;
+ }
+ .svg-course.course-2 {
+ 	fill: green;
+ }
+ .svg-course.course-3 {
+ 	fill: yellow;
+ }
+ .svg-course.course-4 {
+ 	fill: blue;
+ }
