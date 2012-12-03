@@ -7,34 +7,36 @@
 		<script type="text/javascript" src="d3.v2.min.js"></script>
 		<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
 		<script src="./script.js"></script>
-		<link rel="stylesheet" type="text/css" href="./style.css">
 		<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="./style.css">
 		<link rel="stylesheet" type="text/css" href="./style2.css">
 	</head>
 	<body>
 		<header> Header </header>
-		<section class='container' id='select-program-container'>
-			<div id='programs'></div>
-		</section>
-		<section class='container' id='select-courses-container'>
-			<section id="left_bar" class="span3">Left bar
-				<ul id='req-list' class='unstyled'></ul>
-			</section>
-			<section id="mid_section" class="span6">
-				<div id='search'>Place course search here</div>
-				<table id='course-table'> </table>
-			</section>
-			<section id="right_bar" class="span3">
-				<div id='terms'>
-					<div>Terms</div>
-					<ul id='term-list'></ul>
-				</div>
-				<div id='constraint'></div>
-			</section>
-		</section>
-		<section class='container' id='view-schedules-container'>
-			<div id='schedules'></div>
-		</section>
+        <section class='container' id='select-program-container'>
+            <div id='programs'></div>
+        </section>
+        <section class='container' id='select-courses-container'>
+            <div class='row'>
+                <section id='left_bar' class='span3 bs-docs-sidebar'>
+                    <ul id='req-list' class='nav nav-list bs-docs-sidenav affix'></ul>
+                </section>
+                <section id='mid_section' class='span6'>
+                    <div id='search'>Place course search here</div>
+                    <table id='course-table'> </table>
+                </section>
+                <section id='right_bar' class='span3'>
+                    <div id='terms'>
+                        <div>Terms</div>
+                        <ul id='term-list'></ul>
+                    </div>
+                    <div id='constraint'></div>
+                </section>
+            </div>
+        </section>
+        <section class='container' id='view-schedules-container'>
+            <div id='schedules'></div>
+        </section>
 	</body>
 	<script>
 		// $(function(){

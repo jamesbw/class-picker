@@ -1193,15 +1193,14 @@ var ui = {
 			if (!(course.pick || course.alreadyTaken || course.waived)
 				&& !canPickWithFeedback.canPick)
 			{
-				console.log(course.id,canPickWithFeedback.feedback )
 				view.$el.addClass('disabled');
 				view.$('.course-pick').prop('disabled',true);
-				view.$('.tooltip-content').text(canPickWithFeedback.feedback);
+				view.$('tooltip-content').text(canPickWithFeedback.feedback);
 			}
 			else{
 				view.$el.removeClass('disabled');
 				view.$('.course-pick').prop('disabled',false);
-				view.$('.tooltip-content').text('');
+				view.$('tooltip-content').text('');
 			}
 		};
 	},
@@ -1355,7 +1354,14 @@ var ui = {
 
 		tagName: 'li',
 		className: 'requirement',
-		template: _.template("<ul><li class='req-label'></li><li class='progress-text'></li><li class='progress-bar'><meter min='0'></meter></li></ul>"),
+		// template: _.template("<ul><li class='req-label'></li><li class='progress-text'></li><li class='progress-bar'><meter min='0'></meter></li></ul>"),
+		template: _.template("<a>"
+                            +"  <p class='req-label'></p>"
+                            +"  <div class='progress'>"
+                            +"      <p class='progress-text'></p>"
+                            +"      <div class='bar'></div>"
+                            +"  </div>"
+                            +"</a>"),
 
 		activate: function(){
 			ui.activeRequirement = this.requirement;
@@ -1369,16 +1375,36 @@ var ui = {
 		},
 
 
-		render: function(){
-			this.$el.html(this.template());
-			this.$el.toggleClass('activeReq', this.requirement === ui.activeRequirement);
-			this.$('.req-label').html(this.label);
-			this.$('.progress-text').html(this.requirement.progressText());
-			this.$('meter').attr('max', this.requirement.required)
-						   .attr('value', this.requirement.fulfilled);
-			this.$('ul').css('padding-left', (this.indent * 20 + 20) + 'px');
-			return this;
-		}
+		// render: function(){
+		// 	this.$el.html(this.template());
+		// 	this.$el.toggleClass('activeReq', this.requirement === ui.activeRequirement);
+		// 	this.$('.req-label').html(this.label);
+		// 	this.$('.progress-text').html(this.requirement.progressText());
+		// 	this.$('meter').attr('max', this.requirement.required)
+		// 				   .attr('value', this.requirement.fulfilled);
+		// 	this.$('ul').css('padding-left', (this.indent * 20 + 20) + 'px');
+		// 	return this;
+		// }
+
+        render: function(){
+            progressValue = this.requirement.fulfilled / this.requirement.required * 100;
+            this.$el.html(this.template());
+            this.$el.toggleClass('active', this.requirement === ui.activeRequirement);
+            this.$el.addClass('level-' + this.indent);
+            this.$('.req-label').html(this.label);
+            this.$('.progress-text').html(this.requirement.progressText());
+            this.$('.bar').css('width', progressValue + '%');
+            if (progressValue <= 50) {
+                this.$('.progress').addClass('progress-danger');
+            }
+            else if (progressValue < 100) {
+                this.$('.progress').addClass('progress-warning');
+            }
+            else {
+                this.$('.progress').addClass('progress-success');
+            };
+            return this;
+        }
 	}),
 
 	CourseView: Backbone.View.extend({
