@@ -1125,24 +1125,24 @@ Application.prototype.run = function() {
 	this.setSpecialization(new SingleDepthSpecialization(this.getPrograms()[0]));
 	this.setTerms(ui.terms);
 
-	// this.addCourseByID('CS 103');
-	// this.addCourseByID('CS 107');
-	// this.addCourseByID('CS 109');
-	// this.addCourseByID('CS 110');
-	// this.addCourseByID('CS 161');
-	// this.addCourseByID('CS 221');
-	// this.addCourseByID('CS 223A');
-	// this.addCourseByID('CS 224M');
-	// this.addCourseByID('CS 224N');
-	// this.addCourseByID('CS 229');
-	// this.addCourseByID('CS 231A');
-	// this.addCourseByID('CS 124');
-	// this.addCourseByID('CS 224U');
-	// this.addCourseByID('CS 224W');
-	// this.addCourseByID('CS 228');
-	// this.addCourseByID('CS 140');
-	// this.addCourseByID('CS 143');
-	// this.addCourseByID('CS 144');
+	this.addCourseByID('CS 103');
+	this.addCourseByID('CS 107');
+	this.addCourseByID('CS 109');
+	this.addCourseByID('CS 110');
+	this.addCourseByID('CS 161');
+	this.addCourseByID('CS 221');
+	this.addCourseByID('CS 223A');
+	this.addCourseByID('CS 224M');
+	this.addCourseByID('CS 224N');
+	this.addCourseByID('CS 229');
+	this.addCourseByID('CS 231A');
+	this.addCourseByID('CS 124');
+	this.addCourseByID('CS 224U');
+	this.addCourseByID('CS 224W');
+	this.addCourseByID('CS 228');
+	this.addCourseByID('CS 140');
+	this.addCourseByID('CS 143');
+	this.addCourseByID('CS 144');
 
 	ui.app = this;
 	ui.activeRequirement = this.totalUnitRequirement;
@@ -1308,25 +1308,28 @@ var ui = {
 	},
 
 	renderSchedules: function(numToShow){
+		$('#schedules').children().remove();
 
 		//don't show any schedules if no courses are picked
 		//this case is necessary because we start with an empty schedule
 		if (_.isEmpty(ui.app.getCourses())) {
+			$('#schedules').append("<div class='alert'>Pick some classes first!</div>");
 			return;
 		};
 
 		numToShow = numToShow || 10;
-		$('#schedules').children().remove();
 		var schedules = ui.app.getSchedulesMeetingReqs(numToShow);
 		if (_.isEmpty(schedules)) {
 			schedules = ui.app.getSchedules().slice(0,numToShow);
-			$('#schedules').append("<div class='warning'>Warning: these schedules do not meet all the requirements</div>");
+			$('#schedules').append("<div class='alert'>Warning: these schedules do not meet all the requirements</div>");
 		};
 
 		schedules.forEach(function(schedule){
 			var scheduleView = new ui.ScheduleView({schedule: schedule});
 			$('#schedules').append(scheduleView.render().el);
 		});
+
+		$('.mini-term-schedule').overlay();
 	},
 
 	Requirement: Backbone.Model.extend({
@@ -1748,7 +1751,9 @@ var ui = {
 			this.$el.html(this.template());
 			this.schedule.getTermIDs().forEach(function(termID){
 				var courses = this.schedule.courses[termID].get('id').join(', ');
-				this.$el.append("<li class='schedule-term " + termID + "'><div>" + termID + "</div><div class='mini-term-schedule'></div><div class='term-courses'>" + courses + "</div></li>");
+
+				var uniqueID = termID + getRandomInt(0, 10000000);
+				this.$el.append("<li class='schedule-term " + termID + "'><div>" + termID + "</div><div class='mini-term-schedule' rel='#"+ uniqueID+"'></div><div class='schedule-overlay' id='"+ uniqueID+"'></div><div class='term-courses'>" + courses + "</div></li>");
 
 				var svgHeight = 100;
 				var svgWidth = 200;
@@ -1804,7 +1809,105 @@ var ui = {
 					.attr('y', function(d){return timeScale(d.start)})
 					.attr('width', svgWidth / 5)
 					.attr('height', function(d){return timeScale(d.end) - timeScale(d.start)})
-				   
+					.attr('rx', 2)
+					.attr('ry', 2)
+
+
+
+				var overlaySVGWidth = 600;
+				var overlaySVGHeight = 300;
+				var margin = 0;
+
+										
+				var overlaySVG = d3.select(this.$('.'+termID+ ' .schedule-overlay')[0])
+							.append('svg')
+							.attr('width', overlaySVGWidth + margin )
+							.attr('height', overlaySVGHeight + margin);  
+				
+				var overlaySchedule = overlaySVG.append('g')
+										.attr('transform','translate(' + margin + ',' + margin +')')
+
+				overlaySchedule.selectAll('rect .svg-day')
+					.data(days)
+					.enter()
+					.append('rect')
+					.classed('svg-day', true)
+					.attr('x', function(d,i){return overlaySVGWidth / 5 * i})
+					.attr('width', overlaySVGWidth / 5)
+					.attr('y', 0)
+					.attr('height', overlaySVGHeight)
+
+				var overlayTimeScale = d3.scale.linear()
+								  .domain([700, 2000])
+								  .range([0, overlaySVGHeight])
+
+				overlaySchedule.selectAll('line .svg-hour-line')
+				  	.data([900, 1200, 1500, 1800])
+				  	.enter()
+				  	.append('line')
+				  	.classed('svg-hour-line', true)
+				  	.attr('x1', 0)
+				  	.attr('x2', overlaySVGWidth)
+				  	.attr('y1', overlayTimeScale)
+				  	.attr('y2', overlayTimeScale)
+				  	.attr('stroke', '#EBEBEB')
+				  	.attr('stroke-width', 1)
+
+				overlaySchedule.selectAll('text .svg-time-label')
+					.data([{text:'9am', num: 900}, {text:'12pm', num: 1200}, {text:'3pm', num: 1500}, {text:'6pm', num: 1800}])
+					.enter()
+					.append('text')
+					.classed('svg-time-label', true)
+					.attr('x', 0)
+					.attr('y', function(d){return overlayTimeScale(d.num)})
+					.attr('stroke', 'gray')
+					.attr('font-size', 10)
+					.attr('text-anchor', 'left')
+					.text(function(d){ return d.text})
+
+				overlaySchedule.selectAll('text .svg-day-label')
+					.data(days)
+					.enter()
+					.append('text')
+					.classed('svg-day-label', true)
+					.attr('x', function(d,i){return (overlaySVGWidth / 5) * (i + 0.5)})
+					.attr('y', 20)
+					.attr('stroke', 'gray')
+					.attr('stroke-width', 1)
+					.attr('font-size', 10)
+					// .attr('font-weight', 'bold')
+					.attr('text-anchor', 'middle')
+					.text(String)
+
+				overlaySchedule.selectAll('rect .svg-course')
+					.data(slots)
+					.enter()
+					.append('rect')
+					.classed('svg-course', true)
+					.classed('course-1', function(d){return  d.courseNum === 0})
+					.classed('course-2', function(d){return  d.courseNum === 1})
+					.classed('course-3', function(d){return  d.courseNum === 2})
+					.classed('course-4', function(d){return  d.courseNum === 3})
+					.attr('x', function(d){return days.indexOf(d.day) * overlaySVGWidth / 5})
+					.attr('y', function(d){return overlayTimeScale(d.start)})
+					.attr('width', overlaySVGWidth / 5)
+					.attr('height', function(d){return overlayTimeScale(d.end) - overlayTimeScale(d.start)})
+					.attr('rx', 5)
+					.attr('ry', 5)
+
+				overlaySchedule.selectAll('text .svg-course-label')
+					.data(slots)
+					.enter()
+					.append('text')
+					.classed('svg-course-label', true)
+					.attr('x', function(d){return (days.indexOf(d.day) + 0.5) * overlaySVGWidth / 5})
+					.attr('y', function(d){return (overlayTimeScale(d.end) + overlayTimeScale(d.start) + 10) / 2})
+					.attr('stroke', 'white')
+					.attr('font-size', 10)
+					.attr('text-anchor', 'middle')
+					// .style('font-weight', 'lighter')
+					.text(function(d){ return d.courseID})
+
 
 
 			}, this);
