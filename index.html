@@ -9,7 +9,7 @@
 		<script src="./script.js"></script>
 		<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="./style.css">
-		<link rel="stylesheet" type="text/css" href="./style2.css">
+		<!-- <link rel="stylesheet" type="text/css" href="./style2.css"> -->
 	</head>
 	<body>
 		<header> Header </header>
@@ -18,20 +18,23 @@
         </section>
         <section class='container' id='select-courses-container'>
             <div class='row'>
-                <section id='left_bar' class='span3 bs-docs-sidebar'>
+                <div id='left_bar' class='span3 bs-docs-sidebar'>
                     <ul id='req-list' class='nav nav-list bs-docs-sidenav affix'></ul>
-                </section>
-                <section id='mid_section' class='span6'>
+                </div>
+                <div id='mid_section' class='span6'>
                     <div id='search'>Place course search here</div>
-                    <table id='course-table'> </table>
-                </section>
-                <section id='right_bar' class='span3'>
-                    <div id='terms'>
-                        <div>Terms</div>
-                        <ul id='term-list'></ul>
+                    <!-- <table id='course-table'> </table> -->
+                    <div id='course-table'></div>
+                </div>
+                <div id='right_bar' class='span3'>
+                    <div class='well affix'>
+                        <ul id='terms' class='nav nav-list'>
+                            <li class='nav-header'>Terms</li>
+                            <!-- <div id='term-list'></div> -->
+                        </ul>
+                        <div id='constraint'></div>
                     </div>
-                    <div id='constraint'></div>
-                </section>
+                </div>
             </div>
         </section>
         <section class='container' id='view-schedules-container'>

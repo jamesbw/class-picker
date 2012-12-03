@@ -1265,8 +1265,9 @@ var ui = {
 
 	renderCourses: function(){
 		var filter = $('#search-box').val();
-		$('#course-table tr').remove();
-		$('#course-table').append('<tr><td colspan="4">' + ui.activeRequirement.instructions()+ '</td></tr>')
+		// $('#course-table tr').remove();
+        $('#course-table div').remove();
+		$('#course-table').append('<div>' + ui.activeRequirement.instructions()+ '</div>')
 		ui.activeRequirement.courseList.forEach(function(course){
 			if(course.matches(filter)){
 				var courseView = new ui.CourseView({course: course});
@@ -1279,7 +1280,7 @@ var ui = {
 	renderTerms: function(){
 		ui.terms.forEach(function(term){
 			var termView = new ui.TermView({term: term});
-			$('#term-list').append(termView.render().el);
+			$('#terms').append(termView.render().el);
 		});
 	},
 
@@ -1412,18 +1413,41 @@ var ui = {
 			this.course = this.options.course;
 		},
 
-		tagName: 'tr',
-		className: 'course',
-		template: _.template("<td class='course-id'></td>"
-							+"<td class='course-name'></td>"
-							+"<td class='course-units'></td>"
-							+"<td class='tooltip-content'></td>"
-							+"<td><ul>"
-							+"<li><input type='checkbox' class='course-pick'>Pick</input></li>"
-							+"<li><input type='checkbox' class='course-waive'>Waive</input></li>"
-							+"<li><input type='checkbox' class='course-alreadyTaken'>Already taken <span class='unit-option' style='display:none'>for <input type='number' class='alreadyTaken-units' value='3'/> units </span></input></li>"
-							+"</ul></td>"
-							),
+		// tagName: 'tr',
+		// className: 'course',
+		// template: _.template("<td class='course-id'></td>"
+		// 					+"<td class='course-name'></td>"
+		// 					+"<td class='course-units'></td>"
+		// 					+"<td class='tooltip-content'></td>"
+		// 					+"<td><ul>"
+		// 					+"<li><input type='checkbox' class='course-pick'>Pick</input></li>"
+		// 					+"<li><input type='checkbox' class='course-waive'>Waive</input></li>"
+		// 					+"<li><input type='checkbox' class='course-alreadyTaken'>Already taken <span class='unit-option' style='display:none'>for <input type='number' class='alreadyTaken-units' value='3'/> units </span></input></li>"
+		// 					+"</ul></td>"
+		// 					),
+
+        tagName: 'div',
+        className: 'course well',
+        template: _.template("<div class='course-content'>"
+                            +"  <table>"
+                            +"      <tr>"
+                            +"          <td class='course-id'></td>"
+                            +"          <td class='course-name'></td>"
+                            +"          <td class='course-units'></td>"
+                            +"          <td class='tooltip-content'></td>"
+                            // +"<td><ul>"
+                            // +"<li><input type='checkbox' class='course-pick'>Pick</input></li>"
+                            // +"<li><input type='checkbox' class='course-waive'>Waive</input></li>"
+                            // +"<li><input type='checkbox' class='course-alreadyTaken'>Already taken <span class='unit-option' style='display:none'>for <input type='number' class='alreadyTaken-units' value='3'/> units </span></input></li>"
+                            // +"</ul></td>"
+                            +"      </tr>"
+                            +"  </table>"
+                            +"</div>"
+                            +"<div class='course-options'>"
+                            +"  <table><tr><td>more info</td></tr>"
+                            +"  <tr><td>more options</td></tr></table>"
+                            +"</div>"
+                         ),
 
 		events: {
 			'click .course-waive' : 'toggleWaive',
@@ -1569,7 +1593,7 @@ var ui = {
 
 		tagName: 'li',
 		className: 'term',
-		template: _.template("<li><input class='term-pick' type='checkbox'/><span class='term-name'><span></li>"),
+		template: _.template("<a><label class='checkbox'><input class='term-pick' type='checkbox'><span class='term-name'><span></input></label></a>"),
 
 		render: function(){
 			this.$el.html(this.template());
@@ -1599,17 +1623,15 @@ var ui = {
 
 	ConstraintView: Backbone.View.extend({
 
-		tagName: 'span',
-		className: 'constraint',
-		template: _.template("<div class='constraint-units'>Max units per term: <input type='number' value='10' id='constraint-units-selector'/></div><div class='constraint-days'>Max days per term: <input type='number' value='3' id='constraint-numdays-selector'/></div>" 
-							 +"<div>Days Allowed</div>"
-							 +"<ul>"
-							 +"<li><input type='checkbox' class='day-checkbox' value='Mon' checked>Monday</input></li>"
-							 +"<li><input type='checkbox' class='day-checkbox' value='Tue' checked>Tuesday</input></li>"
-							 +"<li><input type='checkbox' class='day-checkbox' value='Wed' checked>Wednesday</input></li>"
-							 +"<li><input type='checkbox' class='day-checkbox' value='Thu' checked>Thursday</input></li>"
-							 +"<li><input type='checkbox' class='day-checkbox' value='Fri' checked>Friday</input></li>"
-							 +"</ul>"),
+		tagName: 'ul',
+		className: 'constraint nav nav-list',
+		template: _.template("<li class='constraint-units nav-header'>Max units per term:</li> <li><input type='number' value='10' id='constraint-units-selector' class='span1'/></li><li class='constraint-days nav-header'>Max days per term:</li> <li><input type='number' value='3' id='constraint-numdays-selector' class='span1'/></li>" 
+							 +"<li class='nav-header'>Days Allowed</li>"
+							 +"<li><a><label class='checkbox'><input type='checkbox' class='day-checkbox' value='Mon' checked>Monday</input></label></a></li>"
+							 +"<li><a><label class='checkbox'><input type='checkbox' class='day-checkbox' value='Tue' checked>Tuesday</input></label></a></li>"
+							 +"<li><a><label class='checkbox'><input type='checkbox' class='day-checkbox' value='Wed' checked>Wednesday</input></label></a></li>"
+							 +"<li><a><label class='checkbox'><input type='checkbox' class='day-checkbox' value='Thu' checked>Thursday</input></label></a></li>"
+							 +"<li><a><label class='checkbox'><input type='checkbox' class='day-checkbox' value='Fri' checked>Friday</input></label></a></li>"),
 
 		render: function(){
 			this.$el.html(this.template());
@@ -1688,9 +1710,9 @@ var ui = {
 		template: _.template("<div class='navbar navbar-fixed-top'>"
   							+"	<div class='navbar-inner'>"
   							+"		<ul class='nav'>"
-							+"			<li id='select-program-tab' class='header-tab'><a><h4>Select your program</h4></a></li>"
-							+"			<li id='select-courses-tab' class='header-tab'><a><h4>Select your courses</h4></a></li>"
-							+"			<li id='view-schedules-tab' class='header-tab'><a><h4>View Schedules</h4></a></li>"
+							+"			<li id='select-program-tab' class='header-tab'><a><h4>1. Select your program</h4></a></li>"
+							+"			<li id='select-courses-tab' class='header-tab'><a><h4>2. Select your courses</h4></a></li>"
+							+"			<li id='view-schedules-tab' class='header-tab'><a><h4>3. View Schedules</h4></a></li>"
 							+"		</ul>"
 							+"  </div>"
 							+"</div>"),
