@@ -1512,6 +1512,8 @@ var ui = {
 		render: function(){
 			this.course.view = this;
 			this.$el.html(this.template());
+			var that = this;
+			this.$el.tooltip({title: function(){return that.$('.tooltip-content').text()}});
 			this.$('.course-id').html(this.course.id);
 			this.$('.course-name').html(this.course.name);
 			this.$('.course-units').html(this.course.units.min + '-' + this.course.units.max);
