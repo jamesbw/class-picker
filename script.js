@@ -1207,12 +1207,16 @@ var ui = {
 			{
 				view.$el.addClass('disabled');
 				view.$('.course-pick').prop('disabled',true);
-				view.$('.tooltip-content').text(canPickWithFeedback.feedback);
+				view.$('.label-disabled').show();
+				// view.$('.tooltip-content').text(canPickWithFeedback.feedback);
+				view.$('.label-disabled').attr('data-original-title', canPickWithFeedback.feedback);
 			}
 			else{
 				view.$el.removeClass('disabled');
+				view.$('.label-disabled').hide();
 				view.$('.course-pick').prop('disabled',false);
-				view.$('.tooltip-content').text('');
+				view.$('.label-disabled').removeAttr('data-original-title');
+				// view.$('.tooltip-content').text('');
 			}
 		};
 	},
@@ -1450,13 +1454,20 @@ var ui = {
                             +"          <td class='course-id'></td>"
                             +"          <td class='course-name'></td>"
                             +"          <td class='course-units'></td>"
-                            +"          <td class='tooltip-content'></td>"
+                            // +"          <td class='tooltip-content'></td>"
                             // +"<td><ul>"
                             // +"<li><input type='checkbox' class='course-pick'>Pick</input></li>"
                             // +"<li><input type='checkbox' class='course-waive'>Waive</input></li>"
                             // +"<li><input type='checkbox' class='course-alreadyTaken'>Already taken <span class='unit-option' style='display:none'>for <input type='number' class='alreadyTaken-units' value='3'/> units </span></input></li>"
                             // +"</ul></td>"
                             +"      </tr>"
+                            +"		<tr>"
+                            +"			<td colspan='4'>"
+                            +"			<div class='course-label label-disabled'>Not Selectable</div>"
+                            +"			<div class='course-label label-waived'>Waived</div>"
+                            +"			<div class='course-label label-already-taken'>Already Taken</div>"
+                            +"			</td>"
+                            +"		</tr>"
                             +"  </table>"
                             +"</div>"
                             +"<div class='course-options'>"
@@ -1488,12 +1499,14 @@ var ui = {
 		toggleWaive: function(){
 			console.log('waive')
 			if (this.course.waived) {
+				this.$('.label-waived').hide();
 				this.course.waived = false;
 				ui.app.removeWaivedCourse(this.course);
 			}
 			else{
 				this.course.waived = true;
 				ui.app.addWaivedCourse(this.course);
+				this.$('.label-waived').show();
 
 				if(this.course.pick){
 					this.course.pick = false;
@@ -1501,6 +1514,7 @@ var ui = {
 					ui.app.removeCourse(this.course);
 				};
 				if (this.course.alreadyTaken) {
+					this.$('.label-already-taken').hide();
 					this.course.alreadyTaken = false;
 					this.$('.course-alreadyTaken').attr('checked', false);
 					this.$('.unit-option').hide();
@@ -1519,8 +1533,10 @@ var ui = {
 				this.course.alreadyTaken = false;
 				// this.$('.unit-option').hide();
 				ui.app.removeAlreadyTakenCourse(this.course);
+				this.$('.label-already-taken').hide();
 			}
 			else{
+				this.$('.label-already-taken').show();
 				this.course.alreadyTaken = true;
 				// this.$('.unit-option').show();
 
@@ -1532,6 +1548,7 @@ var ui = {
 					ui.app.removeCourse(this.course);
 				};
 				if(this.course.waived){
+					this.$('.label-waived').hide();
 					this.course.waived = false;
 					this.$('.course-waive').attr('checked', false);
 					ui.app.removeWaivedCourse(this.course);
@@ -1546,8 +1563,9 @@ var ui = {
 		togglePick: function(){
 
 			console.log(this.$el,this.$el.is('disabled'))
-			if (this.$el.is('.disabled')) {
+			if (this.$el.is('.disabled') || this.course.alreadyTaken || this.course.waived) {
 				//can't pick disabled course
+				//if waived or already taken, need to clear that first
 				return;
 			};
 
@@ -1560,12 +1578,14 @@ var ui = {
 				ui.app.addCourse(this.course);
 
 				if (this.course.alreadyTaken) {
+					this.$('.label-already-taken').hide();
 					this.course.alreadyTaken = false;
 					this.$('.course-alreadyTaken').attr('checked', false);
 					this.$('.unit-option').hide();
 					ui.app.removeAlreadyTakenCourse(this.course);
 				};
 				if(this.course.waived){
+					this.$('.label-waived').hide();
 					this.course.waived = false;
 					this.$('.course-waive').attr('checked', false);
 					ui.app.removeWaivedCourse(this.course);
@@ -1597,7 +1617,10 @@ var ui = {
 			this.course.view = this;
 			this.$el.html(this.template());
 			var that = this;
-			this.$el.tooltip({title: function(){return that.$('.tooltip-content').text()}});
+			this.$('.label-disabled').tooltip({
+				// title: function(){console.log('called');return that.$('.tooltip-content').text()}
+				placement: 'left'
+			});
 			this.$('.course-id').html(this.course.id);
 			this.$('.course-name').html(this.course.name);
 			this.$('.course-units').html(this.course.units.min + '-' + this.course.units.max);
@@ -1605,7 +1628,7 @@ var ui = {
 			// this.$('.course-waive').prop('checked',this.course.waived);
 			// this.$('.course-alreadyTaken').prop('checked',this.course.alreadyTaken);
 			// this.$('.unit-option').toggle(this.course.alreadyTaken);
-			this.$('.tooltip-content').hide();
+			// this.$('.tooltip-content').hide();
 
 			
 
@@ -1613,6 +1636,7 @@ var ui = {
 			this.$('.more-info').popover({
 				content: this.course.desc,
 				placement: 'right',
+				trigger: 'hover'
 			})
 
 			var that = this;

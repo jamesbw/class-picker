@@ -458,6 +458,12 @@ section#select-courses-container {
   width: 25px;
 }
 
-checkbox.course-waive, checkbox.course-alreadyTaken {
+input.course-waive, input.course-alreadyTaken {
   vertical-align: 0px;
+}
+
+.course-label {
+  float: right;
+  display: none;
+  background: pink;
 }
