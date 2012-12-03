@@ -211,7 +211,7 @@ Course.prototype.canBePickedWithFeedback = function(scheduleList) {
 };
 
 Course.prototype.canBePicked = function(scheduleList) {
-	return this.canBePickedWithFeedback.canBePicked;
+	return this.canBePickedWithFeedback(scheduleList).canBePicked;
 };
 
 //Search filter
@@ -396,7 +396,10 @@ function ScheduleList(courses, terms, constraint){
 
 	if (courses) {
 		courses.forEach(function(course){
-			this.addCourse(course);
+			course.pick = false;
+			if (this.canPick(course)) {
+				this.addCourse(course);
+			};
 		}, this)
 	};
 }
@@ -1180,7 +1183,14 @@ var ui = {
 	},
 
 	//enable, disable courses
-	toggleCourses: function(){
+	toggleCourses: function(tighter){
+
+		if(tighter){
+			$('#alert-area').children().remove();
+			$("#alert-area").append($("<div class='alert-message alert fade in' data-alert><p> Warning: some classes may have been dropped to satisfy tighter constraints </p></div>"));
+		    $(".alert-message").delay(2000).fadeOut("slow", function () { $(this).remove(); });
+		};
+
 		var courses = ui.activeRequirement.courseList;
 		for (var i = courses.length - 1; i >= 0; i--) {
 			var course = courses[i];
@@ -1675,7 +1685,8 @@ var ui = {
 		},
 
 		toggleTerm: function(){
-			if (this.$('.term-pick').prop('checked')) {
+			var added = this.$('.term-pick').prop('checked');
+			if (added) {
 				ui.app.addTerm(this.term);
 			}
 			else{
@@ -1684,7 +1695,7 @@ var ui = {
 			ui.updateRequirements();
 			ui.renderRequirements();
 			// ui.renderCourses();
-			ui.toggleCourses();
+			ui.toggleCourses(!added);
 		}
 
 	}),
@@ -1716,37 +1727,43 @@ var ui = {
 
 		changeUnits: function(){
 			var constraint = ui.app.getConstraint();
-			constraint.maxUnitsPerTerm = parseInt(this.$('#constraint-units-selector').val(), 10);
+			var newMax = parseInt(this.$('#constraint-units-selector').val(), 10);
+			var tighter = newMax < constraint.maxUnitsPerTerm;
+			constraint.maxUnitsPerTerm = newMax;
 			ui.app.setConstraint(constraint);
 
 			ui.updateRequirements();
 			ui.renderRequirements();
 			// ui.renderCourses();
-			ui.toggleCourses();
+			ui.toggleCourses(tighter);
 		},
 
 		changeNumDays: function(){
 			var constraint = ui.app.getConstraint();
-			constraint.maxDaysPerTerm = parseInt(this.$('#constraint-numdays-selector').val(), 10);
+			var newNum = parseInt(this.$('#constraint-numdays-selector').val(), 10);
+			var tighter = newNum < constraint.maxDaysPerTerm;
+			constraint.maxDaysPerTerm = newNum;
 			ui.app.setConstraint(constraint);
 
 			ui.updateRequirements();
 			ui.renderRequirements();
 			// ui.renderCourses();
-			ui.toggleCourses();
+			ui.toggleCourses(tighter);
 		},
 
 		changeDays: function(){
 			var constraint = ui.app.getConstraint();
-			constraint.allowedDays = this.$('.day-checkbox:checked').map(function(i, el){
+			var newDays = this.$('.day-checkbox:checked').map(function(i, el){
 				return $(el).val();
 			}).toArray();
+			var tighter = newDays.length < constraint.allowedDays.length;
+			constraint.allowedDays = newDays;
 			ui.app.setConstraint(constraint);
 
 			ui.updateRequirements();
 			ui.renderRequirements();
 			// ui.renderCourses();
-			ui.toggleCourses();
+			ui.toggleCourses(tighter);
 		}
 
 	}),
