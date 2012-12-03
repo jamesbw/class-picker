@@ -1,4 +1,6 @@
-
+body {
+  min-width: 960px;
+}
 
 /* NAVIGATION BAR (HEADER) */
 
@@ -22,6 +24,7 @@
 
 .navbar-inner {
   min-height: 40px;
+  min-width: 960px;
   padding-right: 20px;
   padding-left: 20px;
   background-color: #fafafa;
@@ -281,7 +284,7 @@
 }
 
 .bs-docs-sidenav.affix {
-  top: 60px;
+  top: 100px;
 }
 
 .progress {
@@ -324,6 +327,12 @@
 
 
 /* MIDDLE PLANEL */
+
+#course-table .instructions {
+  text-align: center;
+  padding: 0 20px;
+  margin-top: 20px;
+}
 
 .course.well {
   padding: 0;
@@ -392,6 +401,25 @@
   text-align: center;
 }
 
+#search.navbar-fixed-top {
+  top: 60px;
+  z-index: 1020;
+}
+
+#search .navbar-inner {
+  background-color: #e5e5e5;
+  background-image: none;
+}
+
+#search .navbar-search {
+  float: none;
+  text-align: center;
+}
+
+#search-box {
+  width: 432px;
+}
+
 
 /* TO BE UPDATED */
 
@@ -406,4 +434,8 @@ section {
 
 section.container {
     margin-top: 60px;
+}
+
+section#select-courses-container {
+  margin-top: 100px;
 }

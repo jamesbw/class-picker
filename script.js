@@ -639,11 +639,11 @@ UnitRequirement.prototype.progressText = function() {
 };
 
 CourseRequirement.prototype.instructions = function() {
-	return "Select " + this.required + " courses from the following list:";
+	return "Select " + this.required + " courses from the following list";
 };
 
 UnitRequirement.prototype.instructions = function() {
-	return "Select " + this.required + " units from the following list:";
+	return "Select " + this.required + " units from the following list";
 };
 
 
@@ -1267,7 +1267,7 @@ var ui = {
 		var filter = $('#search-box').val();
 		// $('#course-table tr').remove();
         $('#course-table div').remove();
-		$('#course-table').append('<div>' + ui.activeRequirement.instructions()+ '</div>')
+		$('#course-table').append('<div class="instructions well"><h4>' + ui.activeRequirement.instructions()+ '</h4></div>')
 		ui.activeRequirement.courseList.forEach(function(course){
 			if(course.matches(filter)){
 				var courseView = new ui.CourseView({course: course});
@@ -1291,7 +1291,7 @@ var ui = {
 
 	renderSearch: function(){
 		var searchView = new ui.SearchView();
-		$('#search').html(searchView.render().el);
+		$('#search .navbar-inner').html(searchView.render().el);
 	},
 
 	renderHeader: function(){
@@ -1625,7 +1625,7 @@ var ui = {
 
 		tagName: 'ul',
 		className: 'constraint nav nav-list',
-		template: _.template("<li class='constraint-units nav-header'>Max units per term:</li> <li><input type='number' value='10' id='constraint-units-selector' class='span1'/></li><li class='constraint-days nav-header'>Max days per term:</li> <li><input type='number' value='3' id='constraint-numdays-selector' class='span1'/></li>" 
+		template: _.template("<li class='constraint-units nav-header'>Max units per term:</li> <li><input type='number' value='10' id='constraint-units-selector' class='span1'/></li><li class='constraint-days nav-header'>Max days per week:</li> <li><input type='number' value='3' id='constraint-numdays-selector' class='span1'/></li>" 
 							 +"<li class='nav-header'>Days Allowed</li>"
 							 +"<li><a><label class='checkbox'><input type='checkbox' class='day-checkbox' value='Mon' checked>Monday</input></label></a></li>"
 							 +"<li><a><label class='checkbox'><input type='checkbox' class='day-checkbox' value='Tue' checked>Tuesday</input></label></a></li>"
@@ -1686,7 +1686,7 @@ var ui = {
 	SearchView: Backbone.View.extend({
 		tagName: 'span',
 		className: 'search',
-		template: _.template("Search: <input type=text id='search-box' placeholder='enter class'/>"),
+		template: _.template("<form class='navbar-search'><input type='text' id='search-box' class='search-query' placeholder='search for a class'></form>"),
 
 		render: function(){
 			this.$el.html(this.template());
