@@ -16,6 +16,16 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function numToTime(num) {
+	var ampm = num < 1200? "am": "pm";
+	var hour = (Math.floor(num/100) - 1) % 12 + 1;
+	var minutes = num % 100;
+	var minuteStr = minutes > 10? ":"+minutes : (minutes > 0? ":0"+minutes : "");
+
+	return hour + minuteStr + ampm;
+
+}
+
 Array.prototype.get = function(property) {
 	var res = [];
 	for (var i = 0; i < this.length; i ++) {
@@ -1632,14 +1642,21 @@ var ui = {
 
 			
 
+			var that = this;
 
 			this.$('.more-info').popover({
-				content: this.course.desc,
+				content: function(){
+
+					var items = that.course.courseOfferings.map(function(off){
+						return '<li>' + off.term.period + " " + off.term.year + ": " + off.days.join('-') + " " + numToTime(off.startTime) + "-" + numToTime(off.endTime) + '</li>';
+					}).join('');
+					return  that.course.desc + "<ul>" + items + '</ul>';
+				},
+				html: true,
 				placement: 'right',
 				trigger: 'hover'
 			})
 
-			var that = this;
 			this.$('.more-options').popover({
 				html: true,
 				placement: 'bottom',
