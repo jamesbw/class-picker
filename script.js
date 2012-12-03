@@ -639,11 +639,11 @@ UnitRequirement.prototype.progressText = function() {
 };
 
 CourseRequirement.prototype.instructions = function() {
-	return "Select " + this.required + " courses from the following list:";
+	return "Select " + this.required + " courses from the following list";
 };
 
 UnitRequirement.prototype.instructions = function() {
-	return "Select " + this.required + " units from the following list:";
+	return "Select " + this.required + " units from the following list";
 };
 
 
@@ -1193,15 +1193,14 @@ var ui = {
 			if (!(course.pick || course.alreadyTaken || course.waived)
 				&& !canPickWithFeedback.canPick)
 			{
-				console.log(course.id,canPickWithFeedback.feedback )
 				view.$el.addClass('disabled');
 				view.$('.course-pick').prop('disabled',true);
-				view.$('.tooltip-content').text(canPickWithFeedback.feedback);
+				view.$('tooltip-content').text(canPickWithFeedback.feedback);
 			}
 			else{
 				view.$el.removeClass('disabled');
 				view.$('.course-pick').prop('disabled',false);
-				view.$('.tooltip-content').text('');
+				view.$('tooltip-content').text('');
 			}
 		};
 	},
@@ -1266,8 +1265,9 @@ var ui = {
 
 	renderCourses: function(){
 		var filter = $('#search-box').val();
-		$('#course-table tr').remove();
-		$('#course-table').append('<tr><td colspan="4">' + ui.activeRequirement.instructions()+ '</td></tr>')
+		// $('#course-table tr').remove();
+        $('#course-table div').remove();
+		$('#course-table').append('<div class="instructions well"><h4>' + ui.activeRequirement.instructions()+ '</h4></div>')
 		ui.activeRequirement.courseList.forEach(function(course){
 			if(course.matches(filter)){
 				var courseView = new ui.CourseView({course: course});
@@ -1280,7 +1280,7 @@ var ui = {
 	renderTerms: function(){
 		ui.terms.forEach(function(term){
 			var termView = new ui.TermView({term: term});
-			$('#term-list').append(termView.render().el);
+			$('#terms').append(termView.render().el);
 		});
 	},
 
@@ -1291,7 +1291,7 @@ var ui = {
 
 	renderSearch: function(){
 		var searchView = new ui.SearchView();
-		$('#search').html(searchView.render().el);
+		$('#search .navbar-inner').html(searchView.render().el);
 	},
 
 	renderHeader: function(){
@@ -1359,7 +1359,14 @@ var ui = {
 
 		tagName: 'li',
 		className: 'requirement',
-		template: _.template("<ul><li class='req-label'></li><li class='progress-text'></li><li class='progress-bar'><meter min='0'></meter></li></ul>"),
+		// template: _.template("<ul><li class='req-label'></li><li class='progress-text'></li><li class='progress-bar'><meter min='0'></meter></li></ul>"),
+		template: _.template("<a>"
+                            +"  <p class='req-label'></p>"
+                            +"  <div class='progress'>"
+                            +"      <p class='progress-text'></p>"
+                            +"      <div class='bar'></div>"
+                            +"  </div>"
+                            +"</a>"),
 
 		activate: function(){
 			ui.activeRequirement = this.requirement;
@@ -1373,16 +1380,36 @@ var ui = {
 		},
 
 
-		render: function(){
-			this.$el.html(this.template());
-			this.$el.toggleClass('activeReq', this.requirement === ui.activeRequirement);
-			this.$('.req-label').html(this.label);
-			this.$('.progress-text').html(this.requirement.progressText());
-			this.$('meter').attr('max', this.requirement.required)
-						   .attr('value', this.requirement.fulfilled);
-			this.$('ul').css('padding-left', (this.indent * 20 + 20) + 'px');
-			return this;
-		}
+		// render: function(){
+		// 	this.$el.html(this.template());
+		// 	this.$el.toggleClass('activeReq', this.requirement === ui.activeRequirement);
+		// 	this.$('.req-label').html(this.label);
+		// 	this.$('.progress-text').html(this.requirement.progressText());
+		// 	this.$('meter').attr('max', this.requirement.required)
+		// 				   .attr('value', this.requirement.fulfilled);
+		// 	this.$('ul').css('padding-left', (this.indent * 20 + 20) + 'px');
+		// 	return this;
+		// }
+
+        render: function(){
+            progressValue = this.requirement.fulfilled / this.requirement.required * 100;
+            this.$el.html(this.template());
+            this.$el.toggleClass('active', this.requirement === ui.activeRequirement);
+            this.$el.addClass('level-' + this.indent);
+            this.$('.req-label').html(this.label);
+            this.$('.progress-text').html(this.requirement.progressText());
+            this.$('.bar').css('width', progressValue + '%');
+            if (progressValue <= 50) {
+                this.$('.progress').addClass('progress-danger');
+            }
+            else if (progressValue < 100) {
+                this.$('.progress').addClass('progress-warning');
+            }
+            else {
+                this.$('.progress').addClass('progress-success');
+            };
+            return this;
+        }
 	}),
 
 	CourseView: Backbone.View.extend({
@@ -1390,18 +1417,41 @@ var ui = {
 			this.course = this.options.course;
 		},
 
-		tagName: 'tr',
-		className: 'course',
-		template: _.template("<td class='course-id'></td>"
-							+"<td class='course-name'></td>"
-							+"<td class='course-units'></td>"
-							+"<td class='tooltip-content'></td>"
-							+"<td><ul>"
-							+"<li><input type='checkbox' class='course-pick'>Pick</input></li>"
-							+"<li><input type='checkbox' class='course-waive'>Waive</input></li>"
-							+"<li><input type='checkbox' class='course-alreadyTaken'>Already taken <span class='unit-option' style='display:none'>for <input type='number' class='alreadyTaken-units' value='3'/> units </span></input></li>"
-							+"</ul></td>"
-							),
+		// tagName: 'tr',
+		// className: 'course',
+		// template: _.template("<td class='course-id'></td>"
+		// 					+"<td class='course-name'></td>"
+		// 					+"<td class='course-units'></td>"
+		// 					+"<td class='tooltip-content'></td>"
+		// 					+"<td><ul>"
+		// 					+"<li><input type='checkbox' class='course-pick'>Pick</input></li>"
+		// 					+"<li><input type='checkbox' class='course-waive'>Waive</input></li>"
+		// 					+"<li><input type='checkbox' class='course-alreadyTaken'>Already taken <span class='unit-option' style='display:none'>for <input type='number' class='alreadyTaken-units' value='3'/> units </span></input></li>"
+		// 					+"</ul></td>"
+		// 					),
+
+        tagName: 'div',
+        className: 'course well',
+        template: _.template("<div class='course-content'>"
+                            +"  <table>"
+                            +"      <tr>"
+                            +"          <td class='course-id'></td>"
+                            +"          <td class='course-name'></td>"
+                            +"          <td class='course-units'></td>"
+                            +"          <td class='tooltip-content'></td>"
+                            // +"<td><ul>"
+                            // +"<li><input type='checkbox' class='course-pick'>Pick</input></li>"
+                            // +"<li><input type='checkbox' class='course-waive'>Waive</input></li>"
+                            // +"<li><input type='checkbox' class='course-alreadyTaken'>Already taken <span class='unit-option' style='display:none'>for <input type='number' class='alreadyTaken-units' value='3'/> units </span></input></li>"
+                            // +"</ul></td>"
+                            +"      </tr>"
+                            +"  </table>"
+                            +"</div>"
+                            +"<div class='course-options'>"
+                            +"  <table><tr><td>more info</td></tr>"
+                            +"  <tr><td>more options</td></tr></table>"
+                            +"</div>"
+                         ),
 
 		events: {
 			'click .course-waive' : 'toggleWaive',
@@ -1547,7 +1597,7 @@ var ui = {
 
 		tagName: 'li',
 		className: 'term',
-		template: _.template("<li><input class='term-pick' type='checkbox'/><span class='term-name'><span></li>"),
+		template: _.template("<a><label class='checkbox'><input class='term-pick' type='checkbox'><span class='term-name'><span></input></label></a>"),
 
 		render: function(){
 			this.$el.html(this.template());
@@ -1577,17 +1627,15 @@ var ui = {
 
 	ConstraintView: Backbone.View.extend({
 
-		tagName: 'span',
-		className: 'constraint',
-		template: _.template("<div class='constraint-units'>Max units per term: <input type='number' value='10' id='constraint-units-selector'/></div><div class='constraint-days'>Max days per term: <input type='number' value='3' id='constraint-numdays-selector'/></div>" 
-							 +"<div>Days Allowed</div>"
-							 +"<ul>"
-							 +"<li><input type='checkbox' class='day-checkbox' value='Mon' checked>Monday</input></li>"
-							 +"<li><input type='checkbox' class='day-checkbox' value='Tue' checked>Tuesday</input></li>"
-							 +"<li><input type='checkbox' class='day-checkbox' value='Wed' checked>Wednesday</input></li>"
-							 +"<li><input type='checkbox' class='day-checkbox' value='Thu' checked>Thursday</input></li>"
-							 +"<li><input type='checkbox' class='day-checkbox' value='Fri' checked>Friday</input></li>"
-							 +"</ul>"),
+		tagName: 'ul',
+		className: 'constraint nav nav-list',
+		template: _.template("<li class='constraint-units nav-header'>Max units per term:</li> <li><input type='number' value='10' id='constraint-units-selector' class='span1'/></li><li class='constraint-days nav-header'>Max days per week:</li> <li><input type='number' value='3' id='constraint-numdays-selector' class='span1'/></li>" 
+							 +"<li class='nav-header'>Days Allowed</li>"
+							 +"<li><a><label class='checkbox'><input type='checkbox' class='day-checkbox' value='Mon' checked>Monday</input></label></a></li>"
+							 +"<li><a><label class='checkbox'><input type='checkbox' class='day-checkbox' value='Tue' checked>Tuesday</input></label></a></li>"
+							 +"<li><a><label class='checkbox'><input type='checkbox' class='day-checkbox' value='Wed' checked>Wednesday</input></label></a></li>"
+							 +"<li><a><label class='checkbox'><input type='checkbox' class='day-checkbox' value='Thu' checked>Thursday</input></label></a></li>"
+							 +"<li><a><label class='checkbox'><input type='checkbox' class='day-checkbox' value='Fri' checked>Friday</input></label></a></li>"),
 
 		render: function(){
 			this.$el.html(this.template());
@@ -1642,7 +1690,7 @@ var ui = {
 	SearchView: Backbone.View.extend({
 		tagName: 'span',
 		className: 'search',
-		template: _.template("Search: <input type=text id='search-box' placeholder='enter class'/>"),
+		template: _.template("<form class='navbar-search'><input type='text' id='search-box' class='search-query' placeholder='search for a class'></form>"),
 
 		render: function(){
 			this.$el.html(this.template());
@@ -1666,9 +1714,9 @@ var ui = {
 		template: _.template("<div class='navbar navbar-fixed-top'>"
   							+"	<div class='navbar-inner'>"
   							+"		<ul class='nav'>"
-							+"			<li id='select-program-tab' class='header-tab'><a><h4>Select your program</h4></a></li>"
-							+"			<li id='select-courses-tab' class='header-tab'><a><h4>Select your courses</h4></a></li>"
-							+"			<li id='view-schedules-tab' class='header-tab'><a><h4>View Schedules</h4></a></li>"
+							+"			<li id='select-program-tab' class='header-tab'><a><h4>1. Select your program</h4></a></li>"
+							+"			<li id='select-courses-tab' class='header-tab'><a><h4>2. Select your courses</h4></a></li>"
+							+"			<li id='view-schedules-tab' class='header-tab'><a><h4>3. View Schedules</h4></a></li>"
 							+"		</ul>"
 							+"  </div>"
 							+"</div>"),
