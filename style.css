@@ -337,7 +337,8 @@ body {
 .course.well {
   padding: 0;
   display: inline-block;
-  overflow: hidden;
+  /*removed because hides popovers*/
+  /*overflow: hidden;*/
   position: relative;
   width: 100%;
 }
@@ -350,13 +351,17 @@ body {
   -webkit-box-shadow: 2px 0 2px rgba(0,0,0,.15);
      -moz-box-shadow: 2px 0 2px rgba(0,0,0,.15);
           box-shadow: 2px 0 2px rgba(0,0,0,.15);
-  z-index: 3;
+  /*z-index: 3;*/
   position: relative;
 }
 
 .course-content .course-id {
   width: 70px;
   font-weight: 700;
+}
+
+.picked .course-content, .already-taken .course-content, .waived .course-content {
+  background-color: green;
 }
 
 .course-content .course-name {
@@ -374,7 +379,8 @@ body {
   position: absolute;
   right: 0;
   width: 100px;
-  z-index: 1;
+  /*removed because stacking contexts made all popovers still under z-index: 3 from course-content*/
+  /*z-index: 1*/;
 }
 
 .course-options table {
@@ -438,4 +444,20 @@ section.container {
 
 section#select-courses-container {
   margin-top: 100px;
+}
+
+.popover {
+  z-index: 2050;
+}
+
+.popover ul {
+  list-style: none;
+}
+
+.popover .alreadyTaken-units {
+  width: 25px;
+}
+
+checkbox.course-waive, checkbox.course-alreadyTaken {
+  vertical-align: 0px;
 }

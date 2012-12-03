@@ -1159,9 +1159,7 @@ Application.prototype.run = function() {
 	ui.renderSearch();
 
 	ui.renderPrograms();
-	ui.renderSchedules(10);
-	
-	
+	ui.renderSchedules(10);	
 };
 
 var ui = {
@@ -1188,6 +1186,10 @@ var ui = {
 			var course = courses[i];
 			var view = course.view;
 
+			view.$el.toggleClass('picked', course.pick);
+			view.$el.toggleClass('waived', course.waived);
+			view.$el.toggleClass('already-taken', course.alreadyTaken);
+
 			var canPickWithFeedback = ui.app.canPickWithFeedback(course);
 
 			if (!(course.pick || course.alreadyTaken || course.waived)
@@ -1195,12 +1197,12 @@ var ui = {
 			{
 				view.$el.addClass('disabled');
 				view.$('.course-pick').prop('disabled',true);
-				view.$('tooltip-content').text(canPickWithFeedback.feedback);
+				view.$('.tooltip-content').text(canPickWithFeedback.feedback);
 			}
 			else{
 				view.$el.removeClass('disabled');
 				view.$('.course-pick').prop('disabled',false);
-				view.$('tooltip-content').text('');
+				view.$('.tooltip-content').text('');
 			}
 		};
 	},
@@ -1448,15 +1450,21 @@ var ui = {
                             +"  </table>"
                             +"</div>"
                             +"<div class='course-options'>"
-                            +"  <table><tr><td>more info</td></tr>"
-                            +"  <tr><td>more options</td></tr></table>"
+                            // +"<div class='more-info'>more info</div>"
+                            // +"<div class='more-options'>more options</div>"
+                            +"  <table><tr>"
+                            +"<td class='more-info'>more info</td>"
+                            +"</tr>"
+                            +"  <tr>"
+                            +"<td class='more-options'>more options</td>"
+                            +"</tr></table>"
                             +"</div>"
                          ),
 
 		events: {
 			'click .course-waive' : 'toggleWaive',
 			'click .course-alreadyTaken': 'toggleAlreadyTaken',
-			'click .course-pick': 'togglePick',
+			'click .course-content': 'togglePick',
 			'input .alreadyTaken-units': 'updateTakenUnits',
 			'mouseover': 'showTooltip'
 		},
@@ -1499,18 +1507,18 @@ var ui = {
 			console.log('already taken')
 			if (this.course.alreadyTaken) {
 				this.course.alreadyTaken = false;
-				this.$('.unit-option').hide();
+				// this.$('.unit-option').hide();
 				ui.app.removeAlreadyTakenCourse(this.course);
 			}
 			else{
 				this.course.alreadyTaken = true;
-				this.$('.unit-option').show();
+				// this.$('.unit-option').show();
 
 				ui.app.addAlreadyTakenCourse(this.course, parseInt(this.$('.alreadyTaken-units').val(),10));
 
 				if(this.course.pick){
 					this.course.pick = false;
-					this.$('.course-pick').attr('checked', false);
+					// this.$('.course-pick').attr('checked', false);
 					ui.app.removeCourse(this.course);
 				};
 				if(this.course.waived){
@@ -1526,6 +1534,13 @@ var ui = {
 		},
 
 		togglePick: function(){
+
+			console.log(this.$el,this.$el.is('disabled'))
+			if (this.$el.is('.disabled')) {
+				//can't pick disabled course
+				return;
+			};
+
 			if (this.course.pick) {
 				this.course.pick = false;
 				ui.app.removeCourse(this.course);
@@ -1554,6 +1569,11 @@ var ui = {
 		},
 
 		updateTakenUnits: function(){
+
+			if (!this.course.alreadyTaken) {
+				//nothing to update if the course hasn't been checked
+				return;
+			};
 			console.log('update units')
 			ui.app.setAlreadyTakenUnits(this.course, parseInt(this.$('.alreadyTaken-units').val(),10));
 
@@ -1571,17 +1591,61 @@ var ui = {
 			this.$('.course-id').html(this.course.id);
 			this.$('.course-name').html(this.course.name);
 			this.$('.course-units').html(this.course.units.min + '-' + this.course.units.max);
-			this.$('.course-pick').prop('checked',this.course.pick);
-			this.$('.course-waive').prop('checked',this.course.waived);
-			this.$('.course-alreadyTaken').prop('checked',this.course.alreadyTaken);
-			this.$('.unit-option').toggle(this.course.alreadyTaken);
+			// this.$('.course-pick').prop('checked',this.course.pick);
+			// this.$('.course-waive').prop('checked',this.course.waived);
+			// this.$('.course-alreadyTaken').prop('checked',this.course.alreadyTaken);
+			// this.$('.unit-option').toggle(this.course.alreadyTaken);
 			this.$('.tooltip-content').hide();
 
-			this.$('.alreadyTaken-units').attr('min', this.course.units.min);
-			this.$('.alreadyTaken-units').attr('max', this.course.units.max);
-			if(this.course.alreadyTaken){
-				this.$('.alreadyTaken-units').val(ui.app.getAlreadyTakenUnits(this.course));
-			}
+			
+
+
+			this.$('.more-info').popover({
+				content: this.course.desc,
+				placement: 'right',
+			})
+
+			var that = this;
+			this.$('.more-options').popover({
+				html: true,
+				placement: 'bottom',
+				content:  function(){
+					console.log(that.course)
+					var units;
+					if(that.course.alreadyTaken){
+						units = ui.app.getAlreadyTakenUnits(that.course);
+					}
+					else {
+						units = that.course.units.min;
+					}
+
+					var el = $("<ul>"
+	                            +"<li><input type='checkbox' class='course-waive' " + (that.course.waived? "checked" : "") + "> I waived this course</input></li>"
+	                            +"<li><input type='checkbox' class='course-alreadyTaken' " + (that.course.alreadyTaken? "checked" : "") + ">"
+	                            +" I already took this course for <input type='number' class='alreadyTaken-units' value='"+ units + "' min='"+ that.course.units.min + "' max='" + that.course.units.max + "'/> units </span></input></li>"
+	                            +"</ul>");
+
+
+					// el.select('.alreadyTaken-units').attr('min', that.course.units.min)
+					// 								.attr('max', that.course.units.max);
+
+					// el.select('.course-waive').prop('checked', that.course.waived);
+					// el.select('.course-alreadyTaken').prop('checked', that.course.alreadyTaken);
+
+					// that.$('.alreadyTaken-units').attr('min', that.course.units.min);
+					// that.$('.alreadyTaken-units').attr('max', that.course.units.max);
+					// if(that.course.alreadyTaken){
+					// 	that.$('.alreadyTaken-units').val(ui.app.getAlreadyTakenUnits(that.course));
+					// }
+					// else {
+					// 	that.$('.alreadyTaken-units').val(that.course.units.min);
+					// }
+
+					return el;
+
+				}  
+
+			})
 
 			
 
