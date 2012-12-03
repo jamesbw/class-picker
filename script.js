@@ -1318,6 +1318,7 @@ var ui = {
 		};
 
 		numToShow = numToShow || 10;
+		$('#schedules').append("<div class='alert alert-info'>Click on any term for a more detailed view</div>");
 		var schedules = ui.app.getSchedulesMeetingReqs(numToShow);
 		if (_.isEmpty(schedules)) {
 			schedules = ui.app.getSchedules().slice(0,numToShow);
