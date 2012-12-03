@@ -47,10 +47,6 @@ html {
 	border: 1px solid black;
 }
 
-.schedule-term {
-	display: inline-table;
-	border: 1px solid black;
-}
 
 section {
 	border: 1px solid black;
@@ -66,6 +62,10 @@ section {
     color: black;
   }
 
+.schedule-term {
+	display: inline-table;
+	border: 1px solid black;
+}
  .mini-term-schedule {
  	width: 200px;
  	height: 100px;

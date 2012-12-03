@@ -467,3 +467,71 @@ input.course-waive, input.course-alreadyTaken {
   display: none;
   background: pink;
 }
+
+.schedule-term {
+  display: inline-table;
+  border: 1px solid black;
+}
+ .mini-term-schedule {
+  width: 200px;
+  height: 100px;
+ }
+
+ .term-courses {
+  height: 20px;
+ }
+
+ rect.svg-day {
+  fill: #DBDBDB;
+  stroke: #CCCACB;
+ }
+
+ .svg-course.course-1 {
+  fill: #7FC97F;
+ }
+ .svg-course.course-2 {
+  fill: #BEAED4;
+ }
+ .svg-course.course-3 {
+  fill: #FDC086;
+ }
+ .svg-course.course-4 {
+  fill: #FFFF99;
+ }
+ .svg-course.course-5 {
+  fill: #386CB0;
+ }
+ .svg-course.course-6 {
+  fill: #F0027F;
+ }
+
+ .schedule-overlay {
+ 
+    /* must be initially hidden */
+    display:none;
+ 
+    /* place overlay on top of other elements */
+    z-index:10000;
+ 
+    /* styling */
+    background-color: white;
+  height: 300px;
+  width: 600px;
+
+    /*border:1px solid #666;*/
+ 
+    /* CSS3 styling for latest browsers */
+    -moz-box-shadow:0 0 90px 5px #000;
+    -webkit-box-shadow: 0 0 90px #000;
+}
+
+.schedule-overlay .close {
+    background-image: url(/close.png);
+    position:absolute;
+    right:-15px;
+    top:-15px;
+    cursor:pointer;
+    height:35px;
+    width:35px;
+    opacity: 1;
+}
