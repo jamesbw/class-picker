@@ -653,11 +653,11 @@ UnitRequirement.prototype.progressText = function() {
 };
 
 CourseRequirement.prototype.instructions = function() {
-	return "Select " + this.required + " courses from the following list";
+	return "Click to select " + this.required + " courses from the following list";
 };
 
 UnitRequirement.prototype.instructions = function() {
-	return "Select " + this.required + " units from the following list";
+	return "Click to select " + this.required + " units from the following list";
 };
 
 
@@ -1465,33 +1465,26 @@ var ui = {
                             +"  <table>"
                             +"      <tr>"
                             +"          <td class='course-id'></td>"
-                            +"          <td class='course-name'></td>"
+                            +"          <td class='course-name'>"
+                            +"              <div class='label-container'>"
+                            +"                  <span class='course-label label-disabled label label-important'>Not selectable</span>"
+                            +"                  <span class='course-label label-waived label'>Waived</span>"
+                            +"                  <span class='course-label label-already-taken label label-info'>Already Taken</span>"
+                            +"              </div>"
+                            +"          </td>"
                             +"          <td class='course-units'></td>"
-                            // +"          <td class='tooltip-content'></td>"
-                            // +"<td><ul>"
-                            // +"<li><input type='checkbox' class='course-pick'>Pick</input></li>"
-                            // +"<li><input type='checkbox' class='course-waive'>Waive</input></li>"
-                            // +"<li><input type='checkbox' class='course-alreadyTaken'>Already taken <span class='unit-option' style='display:none'>for <input type='number' class='alreadyTaken-units' value='3'/> units </span></input></li>"
-                            // +"</ul></td>"
                             +"      </tr>"
-                            +"		<tr>"
-                            +"			<td colspan='4'>"
-                            +"			<div class='course-label label-disabled'>Not Selectable</div>"
-                            +"			<div class='course-label label-waived'>Waived</div>"
-                            +"			<div class='course-label label-already-taken'>Already Taken</div>"
-                            +"			</td>"
-                            +"		</tr>"
                             +"  </table>"
                             +"</div>"
                             +"<div class='course-options'>"
-                            // +"<div class='more-info'>more info</div>"
-                            // +"<div class='more-options'>more options</div>"
-                            +"  <table><tr>"
-                            +"<td class='more-info'>more info</td>"
-                            +"</tr>"
-                            +"  <tr>"
-                            +"<td class='more-options'>more options</td>"
-                            +"</tr></table>"
+                            +"  <table>"
+                            +"      <tr>"
+                            +"          <td class='more-info'>more info</td>"
+                            +"      </tr>"
+                            +"      <tr>"
+                            +"          <td class='more-options'>more options</td>"
+                            +"      </tr>"
+                            +"  </table>"
                             +"</div>"
                          ),
 
@@ -1632,10 +1625,10 @@ var ui = {
 			var that = this;
 			this.$('.label-disabled').tooltip({
 				// title: function(){console.log('called');return that.$('.tooltip-content').text()}
-				placement: 'left'
+				placement: 'right'
 			});
 			this.$('.course-id').html(this.course.id);
-			this.$('.course-name').html(this.course.name);
+			this.$('.course-name .label-container').before(this.course.name);
 			this.$('.course-units').html(this.course.units.min + '-' + this.course.units.max);
 			// this.$('.course-pick').prop('checked',this.course.pick);
 			// this.$('.course-waive').prop('checked',this.course.waived);
@@ -1664,6 +1657,7 @@ var ui = {
 			this.$('.more-options').popover({
 				html: true,
 				placement: 'bottom',
+                title: 'Check what applies',
 				content:  function(){
 					console.log(that.course)
 					var units;
@@ -1674,11 +1668,10 @@ var ui = {
 						units = that.course.units.min;
 					}
 
-					var el = $("<ul>"
-	                            +"<li><input type='checkbox' class='course-waive' " + (that.course.waived? "checked" : "") + "> I waived this course</input></li>"
-	                            +"<li><input type='checkbox' class='course-alreadyTaken' " + (that.course.alreadyTaken? "checked" : "") + ">"
-	                            +" I already took this course for <input type='number' class='alreadyTaken-units' value='"+ units + "' min='"+ that.course.units.min + "' max='" + that.course.units.max + "'/> units </span></input></li>"
-	                            +"</ul>");
+					var el = $("<label class='checkbox'><input type='checkbox' class='course-waive' " + (that.course.waived? "checked" : "") + "> I waived this course</input></label>"
+	                            +"<label class='checkbox'><input type='checkbox' class='course-alreadyTaken' " + (that.course.alreadyTaken? "checked" : "") + ">"
+	                            +" I already took this course for <input type='number' class='alreadyTaken-units' value='"+ units + "' min='"+ that.course.units.min + "' max='" + that.course.units.max + "'/> units </span></input></label>"
+                    );
 
 
 					// el.select('.alreadyTaken-units').attr('min', that.course.units.min)

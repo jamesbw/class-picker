@@ -343,6 +343,10 @@ body {
   width: 100%;
 }
 
+.course.well.picked, .course.well.already-taken, .course.well.waived {
+  background-color: #D9FAB9;
+}
+
 .course-content {
   float: left;
   display: block;
@@ -358,10 +362,6 @@ body {
 .course-content .course-id {
   width: 70px;
   font-weight: 700;
-}
-
-.picked .course-content, .already-taken .course-content, .waived .course-content {
-  background-color: green;
 }
 
 .course-content .course-name {
@@ -463,9 +463,7 @@ input.course-waive, input.course-alreadyTaken {
 }
 
 .course-label {
-  float: right;
   display: none;
-  background: pink;
 }
 
 .schedule-term {
