@@ -1928,7 +1928,7 @@ var ui = {
 				var courses = this.schedule.courses[termID].get('id').join(', ');
 
 				var uniqueID = termID + getRandomInt(0, 10000000);
-				this.$el.append("<li class='schedule-term " + termID + "'><div>" + termID + "</div><div class='mini-term-schedule' rel='#"+ uniqueID+"'></div><div class='schedule-overlay' id='"+ uniqueID+"'></div><div class='term-courses'>" + courses + "</div></li>");
+				this.$('ul').append("<li class='schedule-term " + termID + "'><div>" + termID + "</div><div class='mini-term-schedule' rel='#"+ uniqueID+"'></div><div class='schedule-overlay' id='"+ uniqueID+"'></div><div class='term-courses'>" + courses + "</div></li>");
 
 				var svgHeight = 100;
 				var svgWidth = 200;
