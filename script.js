@@ -1356,7 +1356,7 @@ var ui = {
 
 		schedules.forEach(function(schedule){
 			var scheduleView = new ui.ScheduleView({schedule: schedule});
-			$('#schedules').append(scheduleView.render().el);
+            $('#schedules').append(scheduleView.render().el);
 		});
 
 		$('.mini-term-schedule').overlay();
@@ -1912,8 +1912,8 @@ var ui = {
 		},
 
 		tagName: 'div',
-		className: 'schedule',
-		template: _.template("<ul></ul>"),
+		className: 'schedule span4',
+		template: _.template("<div class='schedule-container'><h4>Calendar</h4></div>"),
 
 		render: function(){
 			this.$el.html(this.template());
@@ -1921,11 +1921,18 @@ var ui = {
 				var courses = this.schedule.courses[termID].get('id').join(', ');
 
 				var uniqueID = termID + getRandomInt(0, 10000000);
-				this.$('ul').append("<li class='schedule-term " + termID + "'><div>" + termID + "</div><div class='mini-term-schedule' rel='#"+ uniqueID+"'></div><div class='schedule-overlay' id='"+ uniqueID+"'></div><div class='term-courses'>" + courses + "</div></li>");
+				this.$('.schedule-container').append("<div class='schedule-term " + termID + "'>"
+                                                    +"  <p class='nav-header'>" + termID + "</p>"
+                                                    +"  <div class='row'>"
+                                                    +"      <div class='mini-term-schedule span2' rel='#" + uniqueID + "'></div>"
+                                                    +"      <div class='course-list span2'>" + courses + "</div>"
+                                                    +"  </div>"
+                                                    +"  <div class='schedule-overlay' id='"+ uniqueID+"'></div>"
+                                                    +"</div>");
 
-				var svgHeight = 100;
-				var svgWidth = 200;
-				this.$('.'+termID ).width(svgWidth)
+				var svgHeight = 70;
+				var svgWidth = 140;
+				// this.$('.'+termID ).width(svgWidth)
 				var svg = d3.select(this.$('.'+termID+ ' .mini-term-schedule')[0])
 							.append('svg')
 							.attr('width', svgWidth)

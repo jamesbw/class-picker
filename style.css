@@ -429,11 +429,6 @@ body {
 
 /* TO BE UPDATED */
 
-.schedule-term {
-    display: inline-block;
-    border: 1px solid black;
-}
-
 section {
     /*border: 1px solid black;*/
 }
@@ -466,13 +461,45 @@ input.course-waive, input.course-alreadyTaken {
   display: none;
 }
 
-.schedule-term {
-  display: inline-table;
-  border: 1px solid black;
+.schedule {
+    min-height: 20px;
+    /*padding: 19px;*/
+    margin-bottom: 20px;
+    background-color: #f5f5f5;
+    /*border: 1px solid #e3e3e3;*/
+    -webkit-border-radius: 4px;
+       -moz-border-radius: 4px;
+            border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+       -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
 }
+
+.schedule-container {
+  padding: 8px 14px 14px;
+}
+.schedule-container h4 {
+  /*padding: 0 14px;*/
+  color: #333;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+.schedule-term .nav-header {
+  margin: 8px 0 0 0;
+  padding-left: 0;
+}
+
+.schedule-term .course-list {
+  width: 112px;
+  /*padding-right: 14px;*/
+}
+
+
+
  .mini-term-schedule {
-  width: 200px;
-  height: 100px;
+  /*width: 140px;*/
+  height: 70px;
+  /*padding-left:14px;*/
  }
 
  .term-courses {
@@ -503,24 +530,19 @@ input.course-waive, input.course-alreadyTaken {
   fill: #F0027F;
  }
 
- .schedule-overlay {
- 
-    /* must be initially hidden */
-    display:none;
- 
-    /* place overlay on top of other elements */
-    z-index:10000;
- 
-    /* styling */
-    background-color: white;
+.schedule-overlay {
+  display:none;
+  z-index:10000;
+  background-color: white;
   height: 300px;
   width: 600px;
-
-    /*border:1px solid #666;*/
- 
-    /* CSS3 styling for latest browsers */
-    -moz-box-shadow:0 0 90px 5px #000;
-    -webkit-box-shadow: 0 0 90px #000;
+  padding: 20px;
+  -webkit-box-shadow: 0 0 30px rgba(0,0,0,.4);
+     -moz-box-shadow: 0 0 30px rgba(0,0,0,.4);
+          box-shadow: 0 0 30px rgba(0,0,0,.4);
+  -webkit-border-radius: 8px;
+     -moz-border-radius: 8px;
+          border-radius: 8px;
 }
 
 .schedule-overlay .close {
