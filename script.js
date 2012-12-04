@@ -116,9 +116,10 @@ CourseOffering.prototype.conflictsWith = function(courseOffering) {
 	return true;
 };
 
-function Course(id, name, desc, units, terms, courseOfferings) {
+function Course(id, name, instructors, desc, units, terms, courseOfferings) {
 	this.id = id;
 	this.name = name;
+	this.instructors = instructors;
 	this.desc = desc;
 	this.units = units;
 	this.terms = terms;
@@ -742,6 +743,7 @@ Application.prototype.initCourses = function(callback) {
 			var id = c.id;
 			var name = c.name;
 			var desc = c.desc;
+			var instructors = c.instructors;
 			var units = {
 				min: c.units.min,
 				max: c.units.max
@@ -760,6 +762,7 @@ Application.prototype.initCourses = function(callback) {
 			})
 			return new Course( id,
 				name,
+				instructors,
 				desc,
 				units,
 				terms,
@@ -1650,7 +1653,8 @@ var ui = {
 					var items = that.course.courseOfferings.map(function(off){
 						return '<li>' + off.term.period + " " + off.term.year + ": " + off.days.join('-') + " " + numToTime(off.startTime) + "-" + numToTime(off.endTime) + '</li>';
 					}).join('');
-					return  that.course.desc + "<ul>" + items + '</ul>';
+
+					return  that.course.desc + that.course.instructors.join(', ') +  "<ul>" + items + '</ul>';
 				},
 				html: true,
 				placement: 'right',
