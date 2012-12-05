@@ -1354,9 +1354,14 @@ var ui = {
 			$('#schedules').append("<div class='alert'>Warning: these schedules do not meet all the requirements</div>");
 		};
 
+        var countCalendar = 1;
+
 		schedules.forEach(function(schedule){
+            console.log(schedule)
 			var scheduleView = new ui.ScheduleView({schedule: schedule});
             $('#schedules').append(scheduleView.render().el);
+            $('.schedule-title').html('Schedule proposal ' + countCalendar);
+            countCalendar += 1;
 		});
 
 		$('.mini-term-schedule').overlay();
@@ -1912,21 +1917,38 @@ var ui = {
 
 		tagName: 'div',
 		className: 'schedule span4',
-		template: _.template("<div class='schedule-container'><h4>Calendar</h4></div>"),
+		template: _.template("<div class='schedule-container'><h4 class='schedule-title'><h4></div>"),
 
 		render: function(){
 			this.$el.html(this.template());
 			this.schedule.getTermIDs().forEach(function(termID){
-				var courses = this.schedule.courses[termID].get('id').join(', ');
+
+				var courses = '<ul>';
+                this.schedule.courses[termID].get('id').forEach( function(item) {
+                    courses += '<li>'+ item + '</li>';
+                });
+                courses += '</ul>'
+                // this.schedule.courses[termID].get('id').join(', ');
 
 				var uniqueID = termID + getRandomInt(0, 10000000);
 				this.$('.schedule-container').append("<div class='schedule-term " + termID + "'>"
                                                     +"  <p class='nav-header'>" + termID + "</p>"
                                                     +"  <div class='row'>"
-                                                    +"      <div class='mini-term-schedule span2' rel='#" + uniqueID + "'></div>"
+                                                    // +"      <div class='mini-term-schedule span2' rel='#" + uniqueID + "'></div>"
+                                                    +"      <a class='mini-term-schedule span2' role='button' data-toggle='modal' href='#" + uniqueID + "'></a>"
                                                     +"      <div class='course-list span2'>" + courses + "</div>"
                                                     +"  </div>"
-                                                    +"  <div class='schedule-overlay' id='"+ uniqueID+"'></div>"
+                                                    // +"  <div class='schedule-overlay' id='"+ uniqueID+"'></div>"
+                                                    +"  <div id='" + uniqueID + "' class='modal hide fade schedule-overlay' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'>"
+                                                    +"      <div class='modal-header'>"
+                                                    +"          <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>"
+                                                    +"          <h3>" + termID + "</h3>"
+                                                    +"      </div>"
+                                                    +"      <div class='modal-body'></div>"
+                                                    +"      <div class='modal-footer'>"
+                                                    +"          <a href='#' class='btn btn-primary' data-dismiss='modal' aria-hidden='true'>Close</a>"
+                                                    +"      </div>"
+                                                    +"  </div>"
                                                     +"</div>");
 
 				var svgHeight = 70;
@@ -1990,12 +2012,12 @@ var ui = {
 
 
 
-				var overlaySVGWidth = 600;
+				var overlaySVGWidth = 530;
 				var overlaySVGHeight = 300;
 				var margin = 0;
 
 										
-				var overlaySVG = d3.select(this.$('.'+termID+ ' .schedule-overlay')[0])
+				var overlaySVG = d3.select(this.$('.'+termID+ ' .schedule-overlay .modal-body')[0])
 							.append('svg')
 							.attr('width', overlaySVGWidth + margin )
 							.attr('height', overlaySVGHeight + margin);  
