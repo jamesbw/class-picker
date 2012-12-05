@@ -1462,7 +1462,9 @@ var ui = {
 
         tagName: 'div',
         className: 'course well',
-        template: _.template("<div class='course-content'>"
+        template: function(){
+        	var randomInt = getRandomInt(0,1000000);
+        	return _.template("<div class='course-content'>"
                             +"  <table>"
                             +"      <tr>"
                             +"          <td class='course-id'></td>"
@@ -1480,14 +1482,15 @@ var ui = {
                             +"<div class='course-options'>"
                             +"  <table>"
                             +"      <tr>"
-                            +"          <td class='more-info'>more info</td>"
+                            +"          <td class='more-info' data-toggle='modal' data-target='#info-modal-"+randomInt+"'>more info</td>"
+                            +"			<div id='info-modal-" + randomInt + "' class='modal hide fade' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'></div>"
                             +"      </tr>"
                             +"      <tr>"
                             +"          <td class='more-options'>more options</td>"
                             +"      </tr>"
                             +"  </table>"
                             +"</div>"
-                         ),
+                         )},
 
 		events: {
 			'click .course-waive' : 'toggleWaive',
@@ -1633,24 +1636,44 @@ var ui = {
 			// this.$('.course-alreadyTaken').prop('checked',this.course.alreadyTaken);
 			// this.$('.unit-option').toggle(this.course.alreadyTaken);
 			// this.$('.tooltip-content').hide();
-
 			
 
 			var that = this;
 
-			this.$('.more-info').popover({
-				content: function(){
+			//render modal
+			this.$('.modal').html("<div class='modal-header'>"
+								 +"		<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&#x2a2f;</button>"
+    							 +"		<h3 id='myModalLabel'>" + this.course.id + " " + this.course.name + "</h3>"
+    							 +"</div>"
+    							 +"<div class='modal-body'>"
+    							 +"		<ul>"
+    							 +"			<li>" + unitsText + "</li>"
+    							 +"			<li>Description: " + this.course.desc + "</li>"
+    							 +"			<li>Instructors: " + this.course.instructors.join(', ') + "</li>"
+    							 +"			<li>Grading: " + "Letter or Credit/No Credit" + "</li>"
+    							 + that.course.courseOfferings.map(function(off){
+										return '<li>' + off.term.period + " " + off.term.year + ": " + off.days.join('-') + " " + numToTime(off.startTime) + "-" + numToTime(off.endTime) + '</li>';
+									}).join('')
+    							 +"		</ul>"
+    							 +"</div>"
+								 +"<div class='modal-footer'>"
+								 +"		<button class='btn' data-dismiss='modal' aria-hidden='true'>Close</button>"
+								 +"</div>");
 
-					var items = that.course.courseOfferings.map(function(off){
-						return '<li>' + off.term.period + " " + off.term.year + ": " + off.days.join('-') + " " + numToTime(off.startTime) + "-" + numToTime(off.endTime) + '</li>';
-					}).join('');
 
-					return  that.course.desc + that.course.instructors.join(', ') +  "<ul>" + items + '</ul>';
-				},
-				html: true,
-				placement: 'right',
-				trigger: 'hover'
-			})
+			// this.$('.more-info').popover({
+			// 	content: function(){
+
+					// var items = that.course.courseOfferings.map(function(off){
+					// 	return '<li>' + off.term.period + " " + off.term.year + ": " + off.days.join('-') + " " + numToTime(off.startTime) + "-" + numToTime(off.endTime) + '</li>';
+					// }).join('');
+
+			// 		return  that.course.desc + that.course.instructors.join(', ') +  "<ul>" + items + '</ul>';
+			// 	},
+			// 	html: true,
+			// 	placement: 'right',
+			// 	trigger: 'hover'
+			// });
 
 			this.$('.more-options').popover({
 				html: true,
@@ -2123,7 +2146,6 @@ app.start();
 
 /* TODO
 overview tabs
-schedule view
 local storage
 space in term name
 disable tooltip detail
