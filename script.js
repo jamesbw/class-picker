@@ -1354,14 +1354,10 @@ var ui = {
 			$('#schedules').append("<div class='alert'>Warning: these schedules do not meet all the requirements</div>");
 		};
 
-        var countCalendar = 1;
-
-		schedules.forEach(function(schedule){
+		schedules.forEach(function(schedule, i){
             console.log(schedule)
-			var scheduleView = new ui.ScheduleView({schedule: schedule});
+			var scheduleView = new ui.ScheduleView({schedule: schedule, num: i+1});
             $('#schedules').append(scheduleView.render().el);
-            $('.schedule-title').html('Schedule proposal ' + countCalendar);
-            countCalendar += 1;
 		});
 
 		$('.mini-term-schedule').overlay();
@@ -1913,6 +1909,7 @@ var ui = {
 	ScheduleView: Backbone.View.extend({
 		initialize: function(){
 			this.schedule = this.options.schedule;
+			this.num = this.options.num;
 		},
 
 		tagName: 'div',
@@ -1921,6 +1918,7 @@ var ui = {
 
 		render: function(){
 			this.$el.html(this.template());
+			this.$('.schedule-title').html("Schedule proposal #" + this.num);
 			this.schedule.getTermIDs().forEach(function(termID){
 
 				var courses = '<ul>';
