@@ -1,0 +1,102 @@
+Introduction - An explanation of the problem and the motivation for solving it.
+
+- own experiences, lots of time spent
+- needfinding
+- time spent optimizing unit allocation for tuition mainly, graduation and GPA.
+- define main goals
+ - info about programs and requirements
+ - what courses are offered, when , with whom, for how many units
+ - pick and see, check for conflicts
+
+Related Work - A description of previous papers related to your project.
+- cs website (2, only one term at a time)
+- explore degrees (1, not grouped by program)
+- explore courses (2, only 10 results at a time, no program info)
+- axess (3 simple enroll, but only for upcoming quarter, limited to 24 units)
+- courserank (3, data not always reliable, at most three next quarters)
+
+shortcomings of all. Matrix.
+
+contributions: (show list , continued in Methods)
+step by step process:
+ - multiple tabs
+ - requirement by requirement
+
+level of detail:
+ - big picture with overview tabs for all requirements and depth
+ - zooming into each requirement, then additional info on each course = all info available on all systems. Similar to a degre of interest tree
+ - final result: lists of possible schedules. Again, miniature view, then detail.
+
+immediate feedback:
+ - what requirements are satisfied
+ - what courses are not available. For those, feedback on why they are not available. Not offered or conflicts. Suggestions on courses to drop.
+
+integrate user constraints:
+ - what terms are being taken? Often not summer.
+ - what days / how many days => author's situation with work, or just living far from campus
+ - max units per quarter: generally 10 for tuition, plus good amount of work.
+
+Reducing the work by focusing on the essential: pick courses that satisfy your program:
+ - automatically calculate all valid schedule permutations, so don't have to build those in your head
+ - automatically allocate units and display the maximum units obtained over all valid schedules
+
+Convenient features like waive and already taken for use after 1st quarter
+
+Methods - A detailed explanation of the techniques and algorithms you used to solve the problem.
+
+contributions
+
+algorithm:
+- main idea: keep a list of all possible schedule permutation, when a course is added, for each schedule and each offering of the course (autumn and winter), trying adding
+ -challenges:
+  -exponential problem: 5 foundations, offered almost every quarter makes for about 7500 permutations out of the gate. Limiting factor: more courses picked means more conflicts, fewer schedules. tighter constraints (fewer terms, days). Nonetheless, with few constraints, can reach 1M possible schedules
+  - this list is traversed quite often:
+   - upon adding a course, add course offerings to each schedule
+   - upon any change, check all non-picked courses to see if they can be added. This means trying each schedule and each offering of the course to see if it fits. We determine that the course cannot be picked if we fail for all schedules
+   - upon any change, check all requirements for progress. Easy for course requirements, tougher for unit requirements. We need to assign units to courses in each schedule while satisfying constraints. Since we want the maximum units that satisfy the requirement, we need to do this for all schedules
+   - solution: this is entirely tractable when we have fewer than 1000 schedules. However, at 500k, it's not. Solution: when schedule count is too big, use sampling: 
+    - can be picked: check 1000 at random schedules
+    - count units: max over 100 random schedules
+    - add course: add course to only 1000 randomly picked schedules, discard others. Here, random sample without replacement.
+
+ 
+Results - The visualizations your system produces and data to help evaluate your approach. For example you may include running times, or the time users typically spend generating a visualization using your system.
+
+show use cases	
+
+use cases:
+single quarter display courses
+graduate in 3 quarters
+graduate in 5 with 3 days a week
+
+
+Discussion - What has the audience learned from your work? What new insights or practices has your system enabled? A full blown user study is not expected, but informal observations of use that help evaluate your system are encouraged.
+
+what's achieved: all in one window, versus many windows for info, and excel or paper to test hypotheses.
+recap on main goals
+
+-scope still just CS masters
+-schedule extrapolation
+-browser support
+-especially suited to tight restrictions. Lax constraints lead to exponential problem, which is an indication that the tool is not really needed because it is easy to come up with schedules by hand.
+-assumption that sampling works: some probability analysis could be done: 1M schedules. Conflict in one place, with 2 other courses that can also be in other spots. All other permutations of other coursesdon't change. So permutations of conflicting classes, 1 in 3 leave that slot open, so about 1/3 of permutations leave room for the course. So we sample 1000 from 1M, we need at least 1 that allows for insertion. The probability that we fail is:
+(1 - 1/3)^1000, which is very low.
+
+
+Future Work - A description of how your system could be extended or refined.
+- add dual depth
+- preference for present year, because schedules are extrapolated to next year
+- extend constraint to each term
+
+Acknowledgments
+-course api
+-staff for feedback
+
+References
+-related work
+-tech: jquery, backbone, underscore, jquerytools, bootstrap, d3
+-DOI tree paper: http://vis.stanford.edu/files/2004-DOITree-AVI.pdf
+
+
+
+provid a sample run through?

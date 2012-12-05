@@ -1220,7 +1220,7 @@ var ui = {
 			{
 				view.$el.addClass('disabled');
 				view.$('.course-pick').prop('disabled',true);
-				view.$('.label-disabled').show();
+				view.$('.label-disabled').show();	
 				// view.$('.tooltip-content').text(canPickWithFeedback.feedback);
 				view.$('.label-disabled').attr('data-original-title', canPickWithFeedback.feedback);
 			}
@@ -1493,13 +1493,6 @@ var ui = {
 			'click .course-alreadyTaken': 'toggleAlreadyTaken',
 			'click .course-content': 'togglePick',
 			'input .alreadyTaken-units': 'updateTakenUnits',
-			'mouseover': 'showTooltip'
-		},
-
-		showTooltip: function(){
-			if (this.$el.is('.disabled')) {
-				console.log('disabled')
-			};
 		},
 
 		toggleWaive: function(){
@@ -1568,7 +1561,7 @@ var ui = {
 
 		togglePick: function(){
 
-			console.log(this.$el,this.$el.is('disabled'))
+			// console.log(this.$el,this.$el.is('disabled'))
 			if (this.$el.is('.disabled') || this.course.alreadyTaken || this.course.waived) {
 				//can't pick disabled course
 				//if waived or already taken, need to clear that first
@@ -1629,7 +1622,11 @@ var ui = {
 			});
 			this.$('.course-id').html(this.course.id);
 			this.$('.course-name .label-container').before(this.course.name);
-			this.$('.course-units').html(this.course.units.min + '-' + this.course.units.max);
+
+
+			var variableUnits = this.course.units.min !== this.course.units.max;
+			var unitsText = (variableUnits ? (this.course.units.min + '-' + this.course.units.max) : this.course.units.min) + " Units"
+			this.$('.course-units').html(unitsText);
 			// this.$('.course-pick').prop('checked',this.course.pick);
 			// this.$('.course-waive').prop('checked',this.course.waived);
 			// this.$('.course-alreadyTaken').prop('checked',this.course.alreadyTaken);
@@ -1670,7 +1667,9 @@ var ui = {
 
 					var el = $("<label class='checkbox'><input type='checkbox' class='course-waive' " + (that.course.waived? "checked" : "") + "> I waived this course</input></label>"
 	                            +"<label class='checkbox'><input type='checkbox' class='course-alreadyTaken' " + (that.course.alreadyTaken? "checked" : "") + ">"
-	                            +" I already took this course for <input type='number' class='alreadyTaken-units' value='"+ units + "' min='"+ that.course.units.min + "' max='" + that.course.units.max + "'/> units </span></input></label>"
+	                            +" I already took this course"
+	                            + (variableUnits? " for <input type='number' class='alreadyTaken-units' value='"+ units + "' min='"+ that.course.units.min + "' max='" + that.course.units.max + "'/> units </input>" : "")
+	                            +"</label>"
                     );
 
 
@@ -1980,6 +1979,8 @@ var ui = {
 					.classed('course-2', function(d){return  d.courseNum === 1})
 					.classed('course-3', function(d){return  d.courseNum === 2})
 					.classed('course-4', function(d){return  d.courseNum === 3})
+					.classed('course-5', function(d){return  d.courseNum === 4})
+					.classed('course-6', function(d){return  d.courseNum === 5})
 					.attr('x', function(d){return days.indexOf(d.day) * svgWidth / 5})
 					.attr('y', function(d){return timeScale(d.start)})
 					.attr('width', svgWidth / 5)
@@ -2101,7 +2102,13 @@ var app = new Application();
 app.start();
 
 /* TODO
-pick program
-calendar
-perf
+overview tabs
+schedule view
+local storage
+space in term name
+disable tooltip detail
+filter on selectable
+select schedule
+credit no-credit
+singularize/pluralize
 */
