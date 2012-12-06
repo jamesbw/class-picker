@@ -1203,6 +1203,8 @@ var ui = {
 	//enable, disable courses
 	toggleCourses: function(tighter){
 
+		var selectableOnly = $('#selectable-checkbox').prop('checked');
+
 		if(tighter){
 			$('#alert-area').children().remove();
 			$("#alert-area").append($("<div class='alert-message alert fade in' data-alert><p> Warning: some classes may have been dropped to satisfy tighter constraints </p></div>"));
@@ -1228,8 +1230,10 @@ var ui = {
 				view.$('.label-disabled').show();	
 				// view.$('.tooltip-content').text(canPickWithFeedback.feedback);
 				view.$('.label-disabled').attr('data-original-title', canPickWithFeedback.feedback);
+				view.$el.toggle(!selectableOnly);
 			}
 			else{
+				view.$el.show();
 				view.$el.removeClass('disabled');
 				view.$('.label-disabled').hide();
 				view.$('.course-pick').prop('disabled',false);
@@ -1837,7 +1841,9 @@ var ui = {
 	SearchView: Backbone.View.extend({
 		tagName: 'span',
 		className: 'search',
-		template: _.template("<form class='navbar-search'><input type='text' id='search-box' class='search-query' placeholder='search for a class'></form>"),
+		template: _.template("<form class='navbar-search'><input type='text' id='search-box' class='search-query' placeholder='search for a class'>"
+							+"<input type='checkbox' id='selectable-checkbox' label='Restrict to selectable courses'>Restrict to selectable courses</input>"
+							+"</form>"),
 
 		render: function(){
 			this.$el.html(this.template());
@@ -1846,6 +1852,7 @@ var ui = {
 
 		events: {
 			'input #search-box': 'handleInput',
+			'click #selectable-checkbox': 'handleInput',
 		},
 
 		handleInput: function(){
@@ -2155,7 +2162,6 @@ app.start();
 overview tabs
 local storage
 disable tooltip detail
-filter on selectable
 select schedule
 credit no-credit
 singularize/pluralize
