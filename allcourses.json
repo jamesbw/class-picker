@@ -10,6 +10,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter (ABCD/NP)",
         "terms": [
             {
                 "period": "Winter",
@@ -57,6 +58,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter (ABCD/NP)",
         "terms": [
             {
                 "period": "Autumn",
@@ -104,6 +106,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Winter",
@@ -186,6 +189,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -264,6 +268,7 @@
             "min": 3,
             "max": 5
         },
+        "grading": "Letter (ABCD/NP)",
         "terms": [
             {
                 "period": "Winter",
@@ -307,6 +312,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Medical Option (Med-Ltr-CR/NC)",
         "terms": [],
         "courseOfferings": []
     },
@@ -322,6 +328,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Medical Option (Med-Ltr-CR/NC)",
         "terms": [
             {
                 "period": "Winter",
@@ -369,6 +376,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Medical Option (Med-Ltr-CR/NC)",
         "terms": [
             {
                 "period": "Autumn",
@@ -458,6 +466,7 @@
             "min": 5,
             "max": 5
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -472,6 +481,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -521,6 +531,7 @@
             "min": 1,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -570,6 +581,7 @@
             "min": 1,
             "max": 6
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -623,6 +635,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Winter",
@@ -671,6 +684,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -751,6 +765,7 @@
             "min": 2,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Winter",
@@ -798,6 +813,7 @@
             "min": 2,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -850,6 +866,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Winter",
@@ -933,6 +950,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -980,6 +998,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -1025,6 +1044,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -1041,6 +1061,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -1088,6 +1109,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -1135,6 +1157,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -1184,6 +1207,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -1231,6 +1255,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Winter",
@@ -1278,6 +1303,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -1324,6 +1350,7 @@
             "min": 4,
             "max": 4
         },
+        "grading": "Letter (ABCD/NP)",
         "terms": [
             {
                 "period": "Autumn",
@@ -1433,6 +1460,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter (ABCD/NP)",
         "terms": [
             {
                 "period": "Autumn",
@@ -1482,6 +1510,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter (ABCD/NP)",
         "terms": [
             {
                 "period": "Autumn",
@@ -1531,6 +1560,7 @@
             "min": 4,
             "max": 5
         },
+        "grading": "Letter (ABCD/NP)",
         "terms": [
             {
                 "period": "Autumn",
@@ -1578,6 +1608,7 @@
             "min": 1,
             "max": 5
         },
+        "grading": "Letter (ABCD/NP)",
         "terms": [
             {
                 "period": "Autumn",
@@ -1653,6 +1684,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -1731,6 +1763,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -1803,6 +1836,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -1848,6 +1882,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -1862,6 +1897,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -1909,6 +1945,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -1956,6 +1993,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -2003,6 +2041,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Winter",
@@ -2073,6 +2112,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -2087,6 +2127,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter (ABCD/NP)",
         "terms": [
             {
                 "period": "Spring",
@@ -2136,6 +2177,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Winter",
@@ -2181,6 +2223,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -2222,6 +2265,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Winter",
@@ -2269,6 +2313,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -2314,6 +2359,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -2326,6 +2372,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -2340,6 +2387,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -2385,6 +2433,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -2400,6 +2449,7 @@
             "min": 3,
             "max": 5
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -2516,6 +2566,7 @@
             "min": 3,
             "max": 5
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -2660,6 +2711,7 @@
             "min": 3,
             "max": 5
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Winter",
@@ -2743,6 +2795,7 @@
             "min": 3,
             "max": 5
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -2858,6 +2911,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Winter",
@@ -2906,6 +2960,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -2986,6 +3041,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -3035,6 +3091,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -3116,6 +3173,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -3163,6 +3221,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -3241,6 +3300,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter (ABCD/NP)",
         "terms": [
             {
                 "period": "Autumn",
@@ -3288,6 +3348,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -3369,6 +3430,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Winter",
@@ -3416,6 +3478,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Winter",
@@ -3495,6 +3558,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -3542,6 +3606,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -3590,6 +3655,7 @@
             "min": 3,
             "max": 5
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -3699,6 +3765,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -3713,6 +3780,7 @@
             "min": 1,
             "max": 5
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -3758,6 +3826,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Winter",
@@ -3805,6 +3874,7 @@
             "min": 3,
             "max": 5
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -3852,6 +3922,7 @@
             "min": 4,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -3930,6 +4001,7 @@
             "min": 4,
             "max": 4
         },
+        "grading": "Letter (ABCD/NP)",
         "terms": [
             {
                 "period": "Autumn",
@@ -4109,6 +4181,7 @@
             "min": 1,
             "max": 6
         },
+        "grading": "Letter (ABCD/NP)",
         "terms": [
             {
                 "period": "Autumn",
@@ -4326,6 +4399,7 @@
             "min": 3,
             "max": 6
         },
+        "grading": "Letter (ABCD/NP)",
         "terms": [
             {
                 "period": "Autumn",
@@ -4509,6 +4583,7 @@
             "min": 1,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -4623,6 +4698,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Summer",
@@ -4670,6 +4746,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Winter",
@@ -4717,6 +4794,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter (ABCD/NP)",
         "terms": [
             {
                 "period": "Spring",
@@ -4764,6 +4842,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter (ABCD/NP)",
         "terms": [
             {
                 "period": "Spring",
@@ -4811,6 +4890,7 @@
             "min": 2,
             "max": 2
         },
+        "grading": "Satisfactory/No Credit",
         "terms": [
             {
                 "period": "Winter",
@@ -4891,6 +4971,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Satisfactory/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -5096,6 +5177,7 @@
             "min": 1,
             "max": 6
         },
+        "grading": "Letter (ABCD/NP)",
         "terms": [
             {
                 "period": "Autumn",
@@ -5307,6 +5389,7 @@
             "min": 1,
             "max": 6
         },
+        "grading": "Satisfactory/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -5423,6 +5506,7 @@
             "min": 1,
             "max": 1
         },
+        "grading": "Satisfactory/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -5491,6 +5575,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -5532,6 +5617,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -5577,6 +5663,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -5591,6 +5678,7 @@
             "min": 1,
             "max": 1
         },
+        "grading": "Satisfactory/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -5634,6 +5722,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -5648,6 +5737,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter (ABCD/NP)",
         "terms": [
             {
                 "period": "Winter",
@@ -5695,6 +5785,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter (ABCD/NP)",
         "terms": [
             {
                 "period": "Spring",
@@ -5742,6 +5833,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -5787,6 +5879,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -5801,6 +5894,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Winter",
@@ -5848,6 +5942,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -5893,6 +5988,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -5938,6 +6034,7 @@
             "min": 2,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -5953,6 +6050,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Winter",
@@ -6000,6 +6098,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -6047,6 +6146,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -6092,6 +6192,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -6104,6 +6205,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -6116,6 +6218,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -6130,6 +6233,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -6175,6 +6279,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -6222,6 +6327,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -6267,6 +6373,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -6281,6 +6388,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Winter",
@@ -6328,6 +6436,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -6375,6 +6484,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -6416,6 +6526,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter (ABCD/NP)",
         "terms": [
             {
                 "period": "Spring",
@@ -6463,6 +6574,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -6478,6 +6590,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Winter",
@@ -6554,6 +6667,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -6568,6 +6682,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -6617,6 +6732,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Winter",
@@ -6664,6 +6780,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Winter",
@@ -6711,6 +6828,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -6756,6 +6874,7 @@
             "min": 3,
             "max": 6
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -6768,6 +6887,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -6782,6 +6902,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Winter",
@@ -6829,6 +6950,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Winter",
@@ -6877,6 +6999,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter (ABCD/NP)",
         "terms": [
             {
                 "period": "Winter",
@@ -6924,6 +7047,7 @@
             "min": 1,
             "max": 1
         },
+        "grading": "Satisfactory/No Credit",
         "terms": [
             {
                 "period": "Winter",
@@ -6970,6 +7094,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -7017,6 +7142,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -7062,6 +7188,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -7074,6 +7201,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -7088,6 +7216,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Winter",
@@ -7135,6 +7264,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Winter",
@@ -7182,6 +7312,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -7229,6 +7360,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Winter",
@@ -7276,6 +7408,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -7323,6 +7456,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -7370,6 +7504,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -7420,6 +7555,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Winter",
@@ -7468,6 +7604,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Medical Option (Med-Ltr-CR/NC)",
         "terms": [
             {
                 "period": "Spring",
@@ -7513,6 +7650,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -7527,6 +7665,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Medical Option (Med-Ltr-CR/NC)",
         "terms": [
             {
                 "period": "Autumn",
@@ -7574,6 +7713,7 @@
             "min": 4,
             "max": 4
         },
+        "grading": "Medical Option (Med-Ltr-CR/NC)",
         "terms": [
             {
                 "period": "Spring",
@@ -7622,6 +7762,7 @@
             "min": 2,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Winter",
@@ -7670,6 +7811,7 @@
             "min": 2,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -7718,6 +7860,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -7763,6 +7906,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Winter",
@@ -7802,6 +7946,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -7814,6 +7959,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -7826,6 +7972,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -7838,6 +7985,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -7852,6 +8000,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -7897,6 +8046,7 @@
             "min": 2,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -7909,6 +8059,7 @@
             "min": 1,
             "max": 3
         },
+        "grading": "Satisfactory/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -7923,6 +8074,7 @@
             "min": 1,
             "max": 1
         },
+        "grading": "Satisfactory/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -7968,6 +8120,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -7980,6 +8133,7 @@
             "min": 1,
             "max": 1
         },
+        "grading": "Satisfactory/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -7994,6 +8148,7 @@
             "min": 1,
             "max": 1
         },
+        "grading": "Satisfactory/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -8037,6 +8192,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -8049,6 +8205,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -8064,6 +8221,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -8109,6 +8267,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -8121,6 +8280,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -8133,6 +8293,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -8145,6 +8306,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -8159,6 +8321,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -8204,6 +8367,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -8216,6 +8380,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -8230,6 +8395,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -8275,6 +8441,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Winter",
@@ -8345,6 +8512,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -8357,6 +8525,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -8374,6 +8543,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -8419,6 +8589,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -8433,6 +8604,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -8478,6 +8650,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -8490,6 +8663,7 @@
             "min": 2,
             "max": 2
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -8502,6 +8676,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -8514,6 +8689,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -8528,6 +8704,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -8575,6 +8752,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Winter",
@@ -8622,6 +8800,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -8667,6 +8846,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -8679,6 +8859,7 @@
             "min": 1,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -8691,6 +8872,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -8703,6 +8885,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -8715,6 +8898,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -8727,6 +8911,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -8739,6 +8924,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -8751,6 +8937,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -8763,6 +8950,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -8775,6 +8963,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -8787,6 +8976,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -8801,6 +8991,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Winter",
@@ -8848,6 +9039,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Winter",
@@ -8895,6 +9087,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -8940,6 +9133,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -8952,6 +9146,7 @@
             "min": 2,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -8966,6 +9161,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -9011,6 +9207,7 @@
             "min": 2,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -9025,6 +9222,7 @@
             "min": 2,
             "max": 3
         },
+        "grading": "Letter (ABCD/NP)",
         "terms": [
             {
                 "period": "Winter",
@@ -9095,6 +9293,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -9109,6 +9308,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter (ABCD/NP)",
         "terms": [
             {
                 "period": "Autumn",
@@ -9152,6 +9352,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -9164,6 +9365,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -9178,6 +9380,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Satisfactory/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -9321,6 +9524,7 @@
             "min": 1,
             "max": 1
         },
+        "grading": "Satisfactory/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -9533,6 +9737,7 @@
             "min": 1,
             "max": 1
         },
+        "grading": "Satisfactory/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -9745,6 +9950,7 @@
             "min": 1,
             "max": 1
         },
+        "grading": "Satisfactory/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -9953,6 +10159,7 @@
             "min": 1,
             "max": 9
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -10161,6 +10368,7 @@
             "min": 1,
             "max": 6
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -10381,6 +10589,7 @@
             "min": 1,
             "max": 9
         },
+        "grading": "Letter (ABCD/NP)",
         "terms": [
             {
                 "period": "Autumn",
@@ -10599,6 +10808,7 @@
             "min": 1,
             "max": 9
         },
+        "grading": "Satisfactory/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -10716,6 +10926,7 @@
             "min": 3,
             "max": 5
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -10761,6 +10972,7 @@
             "min": 1,
             "max": 3
         },
+        "grading": "Letter (ABCD/NP)",
         "terms": [
             {
                 "period": "Autumn",
@@ -10804,6 +11016,7 @@
             "min": 1,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -10818,6 +11031,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Winter",
@@ -10865,6 +11079,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -10910,6 +11125,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -10922,6 +11138,7 @@
             "min": 3,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -10936,6 +11153,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -10981,6 +11199,7 @@
             "min": 1,
             "max": 4
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -10993,6 +11212,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter (ABCD/NP)",
         "terms": [],
         "courseOfferings": []
     },
@@ -11007,6 +11227,7 @@
             "min": 3,
             "max": 3
         },
+        "grading": "Letter or Credit/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -11054,6 +11275,7 @@
             "min": 1,
             "max": 1
         },
+        "grading": "Satisfactory/No Credit",
         "terms": [
             {
                 "period": "Winter",
@@ -11097,6 +11319,7 @@
             "min": 1,
             "max": 4
         },
+        "grading": "Letter (ABCD/NP)",
         "terms": [],
         "courseOfferings": []
     },
@@ -11213,6 +11436,7 @@
             "min": 1,
             "max": 15
         },
+        "grading": "Letter (ABCD/NP)",
         "terms": [
             {
                 "period": "Autumn",
@@ -11432,6 +11656,7 @@
             "min": 1,
             "max": 15
         },
+        "grading": "Satisfactory/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -11548,6 +11773,7 @@
             "min": 1,
             "max": 1
         },
+        "grading": "Satisfactory/No Credit",
         "terms": [
             {
                 "period": "Winter",
@@ -11595,6 +11821,7 @@
             "min": 1,
             "max": 1
         },
+        "grading": "Satisfactory/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -11671,6 +11898,7 @@
             "min": 1,
             "max": 1
         },
+        "grading": "Satisfactory/No Credit",
         "terms": [
             {
                 "period": "Autumn",
@@ -11772,6 +12000,7 @@
             "min": 1,
             "max": 1
         },
+        "grading": "Satisfactory/No Credit",
         "terms": [],
         "courseOfferings": []
     },
@@ -11787,6 +12016,7 @@
             "min": 1,
             "max": 1
         },
+        "grading": "Satisfactory/No Credit",
         "terms": [
             {
                 "period": "Spring",
@@ -11929,6 +12159,7 @@
             "min": 0,
             "max": 0
         },
+        "grading": "TGR",
         "terms": [
             {
                 "period": "Autumn",
@@ -12145,6 +12376,7 @@
             "min": 0,
             "max": 0
         },
+        "grading": "TGR",
         "terms": [
             {
                 "period": "Autumn",

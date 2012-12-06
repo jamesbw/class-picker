@@ -124,11 +124,12 @@ CourseOffering.prototype.conflictsWith = function(courseOffering) {
 	return true;
 };
 
-function Course(id, name, instructors, desc, units, terms, courseOfferings) {
+function Course(id, name, instructors, desc, grading, units, terms, courseOfferings) {
 	this.id = id;
 	this.name = name;
 	this.instructors = instructors;
 	this.desc = desc;
+	this.grading = grading;
 	this.units = units;
 	this.terms = terms;
 	this.courseOfferings = courseOfferings;
@@ -756,6 +757,7 @@ Application.prototype.initCourses = function(callback) {
 				min: c.units.min,
 				max: c.units.max
 			};
+			var grading = c.grading;
 			var courseOfferings = c.courseOfferings.map(function(off){
 				return new CourseOffering(id, 
 					name, 
@@ -772,6 +774,7 @@ Application.prototype.initCourses = function(callback) {
 				name,
 				instructors,
 				desc,
+				grading,
 				units,
 				terms,
 				courseOfferings);
@@ -1668,7 +1671,7 @@ var ui = {
     							 +"			<li>" + unitsText + "</li>"
     							 +"			<li>Description: " + this.course.desc + "</li>"
     							 +"			<li>Instructors: " + this.course.instructors.join(', ') + "</li>"
-    							 +"			<li>Grading: " + "Letter or Credit/No Credit" + "</li>"
+    							 +"			<li>Grading: " + this.course.grading + "</li>"
     							 + that.course.courseOfferings.map(function(off){
 										return '<li>' + off.term.period + " " + off.term.year + ": " + off.days.join('-') + " " + numToTime(off.startTime) + "-" + numToTime(off.endTime) + '</li>';
 									}).join('')
@@ -2174,6 +2177,5 @@ local storage
 disable tooltip detail
 select schedule
 credit no-credit
-singularize/pluralize
 remove yellow from schedule colors
 */
