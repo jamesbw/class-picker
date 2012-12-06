@@ -1359,10 +1359,16 @@ var ui = {
 			$('#schedules').append("<div class='alert'>Warning: these schedules do not meet all the requirements</div>");
 		};
 
+        var newdiv;
+        
 		schedules.forEach(function(schedule, i){
             console.log(schedule)
 			var scheduleView = new ui.ScheduleView({schedule: schedule, num: i+1});
-            $('#schedules').append(scheduleView.render().el);
+            if (i%3 === 0) {
+                newdiv = $("<div class='row'>");
+                $('#schedules').append(newdiv);
+            }
+            newdiv.append(scheduleView.render().el);
 		});
 
 		$('.mini-term-schedule').overlay();
@@ -1959,6 +1965,7 @@ var ui = {
                 // this.schedule.courses[termID].get('id').join(', ');
 
 				var uniqueID = termID + getRandomInt(0, 10000000);
+
 				this.$('.schedule-container').append("<div class='schedule-term " + termID + "'>"
                                                     +"  <p class='nav-header'>" + term.period + " " + term.year + "</p>"
                                                     +"  <div class='row'>"
