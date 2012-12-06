@@ -23,7 +23,10 @@ function numToTime(num) {
 	var minuteStr = minutes > 10? ":"+minutes : (minutes > 0? ":0"+minutes : "");
 
 	return hour + minuteStr + ampm;
+}
 
+function pluralize(str, count){
+	return count + " " + (count === 1 ? str : str + 's');
 }
 
 Array.prototype.get = function(property) {
@@ -650,19 +653,19 @@ UnitRequirement.prototype.adjusted = function(waivedCourses, alreadyTakenCourses
 };
 
 CourseRequirement.prototype.progressText = function() {
-	return this.fulfilled + " of " + this.required + " courses";
+	return this.fulfilled + " of " + pluralize('course', this.required);
 };
 
 UnitRequirement.prototype.progressText = function() {
-	return this.fulfilled + " of " + this.required + " units";
+	return this.fulfilled + " of " + pluralize('unit', this.required);
 };
 
 CourseRequirement.prototype.instructions = function() {
-	return "Click to select " + this.required + " courses from the following list";
+	return "Click to select " + pluralize('course', this.required) + " from the following list";
 };
 
 UnitRequirement.prototype.instructions = function() {
-	return "Click to select " + this.required + " units from the following list";
+	return "Click to select " + pluralize('unit', this.required) + " from the following list";
 };
 
 
