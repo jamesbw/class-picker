@@ -1647,7 +1647,8 @@ var ui = {
 
 
 			var variableUnits = this.course.units.min !== this.course.units.max;
-			var unitsText = (variableUnits ? (this.course.units.min + '-' + this.course.units.max) : this.course.units.min) + " Units"
+            var unitsNumber = (variableUnits ? (this.course.units.min + '-' + this.course.units.max) : this.course.units.min)
+			var unitsText = unitsNumber === 1 ? "1 unit" : unitsNumber + " units";
 			this.$('.course-units').html(unitsText);
 			// this.$('.course-pick').prop('checked',this.course.pick);
 			// this.$('.course-waive').prop('checked',this.course.waived);
@@ -1664,15 +1665,16 @@ var ui = {
     							 +"		<h3 id='myModalLabel'>" + this.course.id + " " + this.course.name + "</h3>"
     							 +"</div>"
     							 +"<div class='modal-body'>"
-    							 +"		<ul>"
-    							 +"			<li>" + unitsText + "</li>"
-    							 +"			<li>Description: " + this.course.desc + "</li>"
-    							 +"			<li>Instructors: " + this.course.instructors.join(', ') + "</li>"
-    							 +"			<li>Grading: " + "Letter or Credit/No Credit" + "</li>"
+    							 +"		<dl class='dl-horizontal'>"
+    							 +"			<dt>Units</dt><dd>" + unitsNumber + "</dd>"
+    							 +"			<dt>Description</dt><dd>" + this.course.desc + "</dd>"
+    							 +"			<dt>Instructors</dt><dd>" + this.course.instructors.join(', ') + "</dd>"
+    							 +"			<dt>Grading</dt><dd>" + "Letter or Credit/No Credit" + "</dd>"
+                                 +"         <dt>Offered</dt>"
     							 + that.course.courseOfferings.map(function(off){
-										return '<li>' + off.term.period + " " + off.term.year + ": " + off.days.join('-') + " " + numToTime(off.startTime) + "-" + numToTime(off.endTime) + '</li>';
+										return '<dd>' + off.term.period + " " + off.term.year + ": " + off.days.join('-') + " " + numToTime(off.startTime) + "-" + numToTime(off.endTime) + '</dd>';
 									}).join('')
-    							 +"		</ul>"
+    							 +"		</dl>"
     							 +"</div>"
 								 +"<div class='modal-footer'>"
 								 +"		<button class='btn' data-dismiss='modal' aria-hidden='true'>Close</button>"
