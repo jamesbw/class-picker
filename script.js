@@ -40,6 +40,11 @@ function Term(period, year){
 	this.id = period + year;
 }
 
+function termIDtoTerm(id){
+	var regexp = id.match(/(\w*)(201.*)/);
+	return new Term(regexp[1], regexp[2]);
+}
+
 function Schedule(terms, constraint) {
 	this.constraint = constraint;
 	// this.units = {};
@@ -1944,6 +1949,8 @@ var ui = {
 			this.$('.schedule-title').html("Schedule proposal #" + this.num);
 			this.schedule.getTermIDs().forEach(function(termID){
 
+				var term = termIDtoTerm(termID);
+
 				var courses = '<ul>';
                 this.schedule.courses[termID].get('id').forEach( function(item) {
                     courses += '<li>'+ item + '</li>';
@@ -1953,7 +1960,7 @@ var ui = {
 
 				var uniqueID = termID + getRandomInt(0, 10000000);
 				this.$('.schedule-container').append("<div class='schedule-term " + termID + "'>"
-                                                    +"  <p class='nav-header'>" + termID + "</p>"
+                                                    +"  <p class='nav-header'>" + term.period + " " + term.year + "</p>"
                                                     +"  <div class='row'>"
                                                     // +"      <div class='mini-term-schedule span2' rel='#" + uniqueID + "'></div>"
                                                     +"      <a class='mini-term-schedule span2' role='button' data-toggle='modal' href='#" + uniqueID + "'></a>"
@@ -2147,10 +2154,10 @@ app.start();
 /* TODO
 overview tabs
 local storage
-space in term name
 disable tooltip detail
 filter on selectable
 select schedule
 credit no-credit
 singularize/pluralize
+remove yellow from schedule colors
 */
