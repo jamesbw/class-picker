@@ -555,3 +555,12 @@ input.course-waive, input.course-alreadyTaken {
     width:35px;
     opacity: 1;
 }*/
+
+
+#course-table .dl-horizontal dt {
+  width: 100px;
+}
+
+#course-table .dl-horizontal dd {
+margin-left: 120px;
+}
