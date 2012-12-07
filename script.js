@@ -181,6 +181,22 @@ Course.prototype.canBePickedWithFeedback = function(scheduleList) {
 		};
 	};
 
+	//matching days on matching offerings?
+	if(this.getTerms().every(function(term){
+		return (selectedTermIDs.indexOf(term.id) < 0) 
+				|| _.find(this.courseOfferings, function(off){ 
+						return off.term.id === term.id;
+					}).days.some(function(day){
+						return scheduleList.constraint.allowedDays.indexOf(day) < 0;
+					}); 
+				;
+	}, this)){
+		return {
+			canBePicked: false,
+			feedback: "This course is not offered in the selected days and terms."
+		};
+	}
+
 	var conflicts = [];
 
 	if (numSchedules < 500) {
