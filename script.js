@@ -1248,7 +1248,7 @@ Application.prototype.run = function() {
 	ui.renderSearch();
 
 	ui.renderPrograms();
-	ui.renderSchedules(10);	
+	ui.renderSchedules(9);	
 };
 
 var ui = {
@@ -1424,7 +1424,7 @@ var ui = {
 			return;
 		};
 
-		numToShow = numToShow || 10;
+		numToShow = numToShow || 9;
 		$('#schedules').append("<div class='alert alert-info'>Click on any term for a more detailed view</div>");
 		var schedules = ui.app.getSchedulesMeetingReqs(numToShow);
 		if (_.isEmpty(schedules)) {
@@ -1994,7 +1994,7 @@ var ui = {
 			console.log('clicked on view schedules tab')
 			ui.activeTabId = 'view-schedules-tab';
 			ui.toggleContainers();
-			ui.renderSchedules(10);
+			ui.renderSchedules(9);
 			ui.app.store();
 		},
 	}),
