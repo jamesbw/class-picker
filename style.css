@@ -521,7 +521,33 @@ input.course-waive, input.course-alreadyTaken {
   /*padding-right: 14px;*/
 }
 
+.course-list span[class*="course-"] {
+  display: inline-block;
+  width: 20px;
+  height: 10px;
+  -webkit-border-radius: 2px;
+     -moz-border-radius: 2px;
+          border-radius: 2px;
+}
 
+.course-list span.course-1 {
+  background-color: #7FC97F;
+}
+.course-list span.course-2 {
+  background-color: #BEAED4;
+}
+.course-list span.course-3 {
+  background-color: #FDC086;
+}
+.course-list span.course-4 {
+  background-color: #FFFF99;
+}
+.course-list span.course-5 {
+  background-color: #386CB0;
+}
+.course-list span.course-6 {
+  background-color: #F0027F;
+}
 
  .mini-term-schedule {
   /*width: 140px;*/
