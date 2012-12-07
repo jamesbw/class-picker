@@ -176,16 +176,21 @@ body {
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
        -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
             box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+}
+
+.program:hover {
+  background-color: #eee;
 }
 
 .program:first-child {
     margin-top: 20px;
 }
 
-.activeProgram {
+.program.activeProgram {
     background-color: #D9FAB9;
+    cursor: default;
 }
-
 
 
 
@@ -341,10 +346,32 @@ body {
   /*overflow: hidden;*/
   position: relative;
   width: 100%;
+  cursor: pointer;
 }
 
-.course.well.picked, .course.well.already-taken, .course.well.waived {
+.course-content:hover {
+  background-color: #eee;
+}
+
+.picked .course-content, .already-taken .course-content, .waived .course-content {
   background-color: #D9FAB9;
+}
+
+.picked .course-content:hover {
+  background-color: #e8fcd5;
+}
+
+.already-taken .course-content:hover, .waived .course-content:hover {
+  cursor: default;
+}
+
+.course.well.disabled, .course.well.disabled:hover {
+  cursor: not-allowed !important;
+  background-color: whiteSmoke;
+}
+
+.course.well.disabled .course-content {
+  color: #ccc; 
 }
 
 .course-content {

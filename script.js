@@ -2136,6 +2136,8 @@ var ui = {
 					.classed('course-2', function(d){return  d.courseNum === 1})
 					.classed('course-3', function(d){return  d.courseNum === 2})
 					.classed('course-4', function(d){return  d.courseNum === 3})
+                    .classed('course-5', function(d){return  d.courseNum === 4})
+                    .classed('course-6', function(d){return  d.courseNum === 5})
 					.attr('x', function(d){return days.indexOf(d.day) * overlaySVGWidth / 5})
 					.attr('y', function(d){return overlayTimeScale(d.start)})
 					.attr('width', overlaySVGWidth / 5)
