@@ -1291,7 +1291,7 @@ var ui = {
 
 		if(tighter){
 			$('#alert-area').children().remove();
-			$("#alert-area").append($("<div class='alert-message alert fade in' data-alert><p> Warning: some classes may have been dropped to satisfy tighter constraints </p></div>"));
+			$("#alert-area").append($("<div class='alert-message alert fade in' data-alert><span> Warning: some classes may have been dropped to satisfy tighter constraints</span></div>"));
 		    $(".alert-message").delay(2000).fadeOut("slow", function () { $(this).remove(); });
 		};
 
@@ -2087,7 +2087,7 @@ var ui = {
                                                     +"  <div id='" + uniqueID + "' class='modal hide fade schedule-overlay' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'>"
                                                     +"      <div class='modal-header'>"
                                                     +"          <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>"
-                                                    +"          <h3>" + termID + "</h3>"
+                                                    +"          <h3>" + term.period + " " + term.year + "</h3>"
                                                     +"      </div>"
                                                     +"      <div class='modal-body'></div>"
                                                     +"      <div class='modal-footer'>"

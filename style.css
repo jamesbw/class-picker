@@ -339,6 +339,10 @@ body {
   margin-top: 20px;
 }
 
+#alert-area {
+  margin-top: 20px;
+}
+
 .course.well {
   padding: 0;
   display: inline-block;
@@ -365,9 +369,9 @@ body {
   cursor: default;
 }
 
-.course.well.disabled, .course.well.disabled:hover {
+.disabled .course-content, .disabled .course-content:hover {
   cursor: not-allowed !important;
-  background-color: whiteSmoke;
+  background-color: whiteSmoke !important;
 }
 
 .course.well.disabled .course-content {
@@ -531,22 +535,22 @@ input.course-waive, input.course-alreadyTaken {
 }
 
 .course-list span.course-1 {
-  background-color: #7FC97F;
+  background-color: #70B7BA;
 }
 .course-list span.course-2 {
-  background-color: #BEAED4;
+  background-color: #A9CF54;
 }
 .course-list span.course-3 {
-  background-color: #FDC086;
+  background-color: #FF717E;
 }
 .course-list span.course-4 {
-  background-color: #FFFF99;
+  background-color: #FFB92A;
 }
 .course-list span.course-5 {
-  background-color: #386CB0;
+  background-color: #9f689f;
 }
 .course-list span.course-6 {
-  background-color: #F0027F;
+  background-color: #a7774c;
 }
 
  .mini-term-schedule {
@@ -565,22 +569,22 @@ input.course-waive, input.course-alreadyTaken {
  }
 
  .svg-course.course-1 {
-  fill: #7FC97F;
+  fill: #70B7BA;
  }
  .svg-course.course-2 {
-  fill: #BEAED4;
+  fill: #A9CF54;
  }
  .svg-course.course-3 {
-  fill: #FDC086;
+  fill: #FF717E;
  }
  .svg-course.course-4 {
-  fill: #FFFF99;
+  fill: #FFB92A;
  }
  .svg-course.course-5 {
-  fill: #386CB0;
+  fill: #9f689f;
  }
  .svg-course.course-6 {
-  fill: #F0027F;
+  fill: #a7774c;
  }
 
 /*.schedule-overlay {
