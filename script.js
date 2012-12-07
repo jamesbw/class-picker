@@ -1210,24 +1210,24 @@ Application.prototype.run = function() {
 	// this.setSpecialization(new SingleDepthSpecialization(this.getPrograms()[0]));
 	// this.setTerms(ui.terms);
 
-	// this.addCourseByID('CS 103');
-	// this.addCourseByID('CS 107');
-	// this.addCourseByID('CS 109');
-	// this.addCourseByID('CS 110');
-	// this.addCourseByID('CS 161');
-	// this.addCourseByID('CS 221');
-	// this.addCourseByID('CS 223A');
-	// this.addCourseByID('CS 224M');
-	// this.addCourseByID('CS 224N');
-	// this.addCourseByID('CS 229');
-	// this.addCourseByID('CS 231A');
-	// this.addCourseByID('CS 124');
-	// this.addCourseByID('CS 224U');
-	// this.addCourseByID('CS 224W');
-	// this.addCourseByID('CS 228');
-	// this.addCourseByID('CS 140');
-	// this.addCourseByID('CS 143');
-	// this.addCourseByID('CS 144');
+	this.addCourseByID('CS 103');
+	this.addCourseByID('CS 107');
+	this.addCourseByID('CS 109');
+	this.addCourseByID('CS 110');
+	this.addCourseByID('CS 161');
+	this.addCourseByID('CS 221');
+	this.addCourseByID('CS 223A');
+	this.addCourseByID('CS 224M');
+	this.addCourseByID('CS 224N');
+	this.addCourseByID('CS 229');
+	this.addCourseByID('CS 231A');
+	this.addCourseByID('CS 124');
+	this.addCourseByID('CS 224U');
+	this.addCourseByID('CS 224W');
+	this.addCourseByID('CS 228');
+	this.addCourseByID('CS 140');
+	this.addCourseByID('CS 143');
+	this.addCourseByID('CS 144');
 
 	ui.app = this;
 	// ui.activeRequirement = this.totalUnitRequirement;
@@ -2047,9 +2047,9 @@ var ui = {
 
 				var term = termIDtoTerm(termID);
 
-				var courses = '<ul>';
-                this.schedule.courses[termID].get('id').forEach( function(item) {
-                    courses += '<li>'+ item + '</li>';
+				var courses = '<ul class="unstyled">';
+                this.schedule.courses[termID].get('id').forEach( function(item, index) {
+                    courses += '<li><span class="course-' + (index+1) + '"/> ' + item + '</li>';
                 });
                 courses += '</ul>'
                 // this.schedule.courses[termID].get('id').join(', ');
