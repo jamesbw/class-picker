@@ -890,6 +890,7 @@ Application.prototype.restore = function() {
 		this.setSpecialization(new SingleDepthSpecialization(this.getPrograms()[0]));
 		this.setTerms(ui.terms);
 		ui.activeRequirement = this.totalUnitRequirement;
+		ui.activeTabId = 'select-program-tab';
 		return false;
 	};
 
@@ -1205,10 +1206,8 @@ Application.prototype.run = function() {
 
 
 
-	var previous_visit = this.restore();
-	if (previous_visit) {
-		ui.activeTabId = 'select-courses-tab';
-	};
+	this.restore();
+
 
 	// var constraint = new Constraint(10, 5);
 	// this.setConstraint(constraint);
@@ -1216,24 +1215,24 @@ Application.prototype.run = function() {
 	// this.setTerms(ui.terms);
 	// ui.activeRequirement = this.totalUnitRequirement;
 
-	this.addCourseByID('CS 103');
-	this.addCourseByID('CS 107');
-	this.addCourseByID('CS 109');
-	this.addCourseByID('CS 110');
-	this.addCourseByID('CS 161');
-	this.addCourseByID('CS 221');
-	this.addCourseByID('CS 223A');
-	this.addCourseByID('CS 224M');
-	this.addCourseByID('CS 224N');
-	this.addCourseByID('CS 229');
-	this.addCourseByID('CS 231A');
-	this.addCourseByID('CS 124');
-	this.addCourseByID('CS 224U');
-	this.addCourseByID('CS 224W');
-	this.addCourseByID('CS 228');
-	this.addCourseByID('CS 140');
-	this.addCourseByID('CS 143');
-	this.addCourseByID('CS 144');
+	// this.addCourseByID('CS 103');
+	// this.addCourseByID('CS 107');
+	// this.addCourseByID('CS 109');
+	// this.addCourseByID('CS 110');
+	// this.addCourseByID('CS 161');
+	// this.addCourseByID('CS 221');
+	// this.addCourseByID('CS 223A');
+	// this.addCourseByID('CS 224M');
+	// this.addCourseByID('CS 224N');
+	// this.addCourseByID('CS 229');
+	// this.addCourseByID('CS 231A');
+	// this.addCourseByID('CS 124');
+	// this.addCourseByID('CS 224U');
+	// this.addCourseByID('CS 224W');
+	// this.addCourseByID('CS 228');
+	// this.addCourseByID('CS 140');
+	// this.addCourseByID('CS 143');
+	// this.addCourseByID('CS 144');
 
 	ui.app = this;
 
@@ -1259,7 +1258,7 @@ var ui = {
 
 	app: null,
 	activeRequirement: null, //selected requirement in UI
-	activeTabId: 'select-program-tab',
+	activeTabId: null,
 
 
 	updateRequirements: function(){
