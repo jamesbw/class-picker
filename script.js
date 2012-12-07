@@ -885,6 +885,11 @@ Application.prototype.store = function() {
 Application.prototype.restore = function() {
 	var storedValue = localStorage.getItem('saved-state');
 	if (!storedValue) {
+		var constraint = new Constraint(10, 5);
+		this.setConstraint(constraint);
+		this.setSpecialization(new SingleDepthSpecialization(this.getPrograms()[0]));
+		this.setTerms(ui.terms);
+		ui.activeRequirement = this.totalUnitRequirement;
 		return false;
 	};
 
@@ -1209,6 +1214,7 @@ Application.prototype.run = function() {
 	// this.setConstraint(constraint);
 	// this.setSpecialization(new SingleDepthSpecialization(this.getPrograms()[0]));
 	// this.setTerms(ui.terms);
+	// ui.activeRequirement = this.totalUnitRequirement;
 
 	// this.addCourseByID('CS 103');
 	// this.addCourseByID('CS 107');
@@ -1230,7 +1236,6 @@ Application.prototype.run = function() {
 	// this.addCourseByID('CS 144');
 
 	ui.app = this;
-	// ui.activeRequirement = this.totalUnitRequirement;
 
 	ui.renderHeader();
 	ui.toggleContainers();
@@ -2252,13 +2257,6 @@ app.start();
 
 /* TODO
 overview tabs
-local storage
 disable tooltip detail
 select schedule
-remove yellow from schedule colors
-
-make select more obvious
-seect thru on program
-time intervals
-schedule legend
 */
