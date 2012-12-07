@@ -237,8 +237,8 @@ Course.prototype.canBePicked = function(scheduleList) {
 //Search filter
 Course.prototype.matches = function(filter) {
 	filter = filter || "";
-	var strippedFilter = filter.replace(/\s/g, '');
-	var strippedCourse = (this.id + this.name).replace(/\s/g, '');
+	var strippedFilter = filter.replace(/\s/g, '').toLowerCase();
+	var strippedCourse = (this.id + this.name).replace(/\s/g, '').toLowerCase();
 	return strippedCourse.match(strippedFilter);
 };
 
@@ -1152,24 +1152,24 @@ Application.prototype.run = function() {
 	this.setSpecialization(new SingleDepthSpecialization(this.getPrograms()[0]));
 	this.setTerms(ui.terms);
 
-	this.addCourseByID('CS 103');
-	this.addCourseByID('CS 107');
-	this.addCourseByID('CS 109');
-	this.addCourseByID('CS 110');
-	this.addCourseByID('CS 161');
-	this.addCourseByID('CS 221');
-	this.addCourseByID('CS 223A');
-	this.addCourseByID('CS 224M');
-	this.addCourseByID('CS 224N');
-	this.addCourseByID('CS 229');
-	this.addCourseByID('CS 231A');
-	this.addCourseByID('CS 124');
-	this.addCourseByID('CS 224U');
-	this.addCourseByID('CS 224W');
-	this.addCourseByID('CS 228');
-	this.addCourseByID('CS 140');
-	this.addCourseByID('CS 143');
-	this.addCourseByID('CS 144');
+	// this.addCourseByID('CS 103');
+	// this.addCourseByID('CS 107');
+	// this.addCourseByID('CS 109');
+	// this.addCourseByID('CS 110');
+	// this.addCourseByID('CS 161');
+	// this.addCourseByID('CS 221');
+	// this.addCourseByID('CS 223A');
+	// this.addCourseByID('CS 224M');
+	// this.addCourseByID('CS 224N');
+	// this.addCourseByID('CS 229');
+	// this.addCourseByID('CS 231A');
+	// this.addCourseByID('CS 124');
+	// this.addCourseByID('CS 224U');
+	// this.addCourseByID('CS 224W');
+	// this.addCourseByID('CS 228');
+	// this.addCourseByID('CS 140');
+	// this.addCourseByID('CS 143');
+	// this.addCourseByID('CS 144');
 
 	ui.app = this;
 	ui.activeRequirement = this.totalUnitRequirement;
@@ -1855,7 +1855,7 @@ var ui = {
 	SearchView: Backbone.View.extend({
 		tagName: 'span',
 		className: 'search',
-		template: _.template("<form class='navbar-search'><input type='text' id='search-box' class='search-query' placeholder='search for a class'>"
+		template: _.template("<form onsubmit='return false;' class='navbar-search'><input type='text' id='search-box' class='search-query' placeholder='search for a class'>"
 							+"<input type='checkbox' id='selectable-checkbox' label='Restrict to selectable courses'>Restrict to selectable courses</input>"
 							+"</form>"),
 
@@ -2180,4 +2180,13 @@ disable tooltip detail
 select schedule
 credit no-credit
 remove yellow from schedule colors
+
+form submit on enter
+make select more obvious
+seect thru on program
+case insensitive search
+time intervals
+cs448b 45 units?
+courserank
+schedule legend
 */
