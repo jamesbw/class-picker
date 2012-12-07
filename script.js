@@ -865,6 +865,58 @@ Application.prototype.initPrograms = function(callback) {
 	});
 };
 
+
+Application.prototype.store = function() {
+	var state = {};
+	state.courses = this.getCourses().get('id');
+	state.waivedCourses = this.getWaivedCourses().get('id');
+	state.alreadyTaken = this.getAlreadyTakenCourses().map(function(c){return {id: c.course.id, units: c.units};});
+	state.terms = this.getTerms().get('id');
+	state.maxUnitsPerTerm = this.getConstraint().maxUnitsPerTerm;
+	state.maxDaysPerTerm = this.getConstraint().maxDaysPerTerm;
+	state.allowedDays = this.getConstraint().allowedDays;
+	state.program = this.getSpecialization().singleDepth.name;
+	state.activeTabId = ui.activeTabId;
+	state.activeRequirement = ui.activeRequirement.name;
+
+	localStorage.setItem('saved-state', JSON.stringify(state));
+};
+
+Application.prototype.restore = function() {
+	var storedValue = localStorage.getItem('saved-state');
+	if (!storedValue) {
+		return false;
+	};
+
+	var state = JSON.parse(storedValue);
+
+	this.setSpecialization(new SingleDepthSpecialization(_.find(this.getPrograms(), function(program){return program.name === state.program;})));
+	this.setTerms(ui.terms.filter(function(term){ return _.contains(state.terms, term.id);}));
+	this.setConstraint(new Constraint(state.maxUnitsPerTerm, state.maxDaysPerTerm, state.allowedDays));
+	state.courses.forEach(function(c){
+		this.addCourseByID(c);
+	}, this);
+	state.waivedCourses.forEach(function(c){
+		this.addWaivedCourseByID(c);
+	}, this);
+	state.alreadyTaken.forEach(function(c){
+		this.addAlreadyTakenCourseByID(c.id, c.units);
+	}, this);
+
+	ui.activeTabId = state.activeTabId;
+	ui.activeRequirement = _.find(this.getRequirements(), function(req){return req.name === state.activeRequirement;});
+
+	return true;
+};
+
+Application.prototype.storeCourses = function() {
+	localStorage.setItem('courses', JSON.stringify(this.getCourses().get('id')));
+};
+
+Application.prototype.retrieveCourses = function() {
+	return 
+};
+
 Application.prototype.initScheduleList = function (callback){
 	this.scheduleList = new ScheduleList([], [], undefined);
 	if (callback) {
@@ -1147,10 +1199,16 @@ Application.prototype.run = function() {
 	console.log("Application starting!");
 
 
-	var constraint = new Constraint(10, 5);
-	this.setConstraint(constraint);
-	this.setSpecialization(new SingleDepthSpecialization(this.getPrograms()[0]));
-	this.setTerms(ui.terms);
+
+	var previous_visit = this.restore();
+	if (previous_visit) {
+		ui.activeTabId = 'select-courses-tab';
+	};
+
+	// var constraint = new Constraint(10, 5);
+	// this.setConstraint(constraint);
+	// this.setSpecialization(new SingleDepthSpecialization(this.getPrograms()[0]));
+	// this.setTerms(ui.terms);
 
 	// this.addCourseByID('CS 103');
 	// this.addCourseByID('CS 107');
@@ -1172,7 +1230,7 @@ Application.prototype.run = function() {
 	// this.addCourseByID('CS 144');
 
 	ui.app = this;
-	ui.activeRequirement = this.totalUnitRequirement;
+	// ui.activeRequirement = this.totalUnitRequirement;
 
 	ui.renderHeader();
 	ui.toggleContainers();
@@ -1250,6 +1308,7 @@ var ui = {
 	},
 
 	toggleContainers: function(){
+
 		$('.container').hide();
 		$('.nav li').removeClass('active');
 		switch(ui.activeTabId){
@@ -1424,6 +1483,7 @@ var ui = {
 			ui.renderRequirements();
 			ui.renderCourses();
 			ui.toggleCourses();
+			ui.app.store();
 		},
 
 		events: {
@@ -1549,6 +1609,7 @@ var ui = {
 			ui.renderRequirements();
 			// ui.renderCourses();
 			ui.toggleCourses();
+			ui.app.store();
 		},
 
 		toggleAlreadyTaken: function(){
@@ -1582,6 +1643,7 @@ var ui = {
 			ui.renderRequirements();
 			// ui.renderCourses();
 			ui.toggleCourses();
+			ui.app.store();
 		},
 
 		togglePick: function(){
@@ -1620,6 +1682,7 @@ var ui = {
 			ui.renderRequirements();
 			// ui.renderCourses();
 			ui.toggleCourses();
+			ui.app.store();
 		},
 
 		updateTakenUnits: function(){
@@ -1635,6 +1698,7 @@ var ui = {
 			ui.renderRequirements();
 			// ui.renderCourses();
 			ui.toggleCourses();
+			ui.app.store();
 		},
 
 		render: function(){
@@ -1780,6 +1844,7 @@ var ui = {
 			ui.renderRequirements();
 			// ui.renderCourses();
 			ui.toggleCourses(!added);
+			ui.app.store();
 		}
 
 	}),
@@ -1798,8 +1863,11 @@ var ui = {
 
 		render: function(){
 			this.$el.html(this.template());
-			this.$('#constraint-units-selector').attr('value', ui.app.getConstraint().maxUnitsPerTerm)
+			this.$('#constraint-units-selector').attr('value', ui.app.getConstraint().maxUnitsPerTerm);
 			this.$('#constraint-numdays-selector').attr('value', ui.app.getConstraint().maxDaysPerTerm);
+			this.$('.day-checkbox').each(function(i, el){
+				$(el).prop('checked', _.contains(ui.app.getConstraint().allowedDays, el.value));
+			});
 			return this;
 		},
 
@@ -1820,6 +1888,7 @@ var ui = {
 			ui.renderRequirements();
 			// ui.renderCourses();
 			ui.toggleCourses(tighter);
+			ui.app.store();
 		},
 
 		changeNumDays: function(){
@@ -1833,6 +1902,7 @@ var ui = {
 			ui.renderRequirements();
 			// ui.renderCourses();
 			ui.toggleCourses(tighter);
+			ui.app.store();
 		},
 
 		changeDays: function(){
@@ -1848,6 +1918,7 @@ var ui = {
 			ui.renderRequirements();
 			// ui.renderCourses();
 			ui.toggleCourses(tighter);
+			ui.app.store();
 		}
 
 	}),
@@ -1904,6 +1975,7 @@ var ui = {
 			console.log('clicked on select program tab');
 			ui.activeTabId = 'select-program-tab';
 			ui.toggleContainers();
+			ui.app.store();
 		},
 
 		selectCourses: function(){
@@ -1911,6 +1983,7 @@ var ui = {
 			ui.activeTabId = 'select-courses-tab';
 			ui.toggleContainers();
 			ui.renderRequirements();
+			ui.app.store();
 		},
 
 		viewSchedules: function(){
@@ -1918,6 +1991,7 @@ var ui = {
 			ui.activeTabId = 'view-schedules-tab';
 			ui.toggleContainers();
 			ui.renderSchedules(10);
+			ui.app.store();
 		},
 	}),
 
@@ -1952,6 +2026,7 @@ var ui = {
 			ui.app.setSpecialization(new SingleDepthSpecialization(this.program));
 			$('.program').removeClass('activeProgram');
 			this.$el.addClass('activeProgram');
+			ui.app.store();
 		}
 	}),
 
@@ -2178,15 +2253,10 @@ overview tabs
 local storage
 disable tooltip detail
 select schedule
-credit no-credit
 remove yellow from schedule colors
 
-form submit on enter
 make select more obvious
 seect thru on program
-case insensitive search
 time intervals
-cs448b 45 units?
-courserank
 schedule legend
 */
