@@ -621,3 +621,7 @@ input.course-waive, input.course-alreadyTaken {
 #course-table .dl-horizontal dd {
 margin-left: 120px;
 }
+
+.search label {
+  display: inline;
+}

@@ -734,6 +734,7 @@ function Application(){
 	this.foundationsRequirement = undefined;
 	this.significantImplementationRequirement = undefined;
 	this.totalUnitRequirement = undefined;
+	this.electivesRequirement = undefined;
 
 	//data user can change
 	this.specialization = {};
@@ -860,6 +861,16 @@ Application.prototype.initPrograms = function(callback) {
 			var singleDepthReqs = p.requirements.singleDepth.map(function(req){
 				return parseReq(req);
 			});
+
+			//last req is summary req
+			var summaryReq = singleDepthReqs[singleDepthReqs.length - 1];
+			var lastReq = new CourseRequirement(summaryReq.name, 0, _.difference.apply(
+				null, [summaryReq.courseList].concat(singleDepthReqs.slice(0, singleDepthReqs.length - 1).get('courseList')) ));
+			singleDepthReqs.push(lastReq);
+			summaryReq.name = "Depth";
+
+
+
 			var primaryDepthReqs = p.requirements.primaryDepth.map(function(req){
 				return parseReq(req);
 			});
@@ -977,14 +988,33 @@ Application.prototype.setConstraint = function(constraint) {
 
 Application.prototype.setSpecialization = function(specialization) {
 	this.specialization = specialization;
+
+	var electives = _.difference.apply(null, 
+							[this.totalUnitRequirement.courseList, this.foundationsRequirement.courseList].concat(
+								specialization.getRequirements().get('courseList')
+								));
+
+	this.electivesRequirement = new CourseRequirement("Electives", 0, electives);
 	this.activeRequirements = new Array(this.foundationsRequirement,
-		this.significantImplementationRequirement,
+		this.significantImplementationRequirement, this.electivesRequirement,
 		this.totalUnitRequirement).concat(this.specialization.getRequirements());
 };
 
 Application.prototype.getSpecialization = function() {
 	return this.specialization;
 };
+
+Application.prototype.getElectivesRequirement = function() {
+	return this.electivesRequirement;
+};
+
+// Application.prototype.getLastDepthRequirement = function() {
+// 	var depthReqs = this.getSpecialization().getDepthRequirements();
+// 	var summaryReq = depthReqs[depthReqs.length - 1];
+// 	var previousCourseLists = depthReqs.slice(0, depthReqs.length - 1).get('courseList');
+// 	var lastCourseList = _.difference.apply(null, [summaryReq.courseList].concat(previousCourseLists));
+// 	return new CourseRequirement(summaryReq.name, 0, lastCourseList);
+// };
 
 Application.prototype.getRequirements = function() {
 	return this.activeRequirements;
@@ -1288,6 +1318,7 @@ var ui = {
 	toggleCourses: function(tighter){
 
 		var selectableOnly = $('#selectable-checkbox').prop('checked');
+		var pickedOnly = $('#picked-checkbox').prop('checked');
 
 		if(tighter){
 			$('#alert-area').children().remove();
@@ -1324,6 +1355,10 @@ var ui = {
 				view.$('.label-disabled').removeAttr('data-original-title');
 				// view.$('.tooltip-content').text('');
 			}
+
+			if (pickedOnly) {
+				view.$el.toggle(course.pick || course.alreadyTaken || course.waived);
+			};
 		};
 	},
 
@@ -1355,7 +1390,7 @@ var ui = {
 		$('#req-list li').remove();
 
 		//overview
-		var overviewReqView = new ui.RequirementView({requirement: app.totalUnitRequirement, label: 'Overview', indent: 0});
+		var overviewReqView = new ui.RequirementView({requirement: app.totalUnitRequirement, label: 'All courses', indent: 0});
 		$('#req-list').append(overviewReqView.render().el);
 
 		//Foundations
@@ -1368,13 +1403,17 @@ var ui = {
 
 		//Depth
 		var depthReqs = ui.app.getSpecialization().getDepthRequirements();
-		var summaryReq = depthReqs[depthReqs.length -1];
+		var summaryReq = _.find(depthReqs, function(req){return req.name === 'Depth'});
 		var depthReqView = new ui.RequirementView({requirement: summaryReq, label: 'Depth', indent: 1});
 		$('#req-list').append(depthReqView.render().el);
 
+		// depthReqs[depthReqs.length - 1] = ui.app.getLastDepthRequirement();
+
 		depthReqs.forEach(function(req){
-			var reqView = new ui.RequirementView({requirement: req, label: req.name, indent: 2});
-			$('#req-list').append(reqView.render().el);
+			if (req.name !== 'Depth') {
+				var reqView = new ui.RequirementView({requirement: req, label: req.name, indent: 2});
+				$('#req-list').append(reqView.render().el);
+			};
 		});
 
 		//Breadth
@@ -1382,7 +1421,8 @@ var ui = {
 		$('#req-list').append(breadthReqView.render().el);
 
 		//Electives
-		var electivesReqView = new ui.RequirementView({requirement: app.totalUnitRequirement, label: 'Electives'});
+		//create a new requirement:
+		var electivesReqView = new ui.RequirementView({requirement: ui.app.getElectivesRequirement(), label: 'Electives', indent: 1});
 		$('#req-list').append(electivesReqView.render().el);
 	},
 
@@ -1530,15 +1570,20 @@ var ui = {
             this.$('.req-label').html(this.label);
             this.$('.progress-text').html(this.requirement.progressText());
             this.$('.bar').css('width', progressValue + '%');
-            if (progressValue <= 50) {
-                this.$('.progress').addClass('progress-danger');
+            if (this.requirement.required == 0) {
+            	this.$('.progress').hide();
             }
-            else if (progressValue < 100) {
-                this.$('.progress').addClass('progress-warning');
+            else{
+	            if (progressValue <= 50) {
+	                this.$('.progress').addClass('progress-danger');
+	            }
+	            else if (progressValue < 100) {
+	                this.$('.progress').addClass('progress-warning');
+	            }
+	            else {
+	                this.$('.progress').addClass('progress-success');
+	            };
             }
-            else {
-                this.$('.progress').addClass('progress-success');
-            };
             return this;
         }
 	}),
@@ -1947,7 +1992,8 @@ var ui = {
 		tagName: 'span',
 		className: 'search',
 		template: _.template("<form onsubmit='return false;' class='navbar-search'><input type='text' id='search-box' class='search-query' placeholder='search for a class'>"
-							+"<input type='checkbox' id='selectable-checkbox' label='Restrict to selectable courses'>Restrict to selectable courses</input>"
+							+"<label><input type='checkbox' id='selectable-checkbox'>Restrict to selectable courses</input></label>"
+							+"<label><input type='checkbox' id='picked-checkbox'>Show only picked courses</input></label>"
 							+"</form>"),
 
 		render: function(){
@@ -1958,6 +2004,7 @@ var ui = {
 		events: {
 			'input #search-box': 'handleInput',
 			'click #selectable-checkbox': 'handleInput',
+			'click #picked-checkbox': 'handleInput',
 		},
 
 		handleInput: function(){
@@ -2002,6 +2049,7 @@ var ui = {
 			console.log('clicked on select courses tab')
 			ui.activeTabId = 'select-courses-tab';
 			ui.toggleContainers();
+			ui.updateRequirements();
 			ui.renderRequirements();
 			ui.app.store();
 		},
@@ -2260,6 +2308,20 @@ var ui = {
 		},
 
 
+	}),
+
+	OverviewView: Backbone.View.extend({
+		initialize: function(){
+			this.requirements = this.options.requirements;
+		},
+
+		render: function(){
+			//foundations
+			//SI
+			//Depth
+				//A, B, C
+
+		},
 	})
 }
 
