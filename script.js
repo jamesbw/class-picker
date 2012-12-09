@@ -1443,7 +1443,7 @@ var ui = {
 	},
 
     renderInstructions: function(){
-		$('#instructions').html('<div class="instructions well"><h4>' + ui.activeRequirement.instructions() + '</h4></div>');
+		$('#instructions').html('<div class="instructions well"><h4></h4></div>');
 		ui.renderSearch();
 	},
 	
@@ -1455,7 +1455,17 @@ var ui = {
 
         var renderCourseForOverview = function(course){
         	if((course.pick || course.waived || course.alreadyTaken) && course.matches(filter)){
-				$('#course-table').append("<div>" + course.id + " " + course.name + "</div>");
+        		var extraText;
+        		if (course.pick) {
+        			extraText = "(picked)";
+        		};
+        		if (course.waived) {
+        			extraText = "(waived)";
+        		};
+        		if (course.alreadyTaken) {
+        			extraText = "(already taken)";
+        		};
+				$('#course-table').append("<div>" + course.id + " " + course.name + " " + extraText + "</div>");
 
 			}
         }
@@ -1526,6 +1536,7 @@ var ui = {
         	$('.instructions').show();
         	// renderInstructions();
 			// $('#course-table').append('<div class="instructions well"><h4>' + ui.activeRequirement.instructions()+ '</h4> <label><input type="checkbox" id="selectable-checkbox">Restrict to selectable courses</input></label><label><input type="checkbox" id="picked-checkbox">Show only picked courses</input></label></div>')
+			$('.instructions h4').text(ui.activeRequirement.instructions());
 			ui.activeRequirement.courseList.forEach(function(course){
 				if(course.matches(filter)){
 					var courseView = new ui.CourseView({course: course});
@@ -1948,9 +1959,9 @@ var ui = {
 
 					var el = $("<label class='checkbox'><input type='checkbox' class='course-waive' " + (that.course.waived? "checked" : "") + "> I waived this course</input></label>"
 	                            +"<label class='checkbox'><input type='checkbox' class='course-alreadyTaken' " + (that.course.alreadyTaken? "checked" : "") + ">"
-	                            +" I already took this course"
+	                            +" I already took this course</label>"
 	                            + (variableUnits? " for <input type='number' class='alreadyTaken-units' value='"+ units + "' min='"+ that.course.units.min + "' max='" + that.course.units.max + "'/> units </input>" : "")
-	                            +"</label>"
+	                            +""
                     );
 
 
