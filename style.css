@@ -483,7 +483,7 @@ body {
 }
 
 #search-box {
-  width: 432px;
+  height: 16px;
 }
 
 
@@ -652,11 +652,11 @@ margin-left: 120px;
 }
 
 .search {
-  display: inline-block;
+  /*display: inline-block;*/
 }
 
 .search label {
-  display: inline;
+  /*display: inline;*/
 }
 
 
