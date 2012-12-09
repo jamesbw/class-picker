@@ -1287,11 +1287,12 @@ Application.prototype.run = function() {
 
 	ui.updateRequirements();
 	ui.renderRequirements();
+	ui.renderInstructions();
 	ui.renderCourses();
 	ui.toggleCourses();
 	ui.renderTerms();
 	ui.renderConstraint();
-	ui.renderSearch();
+	// ui.renderSearch();
 
 	ui.renderPrograms();
 	ui.renderSchedules(9);	
@@ -1426,11 +1427,16 @@ var ui = {
 		$('#req-list').append(electivesReqView.render().el);
 	},
 
+	renderInstructions: function(){
+		$('#course-table').append('<div class="instructions well"><h4>' + ui.activeRequirement.instructions() + '</h4></div>');
+		ui.renderSearch();
+	},
+
 	renderCourses: function(){
 		var filter = $('#search-box').val();
 		// $('#course-table tr').remove();
-        $('#course-table div').remove();
-		$('#course-table').append('<div class="instructions well"><h4>' + ui.activeRequirement.instructions()+ '</h4></label></div>')
+        $('#course-table .course').remove();
+		
 		ui.activeRequirement.courseList.forEach(function(course){
 			if(course.matches(filter)){
 				var courseView = new ui.CourseView({course: course});
@@ -1454,7 +1460,8 @@ var ui = {
 
 	renderSearch: function(){
 		var searchView = new ui.SearchView();
-		$('#search .navbar-inner').html(searchView.render().el);
+		// $('#search .navbar-inner').html(searchView.render().el);
+		$('.instructions').append(searchView.render().el);
 	},
 
 	renderHeader: function(){
@@ -1991,16 +1998,16 @@ var ui = {
 	SearchView: Backbone.View.extend({
 		tagName: 'div',
 		className: 'search',
-		template: _.template("<form onsubmit='return false;' class='navbar-search'>"
-							+"	<input type='text' id='search-box' class='search-query' placeholder='search for a class'>"
-							+"	<label>"
+		template: _.template("<form onsubmit='return false;' class='form-inline'>"
+							+"	<input type='text' id='search-box' class='search-query input-small' placeholder='search'>"
+							+"	<label class='checkbox'>"
 							+"		<input type='checkbox' id='selectable-checkbox'>"
-							+"			Selectable courses only"
+							+"			Selectable courses"
 							+"		</input>"
 							+"	</label>"
-							+"	<label>"
+							+"	<label class='checkbox'>"
 							+"		<input type='checkbox' id='picked-checkbox'>"
-							+"			Picked courses only"
+							+"			Picked courses"
 							+"		</input>"
 							+"	</label>"
 							+"</form>"),
