@@ -1293,7 +1293,7 @@ Application.prototype.run = function() {
 
 	ui.updateRequirements();
 	ui.renderRequirements();
-	// ui.renderInstructions();
+	ui.renderInstructions();
 	ui.renderCourses();
 	ui.toggleCourses();
 	ui.renderTerms();
@@ -1442,16 +1442,16 @@ var ui = {
 		$('#req-list').append(electivesReqView.render().el);
 	},
 
+    renderInstructions: function(){
+		$('#instructions').html('<div class="instructions well"><h4>' + ui.activeRequirement.instructions() + '</h4></div>');
+		ui.renderSearch();
+	},
 	
 
 	renderCourses: function(){
 		var filter = $('#search-box').val();
         $('#course-table').children().remove();
 
-        var renderInstructions = function(){
-			$('#course-table').append('<div class="instructions well"><h4>' + ui.activeRequirement.instructions() + '</h4></div>');
-			ui.renderSearch();
-		}
 
         var renderCourseForOverview = function(course){
         	if((course.pick || course.waived || course.alreadyTaken) && course.matches(filter)){
@@ -1513,15 +1513,18 @@ var ui = {
         }
 
         if (ui.activeRequirement === 'overview') {
+        	$('.instructions').hide();
         	renderOverview();
         };
 
         if (ui.activeRequirement === 'depthOverview') {
+        	$('.instructions').hide();
         	renderDepthOverview();
         };
 
         if (ui.activeRequirement !== 'overview' && ui.activeRequirement !== 'depthOverview') {
-        	renderInstructions();
+        	$('.instructions').show();
+        	// renderInstructions();
 			// $('#course-table').append('<div class="instructions well"><h4>' + ui.activeRequirement.instructions()+ '</h4> <label><input type="checkbox" id="selectable-checkbox">Restrict to selectable courses</input></label><label><input type="checkbox" id="picked-checkbox">Show only picked courses</input></label></div>')
 			ui.activeRequirement.courseList.forEach(function(course){
 				if(course.matches(filter)){
