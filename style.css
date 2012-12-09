@@ -708,3 +708,15 @@ margin-left: 120px;
 #right_bar {
   margin-left: 740px;
 }
+
+.no {
+  color: #C43C35;
+}
+
+.yes {
+  color: #57A957;
+}
+
+.status {
+  font-size: 20px;
+}
