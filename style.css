@@ -692,7 +692,7 @@ margin-left: 120px;
 
 
 
-#left_bar, #mid_section, #right_bar {
+#left_bar, #right_bar {
   position: fixed;
   overflow: auto;
 }
