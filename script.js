@@ -1948,9 +1948,9 @@ var ui = {
 
 					var el = $("<label class='checkbox'><input type='checkbox' class='course-waive' " + (that.course.waived? "checked" : "") + "> I waived this course</input></label>"
 	                            +"<label class='checkbox'><input type='checkbox' class='course-alreadyTaken' " + (that.course.alreadyTaken? "checked" : "") + ">"
-	                            +" I already took this course"
+	                            +" I already took this course</label>"
 	                            + (variableUnits? " for <input type='number' class='alreadyTaken-units' value='"+ units + "' min='"+ that.course.units.min + "' max='" + that.course.units.max + "'/> units </input>" : "")
-	                            +"</label>"
+	                            +""
                     );
 
 
