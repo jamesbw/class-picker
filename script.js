@@ -1453,62 +1453,58 @@ var ui = {
         $('#course-table').children().remove();
 
 
-        var renderCourseForOverview = function(course){
+        var renderCourseForOverview = function(course, requirement){
         	if((course.pick || course.waived || course.alreadyTaken) && course.matches(filter)){
         		var extraText;
         		if (course.pick) {
-        			extraText = "(picked)";
+        			extraText = "";
         		};
         		if (course.waived) {
-        			extraText = "(waived)";
+        			extraText = " <span class='label-waived label'>waived</span>";
         		};
         		if (course.alreadyTaken) {
-        			extraText = "(already taken)";
+        			extraText = " <span class='label-already-taken label label-info'>already taken</span>";
         		};
-				$('#course-table').append("<div>" + course.id + " " + course.name + " " + extraText + "</div>");
+				$('#' + requirement + 'Overview').append("<dt>" + course.id + "</dt><dd>" + course.name + extraText + "</dd>");// + "</div>");
 
 			}
         }
 
         var renderOverview = function(course) {
-	    	//Foundations
-	    	$('#course-table').append("<h4>Foundations</h4><hr/>");
-	    	ui.app.foundationsRequirement.courseList.forEach(function(course){
-				renderCourseForOverview(course);
-			});
-
-			//SI
-			$('#course-table').append("<h4>Significant Implementation</h4><hr/>");
-	    	ui.app.significantImplementationRequirement.courseList.forEach(function(course){
-				renderCourseForOverview(course);
-			});
-
-			//Depth
+        	$('#course-table').append("<div class='alert alert-info'><strong>Heads-up!</strong> Here is a summary of all the classes you have already picked. Add other classes by navigating in the tree in the left-hand side of the page.</div>");
+			renderFoundationsOverview();
+			renderSignificantImplementationOverview();
 			renderDepthOverview();
+			renderBreadthOverview();
+			renderElectivesOverview();
+        }
 
-
-			//Breadth
-			$('#course-table').append("<h4>Breadth</h4><hr/>");
-			ui.app.getSpecialization().getBreadthRequirement().courseList.forEach(function(course){
-				renderCourseForOverview(course);
+        var renderFoundationsOverview = function() {
+        	$('#course-table').append("<div id='foundationsOverview' class='well course-overview'></div>");
+        	$('#foundationsOverview').append("<h4>Foundations</h4>");
+        	ui.app.foundationsRequirement.courseList.forEach(function(course){
+				renderCourseForOverview(course, "foundations");
 			});
+        }
 
-			//Electives
-			$('#course-table').append("<h4>Electives</h4><hr/>");
-			ui.app.getElectivesRequirement().courseList.forEach(function(course){
-				renderCourseForOverview(course);
+        var renderSignificantImplementationOverview = function() {
+        	$('#course-table').append("<div id='significantImplementationOverview' class='well course-overview'></div>");
+        	$('#significantImplementationOverview').append("<h4>Significant Implementation</h4>");
+        	ui.app.significantImplementationRequirement.courseList.forEach(function(course){
+				renderCourseForOverview(course, "significantImplementation");
 			});
         }
 
         var renderDepthOverview = function() {
-        	$('#course-table').append("<h4>Depth</h4><hr/>");
+        	$('#course-table').append("<div id='depthOverview' class='well course-overview'></div>");
+        	$('#depthOverview').append("<h4>Depth</h4>");
         	var depthReqs = ui.app.getSpecialization().getDepthRequirements();
 
         	depthReqs.slice(0, depthReqs.length - 1).forEach(function(req){
         		if (req.name !== 'Depth') {
-        			$('#course-table').append("<h5>" + req.name + "</h5><hr/>");
+        			$('#depthOverview').append("<h5>" + req.name + "</h5>");
         			req.courseList.forEach(function(course){
-        				renderCourseForOverview(course);
+        				renderCourseForOverview(course, "depth");
         			});
         		};
         	});
@@ -1516,10 +1512,26 @@ var ui = {
         	var lastCourses = _.difference.apply(
         		null, [summaryReq.courseList].concat(depthReqs.slice(0, depthReqs.length - 1).get('courseList')) );
         	
-        	$('#course-table').append("<h5>" + summaryReq.name + "</h5><hr/>");
+        	$('#depthOverview').append("<h5>" + summaryReq.name + "</h5>");
         	lastCourses.forEach(function(course){
-        		renderCourseForOverview(course);
+        		renderCourseForOverview(course, "depth");
         	});
+        }
+
+        var renderBreadthOverview = function() {
+        	$('#course-table').append("<div id='breadthOverview' class='well course-overview'></div>");
+        	$('#breadthOverview').append("<h4>Breadth</h4>");
+        	ui.app.getSpecialization().getBreadthRequirement().courseList.forEach(function(course){
+				renderCourseForOverview(course, "breadth");
+			});
+        }
+
+        var renderElectivesOverview = function() {
+        	$('#course-table').append("<div id='electivesOverview' class='well course-overview'></div>");
+        	$('#electivesOverview').append("<h4>Electives</h4>");
+        	ui.app.getElectivesRequirement().courseList.forEach(function(course){
+				renderCourseForOverview(course, "electives");
+			});
         }
 
         if (ui.activeRequirement === 'overview') {
@@ -1589,11 +1601,11 @@ var ui = {
 		};
 
 		numToShow = numToShow || 9;
-		$('#schedules').append("<div class='alert alert-info'>Click on any term for a more detailed view</div>");
+		$('#schedules').append("<div class='alert alert-info'><strong>Heads-up!</strong> Here are several schedules that meet all your requirements. Click on any term for a more detailed view.</div>");
 		var schedules = ui.app.getSchedulesMeetingReqs(numToShow);
 		if (_.isEmpty(schedules)) {
 			schedules = ui.app.getSchedules().slice(0,numToShow);
-			$('#schedules').append("<div class='alert'>Warning: these schedules do not meet all the requirements</div>");
+			$('#schedules').append("<div class='alert'><strong>Warning!</strong> These schedules are incomplete since the classes you have selected so far do not meet all the requirements. You can get back to the previous step to update your choice of classes.</div>");
 		};
 
         var newdiv;
@@ -2197,13 +2209,14 @@ var ui = {
 		tagName: 'div',
 		className: 'program',
 		template: _.template("<h3 class='program-name'></h3>"
-							+"<ul class='course-list'></ul>"),
+							+"<h5>Sample classes</h5>"
+							+"<dl class='course-list dl-horizontal'></dl>"),
 
 		render: function(){
 			this.$el.html(this.template());
 			this.$('.program-name').html(this.program.name);
 			this.program.depthCourses.slice(0,5).forEach(function(c){
-				this.$('.course-list').append("<li>"+ c.id + " " + c.name + "</li>");
+				this.$('.course-list').append("<dt>"+ c.id + "</dt><dd>" + c.name + "</dd>");
 			}, this);
 			if(this.program === ui.app.getSpecialization().singleDepth){
 				this.$el.addClass('activeProgram');
