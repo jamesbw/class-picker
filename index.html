@@ -20,7 +20,7 @@
         <section class='container' id='select-courses-container'>
             <div class='row'>
                 <div id='left_bar' class='span3 bs-docs-sidebar'>
-                    <ul id='req-list' class='nav nav-list bs-docs-sidenav affix'></ul>
+                    <ul id='req-list' class='nav nav-list bs-docs-sidenav'></ul>
                 </div>
                 <div id='mid_section' class='span6'>
                     <div id="search" class="navbar navbar-fixed-top">
@@ -32,7 +32,7 @@
                     <div id='course-table'></div>
                 </div>
                 <div id='right_bar' class='span3'>
-                    <div class='well affix'>
+                    <div class='well'>
                         <ul id='terms' class='nav nav-list'>
                             <li class='nav-header'>Terms</li>
                             <!-- <div id='term-list'></div> -->
@@ -45,34 +45,34 @@
         <section class='container' id='view-schedules-container'>
             <div id='schedules' class='row'></div>
         </section>
+<!--         <footer class="footer">
+        	<p>James Whitbeck, Sébastien Robaszkiewicz</p>
+        	<p>CS448b &mdash; final project</p>
+        </footer> -->
 	</body>
 	<script>
-		// $(function(){
+	console.log($(window).height());
+	    $('#left_bar').height($(window).height()-100);
+		$('#mid_section').height($(window).height()-100);
+		$('#right_bar').height($(window).height()-100);
+	window.onresize = function() {
+    	$('#left_bar').height($(window).height()-100);
+		$('#mid_section').height($(window).height()-100);
+		$('#right_bar').height($(window).height()-100);
+	};
 
-		// 	var Requirement = Backbone.Model.extend({
-		// 		name: 'default name'
-		// 	});
+    // $('.bs-docs-sidenav').affix({
+    //   offset: {
+    //     top: 0,
+    //     bottom: 128
+    //   }
+    // });
 
-		// 	var RequirementList = Backbone.Collection.extend({
-		// 		model: Requirement
-		// 	});
-
-		// 	var RequirementView = Backbone.View.extend({
-		// 		tagName: 'li',
-		// 		className: 'requirement',
-		// 		template: _.template("<span>HelloWorld<span><span class='req-name'><span>"),
-
-		// 		events: {
-		// 			"click": toggle,
-		// 			"click": console.log('clicked')
-		// 		},
-
-		// 		render: function(){
-		// 			this.$('.req-name').html(this.model.get('name'));
-		// 			return this;
-		// 		}
-		// 	});
-
-		// });
+    // $('#right_bar .well').affix({
+    //   offset: {
+    //     top: 0,
+    //     bottom: 144
+    //   }
+    // });
 	</script>
 </html>

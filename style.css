@@ -1,6 +1,8 @@
 body {
   min-width: 960px;
+  position: relative;
 }
+
 
 /* NAVIGATION BAR (HEADER) */
 
@@ -202,7 +204,7 @@ body {
 
 .bs-docs-sidenav {
   width: 220px;
-  margin: 20px 0 0;
+  margin: 20px 0;
   padding: 0;
   background-color: #fff;
   -webkit-border-radius: 6px;
@@ -223,6 +225,12 @@ body {
   -webkit-box-shadow: 1px 2px 3px rgba(0,0,0,.25);
      -moz-box-shadow: 1px 2px 3px rgba(0,0,0,.25);
           box-shadow: 1px 2px 3px rgba(0,0,0,.25);
+}
+
+.bs-docs-sidenav > li:last-child > a {0
+  -webkit-box-shadow: none;
+     -moz-box-shadow: none;
+          box-shadow: none;
 }
 
 .bs-docs-sidenav > li.level-0 > a {
@@ -292,6 +300,17 @@ body {
   top: 100px;
 }
 
+.bs-docs-sidenav.affix-bottom {
+  position: absolute;
+  top: auto;
+  bottom: 126px;
+}
+#right_bar .well.affix-bottom {
+  position: absolute;
+  top: auto;
+  bottom: 106px;
+}
+
 .progress {
   margin-bottom: 8px;
 }
@@ -312,15 +331,21 @@ body {
 
 
 
+#req-list{
+  /*overflow: auto;*/
+}
+
+
 
 
 /* RIGHT PANEL */
 
 #right_bar {
-  margin-top: 20px;
+  width: 222px;
 }
 
 #right_bar .well {
+  margin: 20px 0;
   padding: 8px 0;
   width: 220px;
 }
@@ -329,13 +354,17 @@ body {
   margin-top: 9px;
 }
 
+.term-name, .checkbox {
+  cursor: pointer;
+}
+
 
 
 /* MIDDLE PLANEL */
 
 #course-table .instructions {
   text-align: center;
-  padding: 0 20px;
+  padding: 0;
   margin-top: 20px;
 }
 
@@ -624,4 +653,58 @@ margin-left: 120px;
 
 .search label {
   display: inline;
+}
+
+
+
+
+
+
+
+
+
+/* Footer
+-------------------------------------------------- */
+
+.footer {
+  text-align: center;
+  padding: 30px 0;
+  border-top: 1px solid #e5e5e5;
+  background-color: #f5f5f5;
+}
+.footer p {
+  margin-bottom: 0;
+  color: #777;
+}
+.footer-links {
+  margin: 10px 0;
+}
+.footer-links li {
+  display: inline;
+  padding: 0 2px;
+}
+.footer-links li:first-child {
+  padding-left: 0;
+}
+
+
+
+
+
+
+#left_bar, #mid_section, #right_bar {
+  position: fixed;
+  overflow: auto;
+}
+
+#mid_section {
+  margin-left: 260px;
+}
+
+#mid_section .well {
+  width: 458px;
+}
+
+#right_bar {
+  margin-left: 740px;
 }

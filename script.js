@@ -1430,7 +1430,7 @@ var ui = {
 		var filter = $('#search-box').val();
 		// $('#course-table tr').remove();
         $('#course-table div').remove();
-		$('#course-table').append('<div class="instructions well"><h4>' + ui.activeRequirement.instructions()+ '</h4></div>')
+		$('#course-table').append('<div class="instructions well"><h4>' + ui.activeRequirement.instructions()+ '</h4> <label><input type="checkbox" id="selectable-checkbox">Restrict to selectable courses</input></label><label><input type="checkbox" id="picked-checkbox">Show only picked courses</input></label></div>')
 		ui.activeRequirement.courseList.forEach(function(course){
 			if(course.matches(filter)){
 				var courseView = new ui.CourseView({course: course});
@@ -1530,7 +1530,7 @@ var ui = {
 		tagName: 'li',
 		className: 'requirement',
 		// template: _.template("<ul><li class='req-label'></li><li class='progress-text'></li><li class='progress-bar'><meter min='0'></meter></li></ul>"),
-		template: _.template("<a>"
+		template: _.template("<a href='#'>"
                             +"  <p class='req-label'></p>"
                             +"  <div class='progress'>"
                             +"      <p class='progress-text'></p>"
@@ -1884,7 +1884,7 @@ var ui = {
 
 		tagName: 'li',
 		className: 'term',
-		template: _.template("<a><label class='checkbox'><input class='term-pick' type='checkbox'><span class='term-name'><span></input></label></a>"),
+		template: _.template("<a href='#'><label class='checkbox'><input class='term-pick' type='checkbox'><span class='term-name'><span></input></label></a>"),
 
 		render: function(){
 			this.$el.html(this.template());
@@ -1920,11 +1920,11 @@ var ui = {
 		className: 'constraint nav nav-list',
 		template: _.template("<li class='constraint-units nav-header'>Max units per term:</li> <li><input type='number' value='10' id='constraint-units-selector' class='span1'/></li><li class='constraint-days nav-header'>Max days per week:</li> <li><input type='number' value='3' id='constraint-numdays-selector' class='span1'/></li>" 
 							 +"<li class='nav-header'>Days Allowed</li>"
-							 +"<li><a><label class='checkbox'><input type='checkbox' class='day-checkbox' value='Mon' checked>Monday</input></label></a></li>"
-							 +"<li><a><label class='checkbox'><input type='checkbox' class='day-checkbox' value='Tue' checked>Tuesday</input></label></a></li>"
-							 +"<li><a><label class='checkbox'><input type='checkbox' class='day-checkbox' value='Wed' checked>Wednesday</input></label></a></li>"
-							 +"<li><a><label class='checkbox'><input type='checkbox' class='day-checkbox' value='Thu' checked>Thursday</input></label></a></li>"
-							 +"<li><a><label class='checkbox'><input type='checkbox' class='day-checkbox' value='Fri' checked>Friday</input></label></a></li>"),
+							 +"<li><a href='#'><label class='checkbox'><input type='checkbox' class='day-checkbox' value='Mon' checked>Monday</input></label></a></li>"
+							 +"<li><a href='#'><label class='checkbox'><input type='checkbox' class='day-checkbox' value='Tue' checked>Tuesday</input></label></a></li>"
+							 +"<li><a href='#'><label class='checkbox'><input type='checkbox' class='day-checkbox' value='Wed' checked>Wednesday</input></label></a></li>"
+							 +"<li><a href='#'><label class='checkbox'><input type='checkbox' class='day-checkbox' value='Thu' checked>Thursday</input></label></a></li>"
+							 +"<li><a href='#'><label class='checkbox'><input type='checkbox' class='day-checkbox' value='Fri' checked>Friday</input></label></a></li>"),
 
 		render: function(){
 			this.$el.html(this.template());
@@ -1992,8 +1992,8 @@ var ui = {
 		tagName: 'span',
 		className: 'search',
 		template: _.template("<form onsubmit='return false;' class='navbar-search'><input type='text' id='search-box' class='search-query' placeholder='search for a class'>"
-							+"<label><input type='checkbox' id='selectable-checkbox'>Restrict to selectable courses</input></label>"
-							+"<label><input type='checkbox' id='picked-checkbox'>Show only picked courses</input></label>"
+							// +"<label><input type='checkbox' id='selectable-checkbox'>Restrict to selectable courses</input></label>"
+							// +"<label><input type='checkbox' id='picked-checkbox'>Show only picked courses</input></label>"
 							+"</form>"),
 
 		render: function(){
@@ -2020,9 +2020,9 @@ var ui = {
 		template: _.template("<div class='navbar navbar-fixed-top'>"
   							+"	<div class='navbar-inner'>"
   							+"		<ul class='nav'>"
-							+"			<li id='select-program-tab' class='header-tab'><a><h4>1. Select your program</h4></a></li>"
-							+"			<li id='select-courses-tab' class='header-tab'><a><h4>2. Select your courses</h4></a></li>"
-							+"			<li id='view-schedules-tab' class='header-tab'><a><h4>3. View Schedules</h4></a></li>"
+							+"			<li id='select-program-tab' class='header-tab'><a href='#'><h4>1. Select your program</h4></a></li>"
+							+"			<li id='select-courses-tab' class='header-tab'><a href='#'><h4>2. Select your courses</h4></a></li>"
+							+"			<li id='view-schedules-tab' class='header-tab'><a href='#'><h4>3. View Schedules</h4></a></li>"
 							+"		</ul>"
 							+"  </div>"
 							+"</div>"),
