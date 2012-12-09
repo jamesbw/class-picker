@@ -938,8 +938,8 @@ Application.prototype.restore = function() {
 
 	ui.activeTabId = state.activeTabId;
 
-	if (state.activeRequirement === 'overview') {
-		ui.activeRequirement = 'overview';
+	if (state.activeRequirement === 'overview' || state.activeRequirement === 'depthOverview') {
+		ui.activeRequirement = state.activeRequirement;
 	}
 	else {
 		ui.activeRequirement = _.find(this.getRequirements(), function(req){return req.name === state.activeRequirement;});
@@ -1369,6 +1369,12 @@ var ui = {
 				view.$('.label-disabled').hide();
 				view.$('.course-pick').prop('disabled',false);
 				view.$('.label-disabled').removeAttr('data-original-title');
+				if (course.waived) {
+					view.$('.label-waived').show();
+				};
+				if (course.alreadyTaken) {
+					view.$('.label-already-taken').show();
+				};
 				// view.$('.tooltip-content').text('');
 			}
 
@@ -1915,6 +1921,7 @@ var ui = {
 			// this.$('.course-alreadyTaken').prop('checked',this.course.alreadyTaken);
 			// this.$('.unit-option').toggle(this.course.alreadyTaken);
 			// this.$('.tooltip-content').hide();
+
 			
 
 			var that = this;
