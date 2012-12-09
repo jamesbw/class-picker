@@ -1443,12 +1443,12 @@ var ui = {
 
 	renderCourses: function(){
 		var filter = $('#search-box').val();
-		// $('#course-table tr').remove();
         $('#course-table').children().remove();
 
         var renderCourseForOverview = function(course){
         	if((course.pick || course.waived || course.alreadyTaken) && course.matches(filter)){
 				$('#course-table').append("<div>" + course.id + " " + course.name + "</div>");
+
 			}
         }
 
@@ -2081,11 +2081,20 @@ var ui = {
 	}),
 
 	SearchView: Backbone.View.extend({
-		tagName: 'span',
+		tagName: 'div',
 		className: 'search',
-		template: _.template("<form onsubmit='return false;' class='navbar-search'><input type='text' id='search-box' class='search-query' placeholder='search for a class'>"
-							// +"<label><input type='checkbox' id='selectable-checkbox'>Restrict to selectable courses</input></label>"
-							// +"<label><input type='checkbox' id='picked-checkbox'>Show only picked courses</input></label>"
+		template: _.template("<form onsubmit='return false;' class='navbar-search'>"
+							+"	<input type='text' id='search-box' class='search-query' placeholder='search for a class'>"
+							+"	<label>"
+							+"		<input type='checkbox' id='selectable-checkbox'>"
+							+"			Selectable courses only"
+							+"		</input>"
+							+"	</label>"
+							+"	<label>"
+							+"		<input type='checkbox' id='picked-checkbox'>"
+							+"			Picked courses only"
+							+"		</input>"
+							+"	</label>"
 							+"</form>"),
 
 		render: function(){

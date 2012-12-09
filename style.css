@@ -651,6 +651,10 @@ input.course-waive, input.course-alreadyTaken {
 margin-left: 120px;
 }
 
+.search {
+  display: inline-block;
+}
+
 .search label {
   display: inline;
 }
@@ -692,7 +696,7 @@ margin-left: 120px;
 
 
 
-#left_bar, #mid_section, #right_bar {
+#left_bar, #right_bar {
   position: fixed;
   overflow: auto;
 }
