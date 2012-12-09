@@ -297,7 +297,7 @@ body {
 }
 
 .bs-docs-sidenav.affix {
-  top: 100px;
+  top: 60px;
 }
 
 .bs-docs-sidenav.affix-bottom {
@@ -497,7 +497,7 @@ section.container {
 }
 
 section#select-courses-container {
-  margin-top: 100px;
+  margin-top: 60px;
 }
 
 .popover {
