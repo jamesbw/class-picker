@@ -361,10 +361,9 @@ body {
 
 
 /* MIDDLE PLANEL */
-
-#course-table .instructions {
+.instructions {
   text-align: center;
-  padding: 0;
+  padding: 6px 0 0 0;
   margin-top: 20px;
 }
 
@@ -655,8 +654,8 @@ margin-left: 120px;
   /*display: inline-block;*/
 }
 
-.search label {
-  /*display: inline;*/
+.search form {
+  margin-bottom: 10px;
 }
 
 
