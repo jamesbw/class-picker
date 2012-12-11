@@ -739,3 +739,15 @@ margin-left: 120px;
 .status {
   font-size: 20px;
 }
+
+
+
+#instructionsOverlay {
+  background: rgba(0, 0, 0, 0.8) url('overlay.png') no-repeat center 40px;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1040;
+}

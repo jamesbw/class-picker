@@ -6,6 +6,7 @@
 		<script type="text/javascript" src='./backbone.js'></script>
 		<script type="text/javascript" src="d3.v2.min.js"></script>
 		<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="bootstrap/js/bootstrapx-clickover.js"></script>
 		<script src="./script.js"></script>
 		<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="./style.css">
@@ -50,17 +51,26 @@
         	<p>James Whitbeck, Sébastien Robaszkiewicz</p>
         	<p>CS448b &mdash; final project</p>
         </footer> -->
+        <!-- <div id="instructionsOverlay"></div> -->
 	</body>
 	<script>
 	console.log($(window).height());
-	    $('#left_bar').height($(window).height()-100);
+	    $('#left_bar').height($(window).height()-60);
 		// $('#mid_section').height($(window).height()-100);
-		$('#right_bar').height($(window).height()-100);
+		$('#right_bar').height($(window).height()-60);
 	window.onresize = function() {
-    	$('#left_bar').height($(window).height()-100);
+    	$('#left_bar').height($(window).height()-60);
 		// $('#mid_section').height($(window).height()-100);
-		$('#right_bar').height($(window).height()-100);
+		$('#right_bar').height($(window).height()-60);
 	};
+
+    // $(document).click(function(e) {
+    //     $('.popover').hide();
+    // });
+    // $('.popover').click(function(e) {
+    //     e.stopPropagation();
+    // });
+
 
     // $('.bs-docs-sidenav').affix({
     //   offset: {

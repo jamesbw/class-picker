@@ -1700,7 +1700,7 @@ var ui = {
 		// }
 
         render: function(){
-            progressValue = this.requirement.fulfilled / this.requirement.required * 100;
+            progressValue = this.requirement.fulfilled === 0 ? 5 : (this.requirement.fulfilled / this.requirement.required * 100);
             this.$el.html(this.template());
             this.$el.toggleClass('active', this.requirement === ui.activeRequirement);
             this.$el.addClass('level-' + this.indent);
