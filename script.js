@@ -1312,6 +1312,7 @@ var ui = {
 	app: null,
 	activeRequirement: null, //selected requirement in UI
 	activeTabId: null,
+	seenTutorial: null,
 
 
 	updateRequirements: function(){
@@ -1397,6 +1398,17 @@ var ui = {
 			case 'select-courses-tab':
 				$('#select-courses-container').show();
 				$('#select-courses-tab').addClass('active');
+				if (ui.seenTutorial) {
+					$("#instructionsOverlay").hide();
+				}
+				else {
+					$("#instructionsOverlay").show();
+					$("#instructionsOverlay").click(function(){
+						$("#instructionsOverlay").hide();
+						ui.seenTutorial = true;
+					});
+				}
+
 				break;
 			
 			case 'view-schedules-tab':
