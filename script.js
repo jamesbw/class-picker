@@ -2466,8 +2466,8 @@ var ui = {
 
 		template: _.template("<a href='#'>"
                             +"  <p class='req-label'></p>"
-                            +"  <div class='status'>"
-                            +"  </div>"
+                            +"  <span class='status'>"
+                            +"  </span>"
                             +"</a>"),
 
 		render: function(){
@@ -2487,6 +2487,15 @@ var ui = {
 				this.$('.status').toggleClass('no', true);
 			}
 
+			var that = this;
+			this.$('.status').tooltip({
+				placement: 'right',
+				trigger: 'hover',
+				title: function(){
+					console.log('hello')
+					return that.$('.status').is('.yes')? "All requirements are fulfilled!" : "Some requirements are not fulfilled";
+				}
+			})
 			return this;
 		},
 
@@ -2516,8 +2525,8 @@ var ui = {
 
 		template: _.template("<a href='#'>"
                             +"  <p class='req-label'></p>"
-                            +"  <div class='status'>"
-                            +"  </div>"
+                            +"  <span class='status'>"
+                            +"  </span>"
                             +"</a>"),
 
 		render: function(){
@@ -2536,6 +2545,15 @@ var ui = {
 				this.$('.status').toggleClass('yes', false);
 				this.$('.status').toggleClass('no', true);
 			}
+
+			var that = this;
+			this.$('.status').tooltip({
+				placement: 'right',
+				trigger: 'hover',
+				title: function(){
+					return that.$('.status').is('.yes')? "All requirements are fulfilled!" : "Some requirements are not fulfilled";
+				}
+			})
 
 			return this;
 		},

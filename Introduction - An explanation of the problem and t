@@ -100,3 +100,21 @@ References
 
 
 provid a sample run through?
+
+A Simply click to select a course
+-Drill down for all available information on a course
+-You can also waive or indicate you have already taken a course
+
+B keep track of progress on each requirement
+- on every update, calculates maximal unit allocation
+
+C Get feedback on schedule conflicts
+-on every update, see which courses can no longer be picked
+
+D Define your own constraints
+ -What terms are you planning to study in?
+ -Do you have a cap on the number of units per term?
+ -Are there days you do not want to have classes in?
+
+E View generated schedules that match your requirements and constraints
+-These are automatically generated. No more trial and error.
