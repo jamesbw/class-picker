@@ -1458,6 +1458,11 @@ var ui = {
 		var filter = $('#search-box').val();
         $('#course-table').children().remove();
 
+        var renderNoCourse = function(requirement){
+        	if ($('#' + requirement + 'Overview').children().last().is('h4,h5')){
+        		$('#' + requirement + 'Overview').append("<dt>No courses yet</dt>");
+        	}
+        }
 
         var renderCourseForOverview = function(course, requirement){
         	if((course.pick || course.waived || course.alreadyTaken) && course.matches(filter)){
@@ -1491,6 +1496,7 @@ var ui = {
         	ui.app.foundationsRequirement.courseList.forEach(function(course){
 				renderCourseForOverview(course, "foundations");
 			});
+    		renderNoCourse("foundations");
         }
 
         var renderSignificantImplementationOverview = function() {
@@ -1499,6 +1505,7 @@ var ui = {
         	ui.app.significantImplementationRequirement.courseList.forEach(function(course){
 				renderCourseForOverview(course, "significantImplementation");
 			});
+			renderNoCourse("significantImplementation");
         }
 
         var renderDepthOverview = function() {
@@ -1512,16 +1519,18 @@ var ui = {
         			req.courseList.forEach(function(course){
         				renderCourseForOverview(course, "depth");
         			});
+    				renderNoCourse("depth");
         		};
         	});
         	var summaryReq = depthReqs[depthReqs.length -1];
         	var lastCourses = _.difference.apply(
         		null, [summaryReq.courseList].concat(depthReqs.slice(0, depthReqs.length - 1).get('courseList')) );
         	
-        	$('#depthOverview').append("<h5>" + summaryReq.name + "</h5>");
+        	$('#depthOverview').append("<h5>" + summaryReq.name + " (courses that don't fit in any of the previous categories)</h5>");
         	lastCourses.forEach(function(course){
         		renderCourseForOverview(course, "depth");
         	});
+    		renderNoCourse("depth");
         }
 
         var renderBreadthOverview = function() {
@@ -1530,14 +1539,16 @@ var ui = {
         	ui.app.getSpecialization().getBreadthRequirement().courseList.forEach(function(course){
 				renderCourseForOverview(course, "breadth");
 			});
+    		renderNoCourse("breadth");
         }
 
         var renderElectivesOverview = function() {
         	$('#course-table').append("<div id='electivesOverview' class='well course-overview'></div>");
-        	$('#electivesOverview').append("<h4>Electives</h4>");
+        	$('#electivesOverview').append("<h4>Electives (courses that haven't been listed yet in another category)</h4>");
         	ui.app.getElectivesRequirement().courseList.forEach(function(course){
 				renderCourseForOverview(course, "electives");
 			});
+    		renderNoCourse("electives");
         }
 
         if (ui.activeRequirement === 'overview') {
