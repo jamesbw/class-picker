@@ -2250,7 +2250,7 @@ var ui = {
 			ui.app.setSpecialization(new SingleDepthSpecialization(this.program));
 			$('.program').removeClass('activeProgram');
 			this.$el.addClass('activeProgram');
-			ui.app.store();
+			ui.HeaderView.prototype.selectCourses();
 		}
 	}),
 
