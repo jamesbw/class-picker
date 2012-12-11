@@ -167,6 +167,7 @@ body {
 
 
 .program, .course {
+    position: relative;
     min-height: 20px;
     padding: 19px;
     margin-bottom: 20px;
@@ -192,6 +193,17 @@ body {
 .program.activeProgram {
     background-color: #D9FAB9;
     cursor: default;
+}
+
+.program button {
+  position: absolute;
+  top: 40px;
+  right: 40px;
+  display: none;
+}
+
+.program.activeProgram button {
+  display: block;
 }
 
 .program dt {

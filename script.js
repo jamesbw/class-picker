@@ -2228,7 +2228,8 @@ var ui = {
 		className: 'program',
 		template: _.template("<h3 class='program-name'></h3>"
 							+"<h5>Sample classes</h5>"
-							+"<dl class='course-list dl-horizontal'></dl>"),
+							+"<dl class='course-list dl-horizontal'></dl>"
+							+"<button class='btn btn-large btn-primary' type='button' onclick='ui.HeaderView.prototype.selectCourses();'>Now select your classes!</button>"),
 
 		render: function(){
 			this.$el.html(this.template());
@@ -2250,7 +2251,8 @@ var ui = {
 			ui.app.setSpecialization(new SingleDepthSpecialization(this.program));
 			$('.program').removeClass('activeProgram');
 			this.$el.addClass('activeProgram');
-			ui.HeaderView.prototype.selectCourses();
+			ui.app.store();
+			// ui.HeaderView.prototype.selectCourses();
 		}
 	}),
 
