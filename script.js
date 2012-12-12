@@ -2187,7 +2187,7 @@ var ui = {
 		template: _.template("<div class='navbar navbar-fixed-top'>"
   							+"	<div class='navbar-inner'>"
   							+"		<ul class='nav'>"
-							+"			<li id='select-program-tab' class='header-tab'><a href='#'><h4>1. Select your program</h4></a></li>"
+							+"			<li id='select-program-tab' class='header-tab'><a href='#'><h4>1. Select your concentration</h4></a></li>"
 							+"			<li id='select-courses-tab' class='header-tab'><a href='#'><h4>2. Select your courses</h4></a></li>"
 							+"			<li id='view-schedules-tab' class='header-tab'><a href='#'><h4>3. View Schedules</h4></a></li>"
 							+"		</ul>"
