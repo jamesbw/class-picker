@@ -50,11 +50,9 @@ function termIDtoTerm(id){
 
 function Schedule(terms, constraint) {
 	this.constraint = constraint;
-	// this.units = {};
 	this.courses = {};
 
 	for (var i = terms.length - 1; i >= 0; i--) {
-		// this.units[terms[i].id] = { "min" : 0, "max" : 0};
 		this.courses[terms[i].id] = [];
 	};
 }
@@ -64,7 +62,6 @@ Schedule.prototype.clone = function() {
 	var termIDs = this.getTermIDs();
 	for (var i = termIDs.length - 1; i >= 0; i--) {
 		var termID = termIDs[i];
-		// newSchedule.units[termID] = { min: this.units[termID].min, max: this.units[termID].max};
 		newSchedule.courses[termID] = this.courses[termID].slice();
 	};
 	return newSchedule;
@@ -111,7 +108,6 @@ CourseOffering.prototype.conflictsWith = function(courseOffering) {
 		return false;
 
 	//same days?
-	// if (_.isEmpty(_.intersection(courseOffering.days, this.days)))
 	if (! daysInCommon(courseOffering.days, this.days)) {
 		return false;
 	};
@@ -307,8 +303,6 @@ Schedule.prototype.add = function(courseOffering) {
 		return ;
 	};
 	this.courses[termID].push(courseOffering)
-	// this.units[termID].min += courseOffering.units.min
-	// this.units[termID].max += courseOffering.units.max
 };
 
 Schedule.prototype.remove = function(courseOffering) {
@@ -862,15 +856,6 @@ Application.prototype.initPrograms = function(callback) {
 				return parseReq(req);
 			});
 
-			//last req is summary req
-			// var summaryReq = singleDepthReqs[singleDepthReqs.length - 1];
-			// var lastReq = new CourseRequirement(summaryReq.name, 0, _.difference.apply(
-			// 	null, [summaryReq.courseList].concat(singleDepthReqs.slice(0, singleDepthReqs.length - 1).get('courseList')) ));
-			// singleDepthReqs.push(lastReq);
-			// summaryReq.name = "Depth";
-
-
-
 			var primaryDepthReqs = p.requirements.primaryDepth.map(function(req){
 				return parseReq(req);
 			});
@@ -1014,13 +999,6 @@ Application.prototype.getElectivesRequirement = function() {
 	return this.electivesRequirement;
 };
 
-// Application.prototype.getLastDepthRequirement = function() {
-// 	var depthReqs = this.getSpecialization().getDepthRequirements();
-// 	var summaryReq = depthReqs[depthReqs.length - 1];
-// 	var previousCourseLists = depthReqs.slice(0, depthReqs.length - 1).get('courseList');
-// 	var lastCourseList = _.difference.apply(null, [summaryReq.courseList].concat(previousCourseLists));
-// 	return new CourseRequirement(summaryReq.name, 0, lastCourseList);
-// };
 
 Application.prototype.getRequirements = function() {
 	return this.activeRequirements;
@@ -1260,32 +1238,6 @@ Application.prototype.run = function() {
 
 	this.restore();
 
-
-	// var constraint = new Constraint(10, 5);
-	// this.setConstraint(constraint);
-	// this.setSpecialization(new SingleDepthSpecialization(this.getPrograms()[0]));
-	// this.setTerms(ui.terms);
-	// ui.activeRequirement = this.totalUnitRequirement;
-
-	// this.addCourseByID('CS 103');
-	// this.addCourseByID('CS 107');
-	// this.addCourseByID('CS 109');
-	// this.addCourseByID('CS 110');
-	// this.addCourseByID('CS 161');
-	// this.addCourseByID('CS 221');
-	// this.addCourseByID('CS 223A');
-	// this.addCourseByID('CS 224M');
-	// this.addCourseByID('CS 224N');
-	// this.addCourseByID('CS 229');
-	// this.addCourseByID('CS 231A');
-	// this.addCourseByID('CS 124');
-	// this.addCourseByID('CS 224U');
-	// this.addCourseByID('CS 224W');
-	// this.addCourseByID('CS 228');
-	// this.addCourseByID('CS 140');
-	// this.addCourseByID('CS 143');
-	// this.addCourseByID('CS 144');
-
 	$('html').click(function(event){ 
 		if(!$(event.target).is(".popover *") && !$(event.target).is(".more-options")){
 			$('.more-options').popover('hide');
@@ -1307,7 +1259,6 @@ Application.prototype.run = function() {
 	ui.toggleCourses();
 	ui.renderTerms();
 	ui.renderConstraint();
-	// ui.renderSearch();
 
 	ui.renderPrograms();
 	ui.renderSchedules(9);	
@@ -1338,7 +1289,6 @@ var ui = {
 
 		if (ui.activeRequirement === 'overview' || ui.activeRequirement === 'depthOverview'){
 
-			//TODO
 			courses = [];
 		}
 		else {
@@ -1370,7 +1320,6 @@ var ui = {
 				view.$el.addClass('disabled');
 				view.$('.course-pick').prop('disabled',true);
 				view.$('.label-disabled').show();	
-				// view.$('.tooltip-content').text(canPickWithFeedback.feedback);
 				view.$('.label-disabled').attr('data-original-title', canPickWithFeedback.feedback);
 				view.$el.toggle(!selectableOnly);
 			}
@@ -1386,7 +1335,6 @@ var ui = {
 				if (course.alreadyTaken) {
 					view.$('.label-already-taken').show();
 				};
-				// view.$('.tooltip-content').text('');
 			}
 
 			if (pickedOnly) {
@@ -1434,7 +1382,6 @@ var ui = {
 		$('#req-list li').remove();
 
 		//overview
-		// var overviewReqView = new ui.RequirementView({requirement: app.totalUnitRequirement, label: 'All courses', indent: 0});
 		var overviewView = new ui.OverviewView({requirements: app.getRequirements(), label: "Overview"});
 		$('#req-list').append(overviewView.render().el);
 
@@ -1451,7 +1398,6 @@ var ui = {
 		var depthReqView = new ui.DepthView({requirements: depthReqs, label: 'Depth', indent: 1});
 		$('#req-list').append(depthReqView.render().el);
 
-		// depthReqs[depthReqs.length - 1] = ui.app.getLastDepthRequirement();
 
 		depthReqs.forEach(function(req){
 			if (req.name !== 'Depth') {
@@ -1498,7 +1444,7 @@ var ui = {
         		if (course.alreadyTaken) {
         			extraText = " <span class='label-already-taken label label-info'>already taken</span>";
         		};
-				$('#' + requirement + 'Overview').append("<dt>" + course.id + "</dt><dd>" + course.name + extraText + "</dd>");// + "</div>");
+				$('#' + requirement + 'Overview').append("<dt>" + course.id + "</dt><dd>" + course.name + extraText + "</dd>");
 
 			}
         }
@@ -1585,8 +1531,6 @@ var ui = {
 
         if (ui.activeRequirement !== 'overview' && ui.activeRequirement !== 'depthOverview') {
         	$('.instructions').show();
-        	// renderInstructions();
-			// $('#course-table').append('<div class="instructions well"><h4>' + ui.activeRequirement.instructions()+ '</h4> <label><input type="checkbox" id="selectable-checkbox">Restrict to selectable courses</input></label><label><input type="checkbox" id="picked-checkbox">Show only picked courses</input></label></div>')
 			$('.instructions h4').text(ui.activeRequirement.instructions());
 			ui.activeRequirement.courseList.forEach(function(course){
 				if(course.matches(filter)){
@@ -1595,7 +1539,6 @@ var ui = {
 				}
 			});
         };
-		// ui.toggleCourses();
 	},
 
 	renderTerms: function(){
@@ -1612,7 +1555,6 @@ var ui = {
 
 	renderSearch: function(){
 		var searchView = new ui.SearchView();
-		// $('#search .navbar-inner').html(searchView.render().el);
 		$('.instructions').append(searchView.render().el);
 	},
 
@@ -1650,7 +1592,6 @@ var ui = {
         var newdiv;
         
 		schedules.forEach(function(schedule, i){
-            console.log(schedule)
 			var scheduleView = new ui.ScheduleView({schedule: schedule, num: i+1});
             if (i%3 === 0) {
                 newdiv = $("<div class='row'>");
@@ -1688,7 +1629,6 @@ var ui = {
 
 		tagName: 'li',
 		className: 'requirement',
-		// template: _.template("<ul><li class='req-label'></li><li class='progress-text'></li><li class='progress-bar'><meter min='0'></meter></li></ul>"),
 		template: _.template("<a href='#'>"
                             +"  <p class='req-label'></p>"
                             +"  <div class='progress'>"
@@ -1709,17 +1649,6 @@ var ui = {
 			"click": "activate",
 		},
 
-
-		// render: function(){
-		// 	this.$el.html(this.template());
-		// 	this.$el.toggleClass('activeReq', this.requirement === ui.activeRequirement);
-		// 	this.$('.req-label').html(this.label);
-		// 	this.$('.progress-text').html(this.requirement.progressText());
-		// 	this.$('meter').attr('max', this.requirement.required)
-		// 				   .attr('value', this.requirement.fulfilled);
-		// 	this.$('ul').css('padding-left', (this.indent * 20 + 20) + 'px');
-		// 	return this;
-		// }
 
         render: function(){
             progressValue = this.requirement.fulfilled === 0 ? 5 : (this.requirement.fulfilled / this.requirement.required * 100);
@@ -1751,19 +1680,6 @@ var ui = {
 		initialize: function(){
 			this.course = this.options.course;
 		},
-
-		// tagName: 'tr',
-		// className: 'course',
-		// template: _.template("<td class='course-id'></td>"
-		// 					+"<td class='course-name'></td>"
-		// 					+"<td class='course-units'></td>"
-		// 					+"<td class='tooltip-content'></td>"
-		// 					+"<td><ul>"
-		// 					+"<li><input type='checkbox' class='course-pick'>Pick</input></li>"
-		// 					+"<li><input type='checkbox' class='course-waive'>Waive</input></li>"
-		// 					+"<li><input type='checkbox' class='course-alreadyTaken'>Already taken <span class='unit-option' style='display:none'>for <input type='number' class='alreadyTaken-units' value='3'/> units </span></input></li>"
-		// 					+"</ul></td>"
-		// 					),
 
         tagName: 'div',
         className: 'course well',
@@ -1842,20 +1758,17 @@ var ui = {
 			console.log('already taken')
 			if (this.course.alreadyTaken) {
 				this.course.alreadyTaken = false;
-				// this.$('.unit-option').hide();
 				ui.app.removeAlreadyTakenCourse(this.course);
 				this.$('.label-already-taken').hide();
 			}
 			else{
 				this.$('.label-already-taken').show();
 				this.course.alreadyTaken = true;
-				// this.$('.unit-option').show();
 
 				ui.app.addAlreadyTakenCourse(this.course, parseInt(this.$('.alreadyTaken-units').val(),10));
 
 				if(this.course.pick){
 					this.course.pick = false;
-					// this.$('.course-pick').attr('checked', false);
 					ui.app.removeCourse(this.course);
 				};
 				if(this.course.waived){
@@ -1876,7 +1789,6 @@ var ui = {
 
 		togglePick: function(){
 
-			// console.log(this.$el,this.$el.is('disabled'))
 			if (this.$el.is('.disabled') || this.course.alreadyTaken || this.course.waived) {
 				//can't pick disabled course
 				//if waived or already taken, need to clear that first
@@ -1938,7 +1850,6 @@ var ui = {
 			this.$el.html(this.template());
 			var that = this;
 			this.$('.label-disabled').tooltip({
-				// title: function(){console.log('called');return that.$('.tooltip-content').text()}
 				placement: 'right'
 			});
 			this.$('.course-id').html(this.course.id);
@@ -1949,13 +1860,6 @@ var ui = {
             var unitsNumber = (variableUnits ? (this.course.units.min + '-' + this.course.units.max) : this.course.units.min)
 			var unitsText = unitsNumber === 1 ? "1 unit" : unitsNumber + " units";
 			this.$('.course-units').html(unitsText);
-			// this.$('.course-pick').prop('checked',this.course.pick);
-			// this.$('.course-waive').prop('checked',this.course.waived);
-			// this.$('.course-alreadyTaken').prop('checked',this.course.alreadyTaken);
-			// this.$('.unit-option').toggle(this.course.alreadyTaken);
-			// this.$('.tooltip-content').hide();
-
-			
 
 			var that = this;
 
@@ -1981,26 +1885,11 @@ var ui = {
 								 +"</div>");
 
 
-			// this.$('.more-info').popover({
-			// 	content: function(){
-
-					// var items = that.course.courseOfferings.map(function(off){
-					// 	return '<li>' + off.term.period + " " + off.term.year + ": " + off.days.join('-') + " " + numToTime(off.startTime) + "-" + numToTime(off.endTime) + '</li>';
-					// }).join('');
-
-			// 		return  that.course.desc + that.course.instructors.join(', ') +  "<ul>" + items + '</ul>';
-			// 	},
-			// 	html: true,
-			// 	placement: 'right',
-			// 	trigger: 'hover'
-			// });
-
 			this.$('.more-options').popover({
 				html: true,
 				placement: 'bottom',
                 title: 'Check what applies',
 				content:  function(){
-					console.log(that.course)
 					var units;
 					if(that.course.alreadyTaken){
 						units = ui.app.getAlreadyTakenUnits(that.course);
@@ -2016,21 +1905,6 @@ var ui = {
 	                            +""
                     );
 
-
-					// el.select('.alreadyTaken-units').attr('min', that.course.units.min)
-					// 								.attr('max', that.course.units.max);
-
-					// el.select('.course-waive').prop('checked', that.course.waived);
-					// el.select('.course-alreadyTaken').prop('checked', that.course.alreadyTaken);
-
-					// that.$('.alreadyTaken-units').attr('min', that.course.units.min);
-					// that.$('.alreadyTaken-units').attr('max', that.course.units.max);
-					// if(that.course.alreadyTaken){
-					// 	that.$('.alreadyTaken-units').val(ui.app.getAlreadyTakenUnits(that.course));
-					// }
-					// else {
-					// 	that.$('.alreadyTaken-units').val(that.course.units.min);
-					// }
 
 					return el;
 
@@ -2075,7 +1949,6 @@ var ui = {
 			}
 			ui.updateRequirements();
 			ui.renderRequirements();
-			// ui.renderCourses();
 			ui.toggleCourses(!added);
 			ui.app.store();
 		}
@@ -2119,7 +1992,6 @@ var ui = {
 
 			ui.updateRequirements();
 			ui.renderRequirements();
-			// ui.renderCourses();
 			ui.toggleCourses(tighter);
 			ui.app.store();
 		},
@@ -2133,7 +2005,6 @@ var ui = {
 
 			ui.updateRequirements();
 			ui.renderRequirements();
-			// ui.renderCourses();
 			ui.toggleCourses(tighter);
 			ui.app.store();
 		},
@@ -2149,7 +2020,6 @@ var ui = {
 
 			ui.updateRequirements();
 			ui.renderRequirements();
-			// ui.renderCourses();
 			ui.toggleCourses(tighter);
 			ui.app.store();
 		}
@@ -2216,14 +2086,12 @@ var ui = {
 		},
 
 		selectProgram: function(){
-			console.log('clicked on select program tab');
 			ui.activeTabId = 'select-program-tab';
 			ui.toggleContainers();
 			ui.app.store();
 		},
 
 		selectCourses: function(){
-			console.log('clicked on select courses tab')
 			ui.activeTabId = 'select-courses-tab';
 			ui.toggleContainers();
 			ui.updateRequirements();
@@ -2232,7 +2100,6 @@ var ui = {
 		},
 
 		viewSchedules: function(){
-			console.log('clicked on view schedules tab')
 			ui.activeTabId = 'view-schedules-tab';
 			ui.toggleContainers();
 			ui.renderSchedules(9);
@@ -2274,7 +2141,6 @@ var ui = {
 			$('.program').removeClass('activeProgram');
 			this.$el.addClass('activeProgram');
 			ui.app.store();
-			// ui.HeaderView.prototype.selectCourses();
 		}
 	}),
 
@@ -2300,18 +2166,15 @@ var ui = {
                     courses += '<li><span class="course-' + (index+1) + '"/> ' + item + '</li>';
                 });
                 courses += '</ul>'
-                // this.schedule.courses[termID].get('id').join(', ');
 
 				var uniqueID = termID + getRandomInt(0, 10000000);
 
 				this.$('.schedule-container').append("<div class='schedule-term " + termID + "'>"
                                                     +"  <p class='nav-header'>" + term.period + " " + term.year + "</p>"
                                                     +"  <div class='row'>"
-                                                    // +"      <div class='mini-term-schedule span2' rel='#" + uniqueID + "'></div>"
                                                     +"      <a class='mini-term-schedule span2' role='button' data-toggle='modal' href='#" + uniqueID + "'></a>"
                                                     +"      <div class='course-list span2'>" + courses + "</div>"
                                                     +"  </div>"
-                                                    // +"  <div class='schedule-overlay' id='"+ uniqueID+"'></div>"
                                                     +"  <div id='" + uniqueID + "' class='modal hide fade schedule-overlay' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'>"
                                                     +"      <div class='modal-header'>"
                                                     +"          <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>"
@@ -2326,7 +2189,6 @@ var ui = {
 
 				var svgHeight = 70;
 				var svgWidth = 140;
-				// this.$('.'+termID ).width(svgWidth)
 				var svg = d3.select(this.$('.'+termID+ ' .mini-term-schedule')[0])
 							.append('svg')
 							.attr('width', svgWidth)
@@ -2446,7 +2308,6 @@ var ui = {
 					.attr('stroke', 'gray')
 					.attr('stroke-width', 1)
 					.attr('font-size', 10)
-					// .attr('font-weight', 'bold')
 					.attr('text-anchor', 'middle')
 					.text(String)
 
@@ -2478,7 +2339,6 @@ var ui = {
 					.attr('stroke', 'white')
 					.attr('font-size', 10)
 					.attr('text-anchor', 'middle')
-					// .style('font-weight', 'lighter')
 					.text(function(d){ return d.courseID})
 
 
@@ -2615,8 +2475,3 @@ var ui = {
 var app = new Application();
 app.start();
 
-/* TODO
-overview tabs
-disable tooltip detail
-select schedule
-*/

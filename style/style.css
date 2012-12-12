@@ -632,31 +632,6 @@ input.course-waive, input.course-alreadyTaken {
   fill: #a7774c;
  }
 
-/*.schedule-overlay {
-  display:none;
-  z-index:10000;
-  background-color: white;
-  height: 300px;
-  width: 600px;
-  padding: 20px;
-  -webkit-box-shadow: 0 0 30px rgba(0,0,0,.4);
-     -moz-box-shadow: 0 0 30px rgba(0,0,0,.4);
-          box-shadow: 0 0 30px rgba(0,0,0,.4);
-  -webkit-border-radius: 8px;
-     -moz-border-radius: 8px;
-          border-radius: 8px;
-}*/
-
-/*.schedule-overlay .close {
-    background-image: url(/close.png);
-    position:absolute;
-    right:-15px;
-    top:-15px;
-    cursor:pointer;
-    height:35px;
-    width:35px;
-    opacity: 1;
-}*/
 
 
 #course-table .dl-horizontal dt {
@@ -670,10 +645,6 @@ margin-left: 120px;
 .well.course-overview {
   padding: 10px !important;
   width: 440px !important;
-}
-
-.search {
-  /*display: inline-block;*/
 }
 
 .search form {
