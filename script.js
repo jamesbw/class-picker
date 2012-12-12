@@ -1286,6 +1286,15 @@ Application.prototype.run = function() {
 	// this.addCourseByID('CS 143');
 	// this.addCourseByID('CS 144');
 
+	$('html').click(function(event){ 
+		if(!$(event.target).is(".popover *") && !$(event.target).is(".more-options")){
+			$('.more-options').popover('hide');
+		}
+		if($(event.target).is(".more-options")){
+			$('.more-options').filter(function(){return this !== event.target}).popover('hide');
+		}
+	})
+
 	ui.app = this;
 
 	ui.renderHeader();
@@ -1302,6 +1311,7 @@ Application.prototype.run = function() {
 
 	ui.renderPrograms();
 	ui.renderSchedules(9);	
+
 };
 
 var ui = {
