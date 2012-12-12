@@ -43,6 +43,20 @@ function Term(period, year){
 	this.id = period + year;
 }
 
+function termComparator(term1, term2){
+	var periods = ['Autumn', 'Winter', 'Spring', 'Summer'];
+	if (term1.year < term2.year) {
+		return -1;
+	};
+	if (term1.year > term2.year) {
+		return 1;
+	};
+	if (periods.indexOf(term1.period) < periods.indexOf(term2.period)){
+		return -1;
+	}
+	return 1;
+}
+
 function termIDtoTerm(id){
 	var regexp = id.match(/(\w*)(201.*)/);
 	return new Term(regexp[1], regexp[2]);
@@ -577,6 +591,7 @@ ScheduleList.prototype.addTerm = function(term) {
 	};
 
 	this.terms.push(term);
+	this.terms.sort(termComparator);
 	this.recalculate();
 };
 
@@ -594,6 +609,7 @@ ScheduleList.prototype.removeTerm = function(term) {
 
 ScheduleList.prototype.setTerms = function(terms) {
 	this.terms = terms;
+	this.terms.sort(termComparator);
 	this.recalculate();
 };
 
@@ -2157,9 +2173,9 @@ var ui = {
 		render: function(){
 			this.$el.html(this.template());
 			this.$('.schedule-title').html("Schedule proposal #" + this.num);
-			this.schedule.getTermIDs().forEach(function(termID){
+			ui.app.getTerms().forEach(function(term, i){
 
-				var term = termIDtoTerm(termID);
+				var termID = term.id;
 
 				var courses = '<ul class="unstyled">';
                 this.schedule.courses[termID].get('id').forEach( function(item, index) {
@@ -2167,7 +2183,7 @@ var ui = {
                 });
                 courses += '</ul>'
 
-				var uniqueID = termID + getRandomInt(0, 10000000);
+				var uniqueID = termID + i;
 
 				this.$('.schedule-container').append("<div class='schedule-term " + termID + "'>"
                                                     +"  <p class='nav-header'>" + term.period + " " + term.year + "</p>"
