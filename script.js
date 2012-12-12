@@ -1472,7 +1472,7 @@ var ui = {
 
         var renderNoCourse = function(requirement){
         	if ($('#' + requirement + 'Overview').children().last().is('h4,h5')){
-        		$('#' + requirement + 'Overview').append("<dt>No courses yet</dt>");
+        		$('#' + requirement + 'Overview').append("<dd><small>No courses yet</small></dd>");
         	}
         }
 
@@ -1538,7 +1538,7 @@ var ui = {
         	var lastCourses = _.difference.apply(
         		null, [summaryReq.courseList].concat(depthReqs.slice(0, depthReqs.length - 1).get('courseList')) );
         	
-        	$('#depthOverview').append("<h5>" + summaryReq.name + " (courses that don't fit in any of the previous categories)</h5>");
+        	$('#depthOverview').append("<h5>" + summaryReq.name + " <small>(courses that don't fit in any of the previous categories)</small></h5>");
         	lastCourses.forEach(function(course){
         		renderCourseForOverview(course, "depth");
         	});
@@ -1556,7 +1556,7 @@ var ui = {
 
         var renderElectivesOverview = function() {
         	$('#course-table').append("<div id='electivesOverview' class='well course-overview'></div>");
-        	$('#electivesOverview').append("<h4>Electives (courses that haven't been listed yet in another category)</h4>");
+        	$('#electivesOverview').append("<h4>Electives <small>(courses that haven't been listed yet in another category)</small></h4>");
         	ui.app.getElectivesRequirement().courseList.forEach(function(course){
 				renderCourseForOverview(course, "electives");
 			});
@@ -2241,7 +2241,7 @@ var ui = {
 		template: _.template("<h3 class='program-name'></h3>"
 							+"<h5>Sample classes</h5>"
 							+"<dl class='course-list dl-horizontal'></dl>"
-							+"<button class='btn btn-large btn-primary' type='button' onclick='ui.HeaderView.prototype.selectCourses();'>Now select your classes!</button>"),
+							+"<button class='btn btn-large btn-primary' type='button' onclick='ui.HeaderView.prototype.selectCourses();'>Now select your courses!</button>"),
 
 		render: function(){
 			this.$el.html(this.template());
