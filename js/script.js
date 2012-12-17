@@ -1230,7 +1230,10 @@ Application.prototype.getSchedulesMeetingReqs = function(num) {
 	var res = [];
 	for (var i = this.getSchedules().length - 1; i >= 0; i--) {
 		var schedule = this.getSchedules()[i];
-		schedule.valid = unitReqs.every(function(req){return schedule.fulfills(req)});
+		schedule.valid = unitReqs.every(function(req){
+			var adjustedReq = req.adjusted(this.waivedCourses, this.alreadyTakenCourses);
+			return schedule.fulfills(adjustedReq);
+		}, this);
 		if (schedule.valid) {
 			res.push(schedule);
 			count +=1;
@@ -1449,7 +1452,7 @@ var ui = {
         }
 
         var renderCourseForOverview = function(course, requirement){
-        	if((course.pick || course.waived || course.alreadyTaken) && course.matches(filter)){
+        	if((course.pick || course.waived || course.alreadyTaken)){
         		var extraText;
         		if (course.pick) {
         			extraText = "";
@@ -1781,7 +1784,9 @@ var ui = {
 				this.$('.label-already-taken').show();
 				this.course.alreadyTaken = true;
 
-				ui.app.addAlreadyTakenCourse(this.course, parseInt(this.$('.alreadyTaken-units').val(),10));
+				var alreadyTakenUnits = parseInt(this.$('.alreadyTaken-units').val(),10) || this.course.units.min;
+
+				ui.app.addAlreadyTakenCourse(this.course, alreadyTakenUnits);
 
 				if(this.course.pick){
 					this.course.pick = false;
