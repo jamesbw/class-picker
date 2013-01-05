@@ -839,9 +839,6 @@ Application.prototype.initPrograms = function(callback) {
 
 	var findCourseByID = function(courseList, id){
 		return _.find(courseList, function(c){return c.id === id});
-		// courseList.filter(function(c){
-		// 		return c.id === id;
-		// 	})[0];
 	};
 
 	var parseReq = function(req){
@@ -1593,9 +1590,9 @@ var ui = {
         if (ui.activeRequirement !== 'overview' && ui.activeRequirement !== 'depthOverview') {
         	$('.instructions').show();
 			$('.instructions h4').text(ui.activeRequirement.instructions());
-			ui.activeRequirement.courseList.forEach(function(course){
+			ui.activeRequirement.courseList.forEach(function(course, index){
 				if(course.matches(filter)){
-					var courseView = new ui.CourseView({course: course});
+					var courseView = new ui.CourseView({course: course, index: index});
 					$('#course-table').append(courseView.render().el);
 				}
 			});
@@ -1740,12 +1737,12 @@ var ui = {
 	CourseView: Backbone.View.extend({
 		initialize: function(){
 			this.course = this.options.course;
+			this.uniqueIndex = this.options.index;
 		},
 
         tagName: 'div',
         className: 'course well',
         template: function(){
-        	var randomInt = getRandomInt(0,1000000);
         	return _.template("<div class='course-content'>"
                             +"  <table>"
                             +"      <tr>"
@@ -1764,8 +1761,8 @@ var ui = {
                             +"<div class='course-options'>"
                             +"  <table>"
                             +"      <tr>"
-                            +"          <td class='more-info' data-toggle='modal' data-target='#info-modal-"+randomInt+"'>more info</td>"
-                            +"			<div id='info-modal-" + randomInt + "' class='modal hide fade' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'></div>"
+                            +"          <td class='more-info' data-toggle='modal' data-target='#info-modal-"+ this.uniqueIndex +"'>more info</td>"
+                            +"			<div id='info-modal-" + this.uniqueIndex + "' class='modal hide fade' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'></div>"
                             +"      </tr>"
                             +"      <tr>"
                             +"          <td class='more-options'>more options</td>"
