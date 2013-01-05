@@ -81,14 +81,17 @@ Schedule.prototype.clone = function() {
 	return newSchedule;
 };
 
+// a course can have several offerings
 function CourseOffering(id, name, units, term, days, startTime, endTime) {
-	this.id = id
-	this.name = name
-	this.units = units
-	this.term = term
-	this.days = days
-	this.startTime = startTime
-	this.endTime = endTime
+	this.id = id;
+	this.name = name;
+	this.units = units;
+	this.term = term;
+	this.days = days;
+	this.startTime = startTime;
+	this.endTime = endTime;
+	this.effectiveStartTime = startTime;
+	this.effectiveEndTime = endTime;
 }
 
 CourseOffering.prototype.fitsInWithConflicts = function(schedule) {
@@ -127,8 +130,8 @@ CourseOffering.prototype.conflictsWith = function(courseOffering) {
 	};
 
 	//same time?
-	if ((this.startTime < courseOffering.startTime || this.startTime >= courseOffering.endTime)
-			&& (courseOffering.startTime < this.startTime || courseOffering.startTime >= this.endTime))		
+	if ((this.effectiveStartTime < courseOffering.effectiveStartTime || this.effectiveStartTime >= courseOffering.effectiveEndTime)
+			&& (courseOffering.effectiveStartTime < this.effectiveStartTime || courseOffering.effectiveStartTime >= this.effectiveEndTime))		
 		return false;
 
 	return true;
@@ -147,13 +150,32 @@ function Course(id, name, instructors, desc, grading, units, terms, courseOfferi
 	this.pick = false;
 	this.alreadyTaken = false;
 	this.waived = false;
+
+	this.timeIgnored = undefined;
 }
 
 Course.prototype.getTerms = function() {
 	return this.terms;
 };
 
+Course.prototype.ignoreTime = function() {
+	this.timeIgnored = true;
+	this.courseOfferings.forEach(function(off){
+		off.effectiveStartTime = 0;
+		off.effectiveEndTime = 0;
+	});
+};
 
+Course.prototype.unIgnoreTime = function() {
+	this.timeIgnored = false;
+	this.courseOfferings.forEach(function(off){
+		off.effectiveStartTime = off.startTime;
+		off.effectiveEndTime = off.endTime;
+	});
+};
+
+//determines whether a course can be picked given a set of schedules
+//the result also contains feedback on reasons why the course cannot be picked
 Course.prototype.canBePickedWithFeedback = function(scheduleList) {
 
 
@@ -750,6 +772,7 @@ function Application(){
 	this.specialization = {};
 	this.waivedCourses = [];
 	this.alreadyTakenCourses = [];
+	this.timeIgnoredCourses = [];
 
 	//private variable data
 	this.scheduleList = new ScheduleList([], [], undefined);
@@ -815,9 +838,10 @@ Application.prototype.initPrograms = function(callback) {
 	var app = this;
 
 	var findCourseByID = function(courseList, id){
-		return courseList.filter(function(c){
-				return c.id === id;
-			})[0];
+		return _.find(courseList, function(c){return c.id === id});
+		// courseList.filter(function(c){
+		// 		return c.id === id;
+		// 	})[0];
 	};
 
 	var parseReq = function(req){
@@ -906,6 +930,7 @@ Application.prototype.store = function() {
 	state.program = this.getSpecialization().singleDepth.name;
 	state.activeTabId = ui.activeTabId;
 	state.activeRequirement = ui.activeRequirement.name || ui.activeRequirement;
+	state.timeIgnoredCourses = this.timeIgnoredCourses;
 
 	localStorage.setItem('saved-state', JSON.stringify(state));
 };
@@ -923,6 +948,12 @@ Application.prototype.restore = function() {
 	};
 
 	var state = JSON.parse(storedValue);
+
+	this.timeIgnoredCourses = state.timeIgnoredCourses || [];
+	this.timeIgnoredCourses.forEach(function(courseID){
+		var course = _.find(this.allCourses, function(c){return c.id === courseID});
+		course.ignoreTime();
+	}, this);
 
 	this.setSpecialization(new SingleDepthSpecialization(_.find(this.getPrograms(), function(program){return program.name === state.program;})));
 	this.setTerms(ui.terms.filter(function(term){ return _.contains(state.terms, term.id);}));
@@ -1150,6 +1181,17 @@ Application.prototype.fulfills = function(requirement) {
 	return res;
 };
 
+Application.prototype.ignoreTime = function(course) {
+	course.ignoreTime();
+	this.timeIgnoredCourses.push(course.id);
+	this.scheduleList.recalculate();
+};
+
+Application.prototype.unIgnoreTime = function(course) {
+	course.unIgnoreTime();
+	this.timeIgnoredCourses = _.without(this.timeIgnoredCourses, course.id);
+	this.scheduleList.recalculate();
+};
 
 
 function SingleDepthSpecialization(program) {
@@ -1736,7 +1778,24 @@ var ui = {
 			'click .course-waive' : 'toggleWaive',
 			'click .course-alreadyTaken': 'toggleAlreadyTaken',
 			'click .course-content': 'togglePick',
+			'click .course-ignore-time': 'toggleIgnoreTime',
 			'input .alreadyTaken-units': 'updateTakenUnits',
+		},
+
+		toggleIgnoreTime: function(){
+			if (this.course.timeIgnored) {
+				ui.app.unIgnoreTime(this.course);
+			}
+			else {
+				ui.app.ignoreTime(this.course);
+			};
+			ui.updateRequirements();
+			ui.renderRequirements();
+			if (ui.activeRequirement === 'overview') {
+				ui.renderCourses();
+			};
+			ui.toggleCourses();
+			ui.app.store();
 		},
 
 		toggleWaive: function(){
@@ -1774,7 +1833,7 @@ var ui = {
 		},
 
 		toggleAlreadyTaken: function(){
-			console.log('already taken')
+			console.log('already taken');
 			if (this.course.alreadyTaken) {
 				this.course.alreadyTaken = false;
 				ui.app.removeAlreadyTakenCourse(this.course);
@@ -1923,7 +1982,8 @@ var ui = {
 	                            +"<label class='checkbox'><input type='checkbox' class='course-alreadyTaken' " + (that.course.alreadyTaken? "checked" : "") + ">"
 	                            +" I already took this course</label>"
 	                            + (variableUnits? " for <input type='number' class='alreadyTaken-units' value='"+ units + "' min='"+ that.course.units.min + "' max='" + that.course.units.max + "'/> units </input>" : "")
-	                            +""
+	                            +"<label class='checkbox'><input type='checkbox' class='course-ignore-time' " + (that.course.timeIgnored? "checked" : "") + "> Ignore time conflicts </label>"
+	                            +"<label class='checkbox'><input type='checkbox' class='course-repeat' " + (that.course.repeat? "checked" : "") + "> Repeat for credit </label>"
                     );
 
 
@@ -2232,16 +2292,18 @@ var ui = {
 				var slots = [];
 				for (var i = courseOfferings.length - 1; i >= 0; i--) {
 					var courseOffering = courseOfferings[i];
-					for (var j = courseOffering.days.length - 1; j >= 0; j--) {
-						var day = courseOffering.days[j]
-						slots.push({
-							courseNum: i,
-							courseID: courseOffering.id,
-							day: day,
-							start: courseOffering.startTime,
-							end: courseOffering.endTime
-						});
-					};
+					if (courseOffering.effectiveStartTime !== courseOffering.effectiveEndTime){
+						for (var j = courseOffering.days.length - 1; j >= 0; j--) {
+							var day = courseOffering.days[j]
+							slots.push({
+								courseNum: i,
+								courseID: courseOffering.id,
+								day: day,
+								start: courseOffering.startTime,
+								end: courseOffering.endTime
+							});
+						};
+					}
 				};
 
 				var timeScale = d3.scale.linear()
@@ -2496,3 +2558,9 @@ var ui = {
 var app = new Application();
 app.start();
 
+/* TODO
+repeat credit
+dual depth
+scpd: ignore time conflict
+better schedule outputs?
+*/
