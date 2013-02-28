@@ -151,7 +151,10 @@ function Course(id, name, instructors, desc, grading, units, terms, courseOfferi
 	this.alreadyTaken = false;
 	this.waived = false;
 
-	this.timeIgnored = undefined;
+	this.timeIgnored = false;
+
+	this.repeated = false;
+	this.repeatTimes = undefined;
 }
 
 Course.prototype.getTerms = function() {
@@ -288,6 +291,12 @@ Course.prototype.matches = function(filter) {
 	var strippedFilter = filter.replace(/\s/g, '').toLowerCase();
 	var strippedCourse = (this.id + this.name).replace(/\s/g, '').toLowerCase();
 	return strippedCourse.match(strippedFilter);
+};
+
+Course.prototype.repeat = function(times) {
+	console.log("repeating in Course")
+	this.repeatTimes = times;
+	this.repeated = true;
 };
 
 
@@ -773,6 +782,7 @@ function Application(){
 	this.waivedCourses = [];
 	this.alreadyTakenCourses = [];
 	this.timeIgnoredCourses = [];
+	this.repeatCourses = [];
 
 	//private variable data
 	this.scheduleList = new ScheduleList([], [], undefined);
@@ -928,6 +938,7 @@ Application.prototype.store = function() {
 	state.activeTabId = ui.activeTabId;
 	state.activeRequirement = ui.activeRequirement.name || ui.activeRequirement;
 	state.timeIgnoredCourses = this.timeIgnoredCourses;
+	state.repeatCourses = this.repeatCourses;
 
 	localStorage.setItem('saved-state', JSON.stringify(state));
 };
@@ -950,6 +961,12 @@ Application.prototype.restore = function() {
 	this.timeIgnoredCourses.forEach(function(courseID){
 		var course = _.find(this.allCourses, function(c){return c.id === courseID});
 		course.ignoreTime();
+	}, this);
+
+	this.repeatCourses = state.repeatCourses || [];
+	this.repeatCourses.forEach(function(coursePlusRepeat){
+		var course = _.find(this.allCourses, function(c){return c.id === coursePlusRepeat.course});
+		course.repeat(coursePlusRepeat.repeat);
 	}, this);
 
 	this.setSpecialization(new SingleDepthSpecialization(_.find(this.getPrograms(), function(program){return program.name === state.program;})));
@@ -1188,6 +1205,34 @@ Application.prototype.unIgnoreTime = function(course) {
 	course.unIgnoreTime();
 	this.timeIgnoredCourses = _.without(this.timeIgnoredCourses, course.id);
 	this.scheduleList.recalculate();
+};
+
+Application.prototype.addRepeat = function(course) {
+	this.repeatCourses.push({ course: course.id, repeat: 1});
+	console.log("adding repeat")
+	course.repeated = true;
+	course.repeatTimes = 1;
+};
+
+Application.prototype.removeRepeat = function(course) {
+	this.repeatCourses = this.repeatCourses.filter(function(c){return c.course !== course.id;});
+	console.log("removing repeat");
+	course.repeated = false;
+	course.repeatTimes = undefined;
+	this.scheduleList.recalculate();
+};
+
+Application.prototype.updateRepeat = function(course, times) {
+	if (!course.repeat) {
+		console.log("Error: course not selected for repeat yet.");
+		return false;
+	};
+	course.repeat(times);
+
+	_.find(this.repeatCourses, function(c){return c.course === course.id;}).repeat = course.repeatTimes;
+
+	//true if successfully updated the repeat. False if not possible
+	return times === course.repeatTimes;
 };
 
 
@@ -1777,6 +1822,29 @@ var ui = {
 			'click .course-content': 'togglePick',
 			'click .course-ignore-time': 'toggleIgnoreTime',
 			'input .alreadyTaken-units': 'updateTakenUnits',
+			'input .repeat-times': 'updateRepeatTimes',
+			'click .repeat-times': function(e){e.preventDefault();},
+			'click .course-repeat': 'toggleRepeat',
+		},
+
+		toggleRepeat: function(){
+			//TODO: update model, show times
+			if (this.course.repeated) {
+				ui.app.removeRepeat(this.course);
+				this.$('.repeat-times-extra').hide();
+			}
+			else {
+				ui.app.addRepeat(this.course);
+				this.$('.repeat-times').val(this.course.repeatTimes);
+				this.$('.repeat-times-extra').show();
+			};
+			ui.updateRequirements();
+			ui.renderRequirements();
+			if (ui.activeRequirement === 'overview') {
+				ui.renderCourses();
+			};
+			ui.toggleCourses();
+			ui.app.store();
 		},
 
 		toggleIgnoreTime: function(){
@@ -1922,6 +1990,25 @@ var ui = {
 			ui.app.store();
 		},
 
+		updateRepeatTimes: function(e){
+			var newVal = parseInt($(e.target).val(),10);
+			var success = ui.app.updateRepeat(this.course, newVal);
+
+			//Do not allow increasing if not possible
+			//TODO: make failure obvious to user
+			console.log(success);
+			e.preventDefault();
+			$(e.target).val(this.course.repeatTimes);
+
+			ui.updateRequirements();
+			ui.renderRequirements();
+			if (ui.activeRequirement === 'overview') {
+				ui.renderCourses();
+			};
+			ui.toggleCourses();
+			ui.app.store();
+		},
+
 		render: function(){
 			this.course.view = this;
 			this.$el.html(this.template());
@@ -1980,9 +2067,13 @@ var ui = {
 	                            +" I already took this course</label>"
 	                            + (variableUnits? " for <input type='number' class='alreadyTaken-units' value='"+ units + "' min='"+ that.course.units.min + "' max='" + that.course.units.max + "'/> units </input>" : "")
 	                            +"<label class='checkbox'><input type='checkbox' class='course-ignore-time' " + (that.course.timeIgnored? "checked" : "") + "> Ignore time conflicts </label>"
-	                            +"<label class='checkbox'><input type='checkbox' class='course-repeat' " + (that.course.repeat? "checked" : "") + "> Repeat for credit </label>"
+	                            +"<label class='checkbox'><input type='checkbox' class='course-repeat' " + (that.course.repeated? "checked" : "") + "/> Repeat for credit  </label> <span class='repeat-times-extra'> <input type='number' class='repeat-times' min='1' /> times (total) </span>"
                     );
-
+					el.find(".course-repeat").parent('label').toggle(!that.$el.is('.disabled'));
+					el.filter('.repeat-times-extra').toggle(that.course.repeated);
+					if (that.course.repeat) {
+						el.find('.repeat-times').val(that.course.repeatTimes);
+					};
 
 					return el;
 

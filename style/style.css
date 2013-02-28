@@ -525,7 +525,7 @@ section#select-courses-container {
   list-style: none;
 }
 
-.popover .alreadyTaken-units {
+.popover .alreadyTaken-units, .repeat-times {
   width: 25px;
 }
 
