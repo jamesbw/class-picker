@@ -783,6 +783,8 @@ function Application(){
 Application.prototype.start = function() {
 	console.log("Loading");
 
+	ui.terms = this.determineTerms();
+
 	this.initCourses(function(){
 		this.initPrograms(function(){
 			this.initScheduleList(function(){
@@ -792,6 +794,50 @@ Application.prototype.start = function() {
 			});
 		});
 	});
+};
+
+Application.prototype.determineTerms = function() {
+	var date = new Date();
+	var month = date.getMonth();
+	var year = date.getFullYear();
+	var firstPeriod;
+	var firstYear;
+	if (month > 1 && month <= 4) {
+		firstPeriod = "Spring";
+		firstYear = year - 1;
+	}
+	else if (month > 4 && month <= 7) {
+		firstPeriod = "Summer";
+		firstYear = year - 1;
+	}
+	else if (month > 7 && month <= 11) {
+		firstPeriod = "Autumn";
+		firstYear = year;
+	}
+	else if (month > 11 || month <= 1) {
+		if (month > 11) {
+			firstYear = year;
+		}
+		else {
+			firstYear = year - 1;
+		}
+		firstPeriod = "Winter";
+	};
+	var periods = ['Autumn', 'Winter', 'Spring', 'Summer', 'Autumn', 'Winter', 'Spring', 'Summer'];
+
+	var terms = [];
+
+	for (var i = periods.indexOf(firstPeriod); i < periods.length; i++) {
+		if (i == 4) {
+			firstYear++;
+		};
+		var period = periods[i];
+		var academicYear = firstYear + "-" + (firstYear + 1);
+		var id = period + academicYear;
+		terms.push(new Term(period, academicYear));
+	};
+
+	return terms;
 };
 
 Application.prototype.initCourses = function(callback) {
@@ -938,7 +984,9 @@ Application.prototype.restore = function() {
 		var constraint = new Constraint(10, 5);
 		this.setConstraint(constraint);
 		this.setSpecialization(new SingleDepthSpecialization(this.getPrograms()[0]));
-		this.setTerms(ui.terms);
+		this.setTerms(ui.terms.filter(function(term){
+			return term.period != 'Summer';
+		}));
 		ui.activeRequirement = this.totalUnitRequirement;
 		ui.activeTabId = 'select-program-tab';
 		return false;
