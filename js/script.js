@@ -798,7 +798,7 @@ Application.prototype.start = function() {
 
 Application.prototype.determineTerms = function() {
 	var date = new Date();
-	var month = date.getMonth();
+	var month = date.getMonth() + 1; //getMonth returns 0-11
 	var year = date.getFullYear();
 	var firstPeriod;
 	var firstYear;
