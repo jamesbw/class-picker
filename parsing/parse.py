@@ -129,7 +129,7 @@ def getCoursesForDept(department, allowedCourses):
 
 	return allCourses
 
-departments = ['ARTSTUDI', 'ENGR', 'SOC', 'SBIO', 'GENE', 'BIOC', 'PSYCH', 'STATS', 'CME', 'MS&E', 'ME', 'COMM', 'EE', 'CS'];
+departments = ['ARTSTUDI', 'ENGR', 'SOC', 'SBIO', 'GENE', 'BIOC', 'PSYCH', 'STATS', 'CME', 'MS&E', 'ME', 'COMM', 'EE', 'CS', 'APPPHYS', 'BIOE'];
 allCourses = [];
 
 allowedCourses = set()
